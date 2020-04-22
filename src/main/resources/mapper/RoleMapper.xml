@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.RoleMapper">
+    <select id="selectNameByUserId" resultType="string" parameterType="integer">
+        select name from role where id = (select role_id from user_role where user_id = #{userId});
+    </select>
+    <select id="selectRolesByUserId" resultType="com.gydx.bookManager.entity.Role" parameterType="integer">
+        SELECT
+            *
+        FROM
+            role r
+        WHERE
+            r.id IN (
+                SELECT
+                    role_id
+                FROM
+                    user_role
+                WHERE
+                    user_role.user_id = #{id}
+            )
+    </select>
+    <select id="selectRoleByUserId" resultType="com.gydx.bookManager.entity.Role" parameterType="integer">
+        SELECT
+            *
+        FROM
+            role r
+        WHERE
+            r.id IN (
+                SELECT
+                    role_id
+                FROM
+                    user_role
+                WHERE
+                    user_role.user_id = #{id}
+            )
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.MajorMapper">
+    <select id="selectNameById" resultType="string" parameterType="integer">
+        select name from major where id = #{majorId};
+    </select>
+    <select id="selectIdByName" resultType="integer" parameterType="string">
+        select id from major where name like concat('%', #{majorName}, '%');
+    </select>
+    <select id="selectByCourseId" resultType="com.gydx.bookManager.entity.Major" parameterType="integer">
+        select * from major where id IN (select major_id from major_course where course_id = #{courseId});
+    </select>
+</mapper>

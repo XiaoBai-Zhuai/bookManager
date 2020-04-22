@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.StockOutMapper">
+    <select id="selectStockOutByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.StockOut">
+        select * from stock_out
+        LIMIT #{page},
+        #{limit};
+    </select>
+    <select id="selectStockOutByPageAndCondition" resultType="com.gydx.bookManager.entity.StockOut" parameterType="com.gydx.bookManager.pojo.StockOutPojo">
+        select * from stock_out
+        where
+            <trim prefixOverrides="and|or">
+                <if test="stockOutDate != null and stockOut != ''">
+                    and stock_out_date = #{stockOutDate}
+                </if>
+                <if test="departmentName != null and departmentName != ''">
+                    and departmentName like concat('%', #{departmentName}, '%')
+                </if>
+                <if test="bookName != null and bookName != ''">
+                    and id IN (select stockOut_id from book_id = (select id from book where name like concat('%', #{bookName}, '%')))
+                </if>
+            </trim>
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectAllStockOutByCondition" resultType="com.gydx.bookManager.entity.StockOut" parameterType="com.gydx.bookManager.pojo.StockOutPojo">
+        select * from stock_out
+        where
+        <trim prefixOverrides="and|or">
+            <if test="stockOutDate != null and stockOut != ''">
+                and stock_out_date = #{stockOutDate}
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                and departmentName like concat('%', #{departmentName}, '%')
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and id IN (select stockOut_id from book_id = (select id from book where name like concat('%', #{bookName}, '%')))
+            </if>
+        </trim>
+    </select>
+    <update id="updateStockOut" parameterType="com.gydx.bookManager.entity.StockOut">
+        update stock_out set stock_out_date = #{stockOutDate}, departmentName = #{departmentName},
+        book_sum = #{bookSum} where id = #{id};
+    </update>
+</mapper>

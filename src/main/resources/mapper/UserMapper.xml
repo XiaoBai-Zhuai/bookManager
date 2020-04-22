@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.UserMapper">
+    <select id="selectByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.User">
+        select * from user
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectByPageAndCondition" resultType="com.gydx.bookManager.entity.User">
+        select * from user
+        where
+            <trim prefixOverrides="and|or">
+                <if test="roleName != null and roleName != ''">
+                    and id IN (select user_id where role_id = (select id from role where name = #{roleName}))
+                </if>
+                <if test="username != null and username != ''">
+                    and username like concat('%', #{username}, '%')
+                </if>
+                <if test="nickname != null and nickname != ''">
+                    and nickname like concat('%', #{nickname}, '%')
+                </if>
+                <if test="email != null and email != ''">
+                    and email = #{email}
+                </if>
+                <if test="sex != null and sex != ''">
+                    and sex = #{sex}
+                </if>
+            </trim>
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectAllByCondition" resultType="com.gydx.bookManager.entity.User">
+        select * from user
+        where
+        <trim prefixOverrides="and|or">
+            <if test="roleName != null and roleName != ''">
+                and id IN (select user_id where role_id = (select id from role where name = #{roleName}))
+            </if>
+            <if test="username != null and username != ''">
+                and username like concat('%', #{username}, '%')
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname like concat('%', #{nickname}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+        </trim>
+    </select>
+    <update id="updateUser" parameterType="com.gydx.bookManager.pojo.UserInfoPojo">
+        UPDATE USER u
+        SET u.nickname = #{nickname},
+         u.sex = #{sex},
+         u.email = #{email};
+    </update>
+    <update id="updateOneUser" parameterType="com.gydx.bookManager.entity.User">
+        update user set username = #{username}, email = #{email}, nickname = #{nickname}, sex = #{sex};
+    </update>
+    <update id="updatePassword">
+        update user set password = #{password} where id = #{id};
+    </update>
+    <delete id="deleteUsers" parameterType="com.gydx.bookManager.entity.User">
+        delete from user where id =
+        <foreach collection="users" item="user" index="index" open="(" close=")" separator=",">
+            #{user.id}
+        </foreach>
+    </delete>
+</mapper>

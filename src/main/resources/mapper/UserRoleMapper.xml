@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.UserRoleMapper">
+    <insert id="insertOne" parameterType="com.gydx.bookManager.entity.User">
+        insert into user_role (role_id, user_id)
+        select role_id, #{id} from role where name = #{roleName};
+    </insert>
+    <update id="updateUserIdByRoleName" parameterType="string">
+        update user_role set role_id = (select id from role where name like concat('%', #{roleName}, '%'))
+        where user_id = #{id};
+    </update>
+</mapper>

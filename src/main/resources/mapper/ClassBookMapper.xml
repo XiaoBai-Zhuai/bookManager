@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.ClassBookMapper">
+    <select id="selectClassBookListByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.ClassBook">
+        select * from class_book
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectClassBookListByPageAndCondition" resultType="com.gydx.bookManager.entity.ClassBook">
+        select * from class_book
+        where
+        <trim prefixOverrides="and|or">
+            <if test="receiveDate != null and receiveDate != ''">
+                and receive_date = #{receiveDate}
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and book_id IN (select id from book where name like concat('%', #{bookName}, '%'))
+            </if>
+            <if test="className != null and className != ''">
+                and class_id IN (select id from class where name like concat('%', #{className}, '%'))
+            </if>
+        </trim>
+        limit #{page}, #{limit}
+    </select>
+    <select id="selectAllClassBookListByCondition" resultType="com.gydx.bookManager.entity.ClassBook">
+        select * from class_book
+        where
+        <trim prefixOverrides="and|or">
+            <if test="receiveDate != null and receiveDate != ''">
+                and receive_date = #{receiveDate}
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and book_id IN (select id from book where name like concat('%', #{bookName}, '%'))
+            </if>
+            <if test="className != null and className != ''">
+                and class_id IN (select id from class where name like concat('%', #{className}, '%'))
+            </if>
+        </trim>
+    </select>
+    <update id="updateClassBook" parameterType="com.gydx.bookManager.entity.ClassBook">
+        update class_book set receive_date = #{receiveDate},
+        book_id = (select id from book where name like concat('%', #{bookName}, '%')),
+        class_id = (select id from class where name like concat('%', #{className}, '%')),
+        book_sum = #{bookSum}
+        where id = #{id}
+    </update>
+    <delete id="deleteClassBooks">
+        delete from
+        class_book
+        where
+        id IN
+        <foreach collection="classBooks" item="classBook" index="index" open="(" close=")" separator=",">
+            #{classBook.id}
+        </foreach>
+    </delete>
+    <insert id="insertClassBook" parameterType="com.gydx.bookManager.entity.ClassBook" useGeneratedKeys="true" keyProperty="id">
+        insert class_book (book_id, class_id, book_sum, receive_date)
+        select b.id as book_id, c.id as class_id, #{bookSum}, #{receiveDate} from book b join class c
+        where b.name = #{bookName} and c.name = #{className};
+    </insert>
+</mapper>

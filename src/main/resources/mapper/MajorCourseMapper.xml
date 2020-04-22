@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.MajorCourseMapper">
+    <update id="updateMajorIdByCourseId">
+        update major_coourse set major_id = (select id from major where name = #{majorName})
+        where course_id = #{courseId};
+    </update>
+    <select id="selectByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.MajorCourse">
+        select * from major_course
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectByPageAndCondition" resultType="com.gydx.bookManager.entity.MajorCourse">
+        select * from major_course
+        where
+        <trim prefixOverrides="and|or">
+            <if test="schoolName != null and schoolName != ''">
+                and major_id = (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="courseName != null and courseName != ''">
+                and course_id = (select id from course where name like concat('%', #{courseName}, '%'))
+            </if>
+        </trim>
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectAllByCondition" resultType="com.gydx.bookManager.entity.MajorCourse">
+        select * from major_course
+        where
+        <trim prefixOverrides="and|or">
+            <if test="schoolName != null and schoolName != ''">
+                and major_id = (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="courseName != null and courseName != ''">
+                and course_id = (select id from course where name like concat('%', #{courseName}, '%'))
+            </if>
+        </trim>
+    </select>
+    <delete id="deleteSome" parameterType="com.gydx.bookManager.entity.MajorCourse">
+        delete from major_course
+        where id = 
+        <foreach collection="majorCourses" item="majorCourse" index="index" open="(" close=")" separator=",">
+            #{majorCourse.id}
+        </foreach>
+    </delete>
+    <update id="updateOne" parameterType="com.gydx.bookManager.entity.MajorCourse">
+        update major_course set major_id = #{majorId}, course_id = #{courseId} where id = #{id};
+    </update>
+</mapper>

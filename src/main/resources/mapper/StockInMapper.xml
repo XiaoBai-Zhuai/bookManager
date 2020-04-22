@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.StockInMapper">
+    <select id="selectStockInListByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.StockIn">
+        SELECT
+            *
+        FROM
+            stock_in
+        LIMIT #{page},
+         #{limit};
+    </select>
+    <select id="selectStockInListByPageAndCondition" parameterType="com.gydx.bookManager.pojo.StockInPojo"
+            resultType="com.gydx.bookManager.entity.StockIn">
+        SELECT
+        *
+        FROM
+        stock_in
+        WHERE
+        <trim prefixOverrides="and|or">
+            <if test="stockInDate != null and stockInDate != ''">
+                and stock_in_date = #{stockInDate}
+            </if>
+            <if test="bookName != null and bookName != '' and (supplier == null or supplier == '')">
+                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')))
+            </if>
+            <if test="supplier != null and supplier != '' and (bookName == null or bookName == '')">
+                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%'))
+            </if>
+            <if test="supplier != null and supplier != '' and bookName != null and bookName != ''">
+                and id = (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')) and
+                    supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%')))
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                and department_name = #{departmentName}
+            </if>
+        </trim>
+        LIMIT #{page},
+         #{limit};
+    </select>
+    <select id="selectStockInListByCondition" parameterType="com.gydx.bookManager.pojo.StockInPojo"
+            resultType="com.gydx.bookManager.entity.StockIn">
+        SELECT
+        *
+        FROM
+        stock_in
+        WHERE
+        <trim prefixOverrides="and|or">
+            <if test="stockInDate != null and stockInDate != ''">
+                and stock_in_date = #{stockInDate}
+            </if>
+            <if test="bookName != null and bookName != '' and (supplier == null or supplier == '')">
+                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')))
+            </if>
+            <if test="supplier != null and supplier != '' and (bookName == null or bookName == '')">
+                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%'))
+            </if>
+            <if test="supplier != null and supplier != '' and bookName != null and bookName != ''">
+                and id = (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')) and
+                supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%')))
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                and department_name = #{departmentName}
+            </if>
+        </trim>
+        LIMIT #{page},
+        #{limit};
+    </select>
+    <delete id="deleteBatchById" parameterType="com.gydx.bookManager.entity.Book">
+        delete from
+        stock_in
+        where
+        id IN
+        <foreach collection="stockIns" item="stockIn" index="index" open="(" close=")" separator=",">
+            #{stockIn.id}
+        </foreach>
+    </delete>
+    <update id="updateStockIn" parameterType="com.gydx.bookManager.pojo.StockInPojo">
+        UPDATE stock_in
+        SET book_sum = #{bookSum},
+            stock_in_date = #{stockInDate},
+            price = #{price},
+            department_name = #{departmentName}
+        WHERE
+            id = #{id};
+    </update>
+    <!--<select id="selectByCondition" parameterType="com.gydx.bookManager.pojo.BookPageInfoPojo" resultType="com.gydx.bookManager.entity.Book">
+        SELECT
+            *
+        FROM
+            book
+        WHERE
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+            <if test="publisher != null and publisher != ''">
+                and publisher = #{publisher}
+            </if>
+        </trim>
+        LIMIT #{page},
+         #{limit};
+    </select>
+    <update id="updateBook" parameterType="com.gydx.bookManager.entity.Book">
+        UPDATE book b
+        SET b.`name` = #{name},
+         b.author = #{author},
+         b.publisher = #{publisher},
+         b.publish_time = #{publishTime},
+         b.price = #{price}
+        WHERE
+            b.id = #{id};
+    </update>
+    <delete id="deleteBatchById" parameterType="com.gydx.bookManager.entity.Book">
+        delete from
+        book
+        where
+        id IN
+        <foreach collection="books" item="book" index="index" open="(" close=")" separator=",">
+            #{book.id}
+        </foreach>
+    </delete>-->
+</mapper>

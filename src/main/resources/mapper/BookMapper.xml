@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.BookMapper">
+    <select id="selectBookList" parameterType="integer" resultType="com.gydx.bookManager.entity.Book">
+        SELECT
+            *
+        FROM
+            book
+        LIMIT #{page},
+         #{limit};
+    </select>
+    <select id="selectIdByName" parameterType="string" resultType="integer">
+        select id from book where name = #{bookName};
+    </select>
+    <select id="selectByStockInId" resultType="com.gydx.bookManager.entity.Book" parameterType="integer">
+        SELECT
+            *
+        FROM
+            book
+        WHERE
+            id = (SELECT book_id FROM stockIn_book_supplier WHERE stock_in_id = #{id});
+    </select>
+    <select id="selectNameById" resultType="string" parameterType="integer">
+        SELECT
+            name
+        FROM
+            book
+        WHERE
+            id = #{bookId};
+    </select>
+    <select id="selectByCondition" parameterType="com.gydx.bookManager.pojo.BookPageInfoPojo"
+            resultType="com.gydx.bookManager.entity.Book">
+        SELECT
+        *
+        FROM
+        book
+        WHERE
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+            <if test="publisher != null and publisher != ''">
+                and publisher = #{publisher}
+            </if>
+        </trim>
+        LIMIT #{page},
+        #{limit};
+    </select>
+    <select id="selectByMajorCourse" parameterType="com.gydx.bookManager.entity.MajorCourse"
+            resultType="com.gydx.bookManager.entity.Book">
+        select * from book where id IN
+         (select book_id
+            from course
+            where id
+            IN
+            <foreach collection="majorCourses" item="majorCourse" index="index" open="(" close=")" separator=",">
+                #{majorCourse.courseId}
+            </foreach>
+         )
+    </select>
+    <update id="updateBook" parameterType="com.gydx.bookManager.entity.Book">
+        UPDATE
+        book b
+        SET
+        <trim suffixOverrides=",">
+            <if test="name != null and name != ''">
+                b.name = #{name},
+            </if>
+            <if test="author != null and author != ''">
+                b.author = #{author},
+            </if>
+            <if test="publisher != null and publisher != ''">
+                b.publisher = #{publisher},
+            </if>
+            <if test="publishTime != null and publishTime != ''">
+                b.publish_time = #{publishTime},
+            </if>
+            <if test="price != null">
+                b.price = #{price},
+            </if>
+            <if test="stockSum != null">
+                b.stock_sum = #{stockSum}
+            </if>
+        </trim>
+        WHERE
+        b.id = #{id};
+    </update>
+    <delete id="deleteBatchById" parameterType="com.gydx.bookManager.entity.Book">
+        delete from
+        book
+        where
+        id IN
+        <foreach collection="books" item="book" index="index" open="(" close=")" separator=",">
+            #{book.id}
+        </foreach>
+    </delete>
+</mapper>

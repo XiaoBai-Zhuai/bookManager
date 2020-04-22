@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.SupplierMapper">
+    <select id="selectNameById" parameterType="integer" resultType="string">
+        SELECT
+            name
+        FROM
+            supplier
+        WHERE
+            id = #{supplierId};
+    </select>
+    <select id="selectByStockInId" parameterType="integer" resultType="com.gydx.bookManager.entity.Supplier">
+        SELECT
+            *
+        FROM
+            supplier
+        WHERE
+            id = (SELECT supplier_id from stockIn_book_supplier where stock_in_id = #{id});
+    </select>
+    <select id="selectIdByName" resultType="integer" parameterType="string">
+        SELECT
+            id
+        FROM
+            supplier
+        WHERE
+            name = #{supplier}
+    </select>
+    <select id="selectSupplierListByPage" resultType="com.gydx.bookManager.entity.Supplier">
+        select * from supplier
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectSupplierListByPageAndCondition" resultType="com.gydx.bookManager.entity.Supplier">
+        select * from supplier where
+        <trim prefixOverrides="and">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and tel = #{tel}
+            </if>
+        </trim>
+        limit #{page}, #{limit};
+    </select>
+    <select id="selectAllSupplierListByCondition" resultType="com.gydx.bookManager.entity.Supplier">
+        select * from supplier where
+        <trim prefixOverrides="and">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and tel = #{tel}
+            </if>
+        </trim>
+    </select>
+    <update id="updateSupplier" parameterType="com.gydx.bookManager.entity.Supplier">
+        update supplier set name = #{name}, tel = #{tel} where id = #{id};
+    </update>
+</mapper>

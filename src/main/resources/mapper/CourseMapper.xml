@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.CourseMapper">
+    <select id="selectCourseListByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.Course">
+        select * from course
+        limit #{page}, #{limit};
+    </select>
+    <update id="updateCourse" parameterType="com.gydx.bookManager.entity.Course">
+        update course set name = #{courseName},
+        book_id = (select id from book where name = #{bookName}),
+        hour = #{hour}
+        where id = #{id};
+    </update>
+</mapper>
