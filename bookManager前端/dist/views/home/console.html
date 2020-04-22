@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>管理员主页</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md8">
+        <div class="layui-row layui-col-space15">
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">待办事项</div>
+              <div class="layui-card-body">
+
+                <div class="layui-carousel layadmin-carousel layadmin-backlog">
+                  <div carousel-item>
+                    <ul class="layui-row layui-col-space10">
+                      <li class="layui-col-xs6">
+                        <h3>管理员姓名：</h3>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <h3 id="nickname">...</h3>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <h3>管理员编号</h3>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <h3 id="username">...</h3>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">快捷方式</div>
+              <div class="layui-card-body">
+
+                <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                  <div carousel-item>
+                    <ul class="layui-row layui-col-space10">
+                      <li class="layui-col-xs6">
+                        <a lay-href="class/classbook.html">
+                          <i class="layui-icon layui-icon-console"></i>
+                          <cite>班级教材领取情况</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="template/booklist">
+                          <i class="layui-icon layui-icon-chart"></i>
+                          <cite>教材库存列表</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="studyPlan/studyPlan.html">
+                          <i class="layui-icon layui-icon-template-1"></i>
+                          <cite>教学计划汇总</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="user/user/list.html">
+                          <i class="layui-icon layui-icon-find-fill"></i>
+                          <cite>网站用户</cite>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul>
+                      <li class="layui-col-xs6">
+                        <a lay-href="set/user/info.html">
+                          <i class="layui-icon layui-icon-friends"></i>
+                          <cite>基本信息</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="set/user/password.html">
+                          <i class="layui-icon layui-icon-find-fill"></i>
+                          <cite>修改密码</cite>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md12">
+            <div class="layui-card">
+              <div class="layui-card-header">学期进度</div>
+              <div class="layui-card-body">
+                <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                  <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layui-col-md4">
+        <div class="layui-card">
+          <div class="layui-card-header">通知</div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="layui-card">
+          <div class="layui-card-header">在线问答</div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../layuiadmin/layui/layui.js?t=1"></script>
+  <script>
+    layui.config({
+      base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+      index: 'lib/index' //主入口模块
+    }).use(['index', 'console']);
+    document.getElementById("nickname").innerHTML = sessionStorage.getItem("nickname");
+    document.getElementById("username").innerHTML = sessionStorage.getItem("username");
+  </script>
+</body>
+
+</html>

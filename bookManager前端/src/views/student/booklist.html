@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>教材信息列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">教材名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">作者名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="author" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">出版社</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="publisher" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <!-- <div class="layui-inline">
+                        <label class="layui-form-label">出版时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="publishTime" id="publishTime" class="layui-input" placeholder="请输入"
+                                autocomplete="off">
+                        </div>
+                    </div> -->
+                    
+
+                    <!-- <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <select name="sex">
+                                <option value="0">不限</option>
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-booklist" lay-submit lay-filter="LAY-book-front-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <table id="book-manage" lay-filter="book-manage"></table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'studentbooklist', 'table'], function () {
+            var $ = layui.$
+                , form = layui.form
+                , table = layui.table;
+
+            //监听搜索
+            form.on('submit(LAY-book-front-search)', function (data) {
+                var field = data.field;
+
+                //执行重载
+                table.reload('book-manage', {
+                    where: field
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>学生主页</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md8">
+        <div class="layui-row layui-col-space15">
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">学生信息</div>
+              <div class="layui-card-body">
+
+                <div class="layui-carousel layadmin-carousel layadmin-backlog">
+                  <div carousel-item>
+                    <ul class="layui-row layui-col-space10">
+                      <li class="layui-col-xs4">
+                        <h3>学生姓名：</h3>
+                      </li>
+                      <li class="layui-col-xs8">
+                        <h3 id="nickname">...</h3>
+                      </li>
+                      <li class="layui-col-xs4">
+                        <h3>学生编号：</h3>
+                      </li>
+                      <li class="layui-col-xs8">
+                        <h3 id="studentNumber">...</h3>
+                      </li>
+                      <li class="layui-col-xs4">
+                        <h3>所属院系：</h3>
+                      </li>
+                      <li class="layui-col-xs8">
+                        <h3 id="schoolName">...</h3>
+                      </li>
+                      <li class="layui-col-xs4">
+                        <h3>专业名称</h3>
+                      </li>
+                      <li class="layui-col-xs8">
+                        <h3 id="majorName">...</h3>
+                      </li>
+                      <li class="layui-col-xs4">
+                        <h3>班级名称</h3>
+                      </li>
+                      <li class="layui-col-xs8">
+                        <h3 id="className">...</h3>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">快捷方式</div>
+              <div class="layui-card-body">
+
+                <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                  <div carousel-item>
+                    <ul class="layui-row layui-col-space10">
+                      <li class="layui-col-xs6">
+                        <a lay-href="student/studyPlanlist.html">
+                          <i class="layui-icon layui-icon-template-1"></i>
+                          <cite>教学计划</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="student/booklist.html">
+                          <i class="layui-icon layui-icon-read"></i>
+                          <cite>教材库存表</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="set/user/info.html">
+                          <i class="layui-icon layui-icon-friends"></i>
+                          <cite>基本信息</cite>
+                        </a>
+                      </li>
+                      <li class="layui-col-xs6">
+                        <a lay-href="set/user/password.html">
+                          <i class="layui-icon layui-icon-find-fill"></i>
+                          <cite>修改密码</cite>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md12">
+            <div class="layui-card">
+              <div class="layui-card-header">教学计划</div>
+              <div class="layui-card-body">
+                <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                  <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layui-col-md4">
+        <div class="layui-card">
+          <div class="layui-card-header">通知</div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="layui-card">
+          <div class="layui-card-header">在线问答</div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="../../layuiadmin/layui/layui.js?t=1"></script>
+    <script>
+      layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+      }).extend({
+        index: 'lib/index' //主入口模块
+      }).use(['index', 'console', 'table'], function () {
+        var $ = layui.$
+          , admin = layui.admin
+          , element = layui.element
+          , layer = layui.layer
+          , laydate = layui.laydate
+          , form = layui.form
+          , table = layui.table;
+
+        table.render({
+          elem: '#test-table-toolbar'
+          , url: 'http://localhost:8080/getStudyPlanList'
+          , headers: {
+            'Authorization': sessionStorage.getItem("token"),
+            'Access-Control-Allow-Origin': '*'
+          }
+          , where: {
+            majorName: sessionStorage.getItem("majorName"),
+          }
+          , title: '教学计划'
+          , cols: [[
+            { field: 'schoolName', title: '学院名' }
+            , { field: 'majorName', title: '专业名' }
+            , { field: 'courseName', title: '课程名' }
+            , { field: 'bookName', title: '教材名' }
+            , { field: 'hour', title: '课时' }
+          ]]
+        });
+
+
+        layer.ready(function () {
+          var username = sessionStorage.getItem("username");
+          var data = { "username": username };
+          $.ajax({
+            url: 'http://localhost:8080/getStudentInfo',
+            type: 'post',
+            headers: {
+              'Authorization': sessionStorage.getItem("token"),
+              'Access-Control-Allow-Origin': '*'
+            },
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function (res) {
+              sessionStorage.setItem("classId", res.student.classId);
+              sessionStorage.setItem("className", res.student.className);
+              sessionStorage.setItem("majorId", res.student.majorId);
+              sessionStorage.setItem("majorName", res.student.majorName);
+              sessionStorage.setItem("schoolId", res.student.schoolId);
+              sessionStorage.setItem("schoolName", res.student.schoolName);
+              document.getElementById("nickname").innerHTML = sessionStorage.getItem("nickname");
+              document.getElementById("studentNumber").innerHTML = sessionStorage.getItem("username");
+              document.getElementById("schoolName").innerHTML = sessionStorage.getItem("schoolName");
+              document.getElementById("majorName").innerHTML = sessionStorage.getItem("majorName");
+              document.getElementById("className").innerHTML = sessionStorage.getItem("className");
+            }
+          });
+        });
+      });
+    </script>
+</body>
+
+</html>

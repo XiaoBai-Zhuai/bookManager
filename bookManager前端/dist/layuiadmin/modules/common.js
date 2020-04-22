@@ -1,0 +1,2 @@
+/** layuiAdmin.std-v1.1.0 LPPL License By http://www.layui.com/admin/ */
+ ;layui.define(function(o){var t=layui.$,e=layui.layer,l=(layui.laytpl,layui.setter,layui.view,layui.admin);l.events.logout=function(){t.ajax({url:"http://localhost:8080/logout",type:"post",headers:{Authorization:sessionStorage.getItem("token"),"Access-Control-Allow-Origin":"*"},success:function(o){e.msg(o.msg),sessionStorage.clear(),location.href="login.html"}})},o("common",{})});

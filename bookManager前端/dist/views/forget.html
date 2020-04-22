@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>忘记密码</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/login.css" media="all">
+</head>
+
+<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+  <div class="layadmin-user-login-main">
+    <div class="layadmin-user-login-box layadmin-user-login-header">
+      <h2>重置密码</h2>
+    </div>
+    <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+
+      <script type="text/html" template>
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-user" for="LAY-user-login-email"></label>
+              <input type="text" name="email" id="LAY-user-login-email" lay-verify="email" placeholder="请输入您的邮箱" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-row">
+                <div class="layui-col-xs7">
+                  <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-smscode"></label>
+                  <input type="text" name="code" id="LAY-user-login-smscode" lay-verify="required" placeholder="邮件验证码" class="layui-input">
+                </div>
+                <div class="layui-col-xs5">
+                  <div style="margin-left: 10px;">
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode">获取验证码</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY_password"></label>
+              <input type="password" name="password" id="LAY_password" lay-verify="pass" placeholder="请输入您的新密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repassword"></label>
+              <input type="password" name="repassword" id="LAY-user-login-repassword" lay-verify="repass" placeholder="请确认您的新密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-forget-submit">保存</button>
+            </div>
+        </script>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="../layuiadmin/layui/layui.js"></script>
+<script>
+  layui.config({
+    base: '../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'user', 'set'], function () {
+    var $ = layui.$
+      , setter = layui.setter
+      , admin = layui.admin
+      , form = layui.form
+      , router = layui.router();
+
+    form.render();
+
+    $(document).on('click', '#LAY-user-getsmscode', function () {
+      var email = document.getElementById("LAY-user-login-email").value;
+      if (email == null || email === '') {
+        return layer.msg("请输入您的邮箱");
+      }
+      var filter = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+      if (!filter.test(email)) {
+        return layer.msg("邮箱格式不正确！");
+      }
+      $.ajax({
+        url: 'http://localhost:8080/forget/getCode',
+        type: 'post',
+        data: JSON.stringify({ 'email': email }),
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (res) {
+          layer.msg(res.msg);
+        },
+        error: function () {
+          layer.msg("发送失败！");
+        }
+      })
+    })
+
+    //找回密码下一步
+    form.on('submit(LAY-user-forget-submit)', function (obj) {
+      var field = obj.field;
+
+      $.ajax({
+        url: 'http://localhost:8080/forget/updatePassword',
+        type: 'post',
+        data: JSON.stringify(field),
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (res) {
+          if (res.msg != '保存成功！') {
+            layer.msg(res.msg, {
+              time: 2000
+            })
+          } else {
+            layer.msg(res.msg, {
+              time: 2000
+            }, function () {
+              location.href = 'login.html';
+            })
+          }
+
+        }
+      });
+
+      return false;
+    });
+
+  });
+</script>
+</body>
+
+</html>
