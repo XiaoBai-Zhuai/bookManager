@@ -4,10 +4,12 @@ package com.gydx.bookManager.mapper;
 import com.gydx.bookManager.pojo.UserInfoPojo;
 import com.gydx.bookManager.entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
+@Repository
 public interface UserMapper extends Mapper<User> {
 
     int updateUser(UserInfoPojo userInfoPojo);

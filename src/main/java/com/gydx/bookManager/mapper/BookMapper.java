@@ -4,10 +4,12 @@ import com.gydx.bookManager.entity.MajorCourse;
 import com.gydx.bookManager.pojo.BookPageInfoPojo;
 import com.gydx.bookManager.entity.Book;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
+@Repository
 public interface BookMapper extends Mapper<Book> {
     List<Book> selectBookList(@Param("page") Integer page,@Param("limit") Integer limit);
 

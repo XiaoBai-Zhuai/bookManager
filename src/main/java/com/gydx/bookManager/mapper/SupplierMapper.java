@@ -2,10 +2,12 @@ package com.gydx.bookManager.mapper;
 
 import com.gydx.bookManager.entity.Supplier;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
+@Repository
 public interface SupplierMapper extends Mapper<Supplier> {
     String selectNameById(@Param("supplierId") int supplierId);
 

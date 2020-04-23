@@ -2,10 +2,12 @@ package com.gydx.bookManager.mapper;
 
 import com.gydx.bookManager.entity.ClassBook;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
+@Repository
 public interface ClassBookMapper extends Mapper<ClassBook> {
     List<ClassBook> selectClassBookListByPage(@Param("page") Integer page, @Param("limit") Integer limit);
 

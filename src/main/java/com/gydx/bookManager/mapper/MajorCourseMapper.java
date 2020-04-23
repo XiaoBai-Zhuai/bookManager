@@ -2,10 +2,12 @@ package com.gydx.bookManager.mapper;
 
 import com.gydx.bookManager.entity.MajorCourse;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
+@Repository
 public interface MajorCourseMapper extends Mapper<MajorCourse> {
     int updateMajorIdByCourseId(@Param("majorName") String majorName, @Param("courseId") Integer courseId);
 
