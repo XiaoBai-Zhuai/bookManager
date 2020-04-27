@@ -25,6 +25,8 @@ public class Student implements Serializable {
     private Integer schoolId;
     @Transient
     private String schoolName;
+    @Column
+    private Integer status;
 
     public Integer getId() {
         return id;
@@ -96,5 +98,13 @@ public class Student implements Serializable {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

@@ -6,6 +6,7 @@ public class UserInfoPojo {
     private String nickname;
     private Character sex;
     private String email;
+    private String tel;
 
     public String getUsername() {
         return username;
@@ -37,5 +38,13 @@ public class UserInfoPojo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }

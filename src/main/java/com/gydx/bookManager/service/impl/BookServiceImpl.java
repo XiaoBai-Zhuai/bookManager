@@ -28,6 +28,12 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private MajorCourseMapper majorCourseMapper;
 
+    /**
+     * 教材列表分页查询
+     * @param page
+     * @param limit
+     * @return
+     */
     @Override
     public List<Book> getBookList(Integer page, Integer limit) {
         List<Book> books = null;
@@ -39,11 +45,20 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
+    /**
+     * 获取全部教材列表
+     * @return
+     */
     @Override
     public List<Book> getAllBooks() {
         return bookMapper.selectAll();
     }
 
+    /**
+     * 根据教材id删除某本教材
+     * @param id
+     * @return
+     */
     @Override
     public int deleteOneBookById(Integer id) {
         Book book = new Book();
@@ -51,6 +66,11 @@ public class BookServiceImpl implements BookService {
         return bookMapper.delete(book);
     }
 
+    /**
+     * 修改教材信息
+     * @param book
+     * @return
+     */
     @Override
     public int updateBookInfo(Book book) {
         int i = 0;
@@ -62,6 +82,11 @@ public class BookServiceImpl implements BookService {
         return i;
     }
 
+    /**
+     * 批量删除教材
+     * @param books
+     * @return
+     */
     @Override
     public int deleteBooks(List<Book> books) {
         int i = 0;
@@ -73,11 +98,21 @@ public class BookServiceImpl implements BookService {
         return i;
     }
 
+    /**
+     * 添加教材
+     * @param book
+     * @return
+     */
     @Override
     public int addBook(Book book) {
         return bookMapper.insertSelective(book);
     }
 
+    /**
+     * 根据条件分页查询出教材
+     * @param bookPageInfoPojo
+     * @return
+     */
     @Override
     public List<Book> getBookListByCondition(BookPageInfoPojo bookPageInfoPojo) {
         bookPageInfoPojo.setPage((bookPageInfoPojo.getPage() - 1) * bookPageInfoPojo.getLimit());
@@ -90,6 +125,11 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
+    /**
+     * 根据条件查询出所有的教材
+     * @param bookPageInfoPojo
+     * @return
+     */
     @Override
     public List<Book> getAllBooksByCondition(BookPageInfoPojo bookPageInfoPojo) {
         Book book = new Book();
@@ -98,6 +138,11 @@ public class BookServiceImpl implements BookService {
         return bookMapper.select(book);
     }
 
+    /**
+     * 根据专业名获取该专业下应该用到的教材，在班级负责人提交教材领取情况时使用
+     * @param majorName
+     * @return
+     */
     @Override
     public List<Book> getBookListByMajor(String majorName) {
         Integer majorId = 0;

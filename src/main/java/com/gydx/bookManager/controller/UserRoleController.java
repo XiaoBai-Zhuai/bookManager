@@ -2,6 +2,7 @@ package com.gydx.bookManager.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gydx.bookManager.entity.User;
+import com.gydx.bookManager.pojo.ReceiveData;
 import com.gydx.bookManager.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,14 @@ public class UserRoleController {
     @ResponseBody
     public String addUserRole(@RequestBody User user) {
         JSONObject jsonObject = new JSONObject();
-        userRoleService.addUserRole(user);
+        int i = userRoleService.addUserRole(user);
+        if (i == 0) {
+            jsonObject.put("msg", "该班级负责人已存在！");
+            return jsonObject.toJSONString();
+        } else if (i == 2) {
+            jsonObject.put("msg", "该学院负责人已存在！");
+            return jsonObject.toJSONString();
+        }
         jsonObject.put("msg", "添加成功");
         return jsonObject.toJSONString();
     }

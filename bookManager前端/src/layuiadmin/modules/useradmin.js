@@ -78,11 +78,11 @@ layui.define(['table', 'form'], function (exports) {
 
     } else if (obj.event === 'edit') {
       var tr = $(obj.tr);
-
+      var id = obj.data.id;
       layer.open({
         type: 2
         , title: '编辑用户'
-        , content: '../../../views/user/user/userform.html'
+        , content: '../../../views/user/user/updateUserform.html'
         , maxmin: true
         , area: ['500px', '450px']
         , btn: ['确定', '取消']
@@ -95,6 +95,10 @@ layui.define(['table', 'form'], function (exports) {
           iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
             var field = data.field; //获取提交的字段
 
+            field['id'] = id;
+
+            console.log(field);
+
             $.ajax({
               url: 'http://localhost:8080/updateUserRole',
               type: 'post',
@@ -102,12 +106,12 @@ layui.define(['table', 'form'], function (exports) {
                 'Authorization': sessionStorage.getItem("token"),
                 'Access-Control-Allow-Origin': '*'
               },
-              data: JSON.stringify(data),
+              data: JSON.stringify(field),
               dataType: 'json',
               contentType: 'application/json;charset=utf-8',
               success: function(res) {
                 layer.msg(res.msg);
-                table.reload('LAY-user-front-submit'); //数据刷新
+                table.reload('LAY-user-manage'); //数据刷新
                 layer.close(index); //关闭弹层
               },
               error: function(res) {

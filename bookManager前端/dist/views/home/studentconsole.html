@@ -141,63 +141,58 @@
       }).extend({
         index: 'lib/index' //主入口模块
       }).use(['index', 'console', 'table'], function () {
-        var $ = layui.$
-          , admin = layui.admin
-          , element = layui.element
-          , layer = layui.layer
-          , laydate = layui.laydate
-          , form = layui.form
-          , table = layui.table;
+        var $ = layui.$,
+          admin = layui.admin,
+          element = layui.element,
+          layer = layui.layer,
+          laydate = layui.laydate,
+          form = layui.form,
+          table = layui.table;
 
         table.render({
-          elem: '#test-table-toolbar'
-          , url: 'http://localhost:8080/getStudyPlanList'
-          , headers: {
+          elem: '#test-table-toolbar',
+          title: '教学计划',
+          url: 'http://localhost:8080/getStudyPlanList',
+          headers: {
             'Authorization': sessionStorage.getItem("token"),
             'Access-Control-Allow-Origin': '*'
-          }
-          , where: {
-            majorName: sessionStorage.getItem("majorName"),
-          }
-          , title: '教学计划'
-          , cols: [[
-            { field: 'schoolName', title: '学院名' }
-            , { field: 'majorName', title: '专业名' }
-            , { field: 'courseName', title: '课程名' }
-            , { field: 'bookName', title: '教材名' }
-            , { field: 'hour', title: '课时' }
-          ]]
+          },
+          where: {
+            majorName: sessionStorage.getItem("majorName")
+          },
+          cols: [
+            [{
+              field: 'schoolName',
+              title: '学院名'
+            }, {
+              field: 'majorName',
+              title: '专业名'
+            }, {
+              field: 'courseName',
+              title: '课程名'
+            }, {
+              field: 'bookName',
+              title: '教材名'
+            }, {
+              field: 'hour',
+              title: '课时'
+            }]
+          ]
         });
 
+        layer.ready(function() {
+          document.getElementById("nickname").innerHTML = sessionStorage.getItem(
+            "nickname");
+          document.getElementById("studentNumber").innerHTML = sessionStorage
+          .getItem("username");
+          document.getElementById("schoolName").innerHTML = sessionStorage
+          .getItem("schoolName");
+          document.getElementById("majorName").innerHTML = sessionStorage.getItem(
+            "majorName");
+          document.getElementById("className").innerHTML = sessionStorage.getItem(
+            "className");
+        })
 
-        layer.ready(function () {
-          var username = sessionStorage.getItem("username");
-          var data = { "username": username };
-          $.ajax({
-            url: 'http://localhost:8080/getStudentInfo',
-            type: 'post',
-            headers: {
-              'Authorization': sessionStorage.getItem("token"),
-              'Access-Control-Allow-Origin': '*'
-            },
-            data: JSON.stringify(data),
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            success: function (res) {
-              sessionStorage.setItem("classId", res.student.classId);
-              sessionStorage.setItem("className", res.student.className);
-              sessionStorage.setItem("majorId", res.student.majorId);
-              sessionStorage.setItem("majorName", res.student.majorName);
-              sessionStorage.setItem("schoolId", res.student.schoolId);
-              sessionStorage.setItem("schoolName", res.student.schoolName);
-              document.getElementById("nickname").innerHTML = sessionStorage.getItem("nickname");
-              document.getElementById("studentNumber").innerHTML = sessionStorage.getItem("username");
-              document.getElementById("schoolName").innerHTML = sessionStorage.getItem("schoolName");
-              document.getElementById("majorName").innerHTML = sessionStorage.getItem("majorName");
-              document.getElementById("className").innerHTML = sessionStorage.getItem("className");
-            }
-          });
-        });
       });
     </script>
 </body>

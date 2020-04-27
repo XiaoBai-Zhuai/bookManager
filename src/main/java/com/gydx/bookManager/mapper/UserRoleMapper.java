@@ -10,4 +10,8 @@ public interface UserRoleMapper extends Mapper<UserRole> {
     int insertOne(User user);
 
     int updateUserIdByRoleName(User user);
+
+    int updateByClass(Integer userId);
+
+    int updateByStudent(UserRole ur);
 }

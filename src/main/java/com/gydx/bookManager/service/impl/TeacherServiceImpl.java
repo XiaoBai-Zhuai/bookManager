@@ -15,6 +15,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private SchoolMapper schoolMapper;
 
+    /**
+     * 根据用户名获取教师信息
+     * @param username
+     * @return
+     */
     @Override
     public Teacher getTeacherInfo(String username) {
         Teacher t = new Teacher();

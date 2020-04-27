@@ -8,44 +8,62 @@
  */
 
 layui.define(['form', 'upload'], function (exports) {
-  var $ = layui.$
-    , layer = layui.layer
-    , laytpl = layui.laytpl
-    , setter = layui.setter
-    , view = layui.view
-    , admin = layui.admin
-    , form = layui.form
-    , upload = layui.upload;
+  var $ = layui.$,
+    layer = layui.layer,
+    laytpl = layui.laytpl,
+    setter = layui.setter,
+    view = layui.view,
+    admin = layui.admin,
+    form = layui.form,
+    upload = layui.upload;
 
   var $body = $('body');
 
   //自定义验证
   form.verify({
     nickname: function (value, item) { //value：表单的值、item：表单的DOM对象
-      if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-        return '用户名不能有特殊字符';
+        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+          return '用户名不能有特殊字符';
+        }
+        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+          return '用户名首尾不能出现下划线\'_\'';
+        }
+        if (/^\d+\d+\d$/.test(value)) {
+          return '用户名不能全为数字';
+        }
       }
-      if (/(^\_)|(\__)|(\_+$)/.test(value)) {
-        return '用户名首尾不能出现下划线\'_\'';
+
+      //我们既支持上述函数式的方式，也支持下述数组的形式
+      //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+      ,
+    pass: [
+        /^[\S]{6,16}$/, '密码必须6到16位，且不能出现空格'
+      ]
+
+      //确认密码
+      ,
+    repass: function (value) {
+        if (value !== $('#LAY_password').val()) {
+          return '两次密码输入不一致';
+        }
       }
-      if (/^\d+\d+\d$/.test(value)) {
-        return '用户名不能全为数字';
+
+      ,
+    mail: function (value) {
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        if (value != '' && !reg.test(value)) {
+          return '请输入正确的邮箱格式';
+        }
       }
+
+      ,
+    tel: function (value) {
+      var reg = /^1[3456789]\d{9}$/;
+      if (value != '' && !reg.test(value))
+        return '请输入正确的电话号码';
     }
 
-    //我们既支持上述函数式的方式，也支持下述数组的形式
-    //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
-    , pass: [
-      /^[\S]{6,16}$/
-      , '密码必须6到16位，且不能出现空格'
-    ]
 
-    //确认密码
-    , repass: function (value) {
-      if (value !== $('#LAY_password').val()) {
-        return '两次密码输入不一致';
-      }
-    }
   });
 
   //网站设置
@@ -103,13 +121,15 @@ layui.define(['form', 'upload'], function (exports) {
   //上传头像
   var avatarSrc = $('#LAY_avatarSrc');
   upload.render({
-    url: '/api/upload/'
-    , elem: '#LAY_avatarUpload'
-    , done: function (res) {
+    url: '/api/upload/',
+    elem: '#LAY_avatarUpload',
+    done: function (res) {
       if (res.status == 0) {
         avatarSrc.val(res.url);
       } else {
-        layer.msg(res.msg, { icon: 5 });
+        layer.msg(res.msg, {
+          icon: 5
+        });
       }
     }
   });
@@ -120,13 +140,14 @@ layui.define(['form', 'upload'], function (exports) {
     layer.photos({
       photos: {
         "title": "查看头像" //相册标题
-        , "data": [{
+          ,
+        "data": [{
           "src": src //原图地址
         }]
-      }
-      , shade: 0.01
-      , closeBtn: 1
-      , anim: 5
+      },
+      shade: 0.01,
+      closeBtn: 1,
+      anim: 5
     });
   };
 
@@ -145,13 +166,12 @@ layui.define(['form', 'upload'], function (exports) {
       data: JSON.stringify(field),
       dataType: 'json',
       contentType: 'application/json;charse=utf-8',
-      success: function(res) {
-        layer.msg(res.msg, {
-        }, function() {
+      success: function (res) {
+        layer.msg(res.msg, {}, function () {
           location.reload();
         });
       },
-      error: function() {
+      error: function () {
         layer.msg("修改失败");
       }
     })

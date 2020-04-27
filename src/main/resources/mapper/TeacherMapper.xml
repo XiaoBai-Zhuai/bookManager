@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.TeacherMapper">
+    <update id="updateSchoolIdById" parameterType="integer">
+        update teacher set school_id = #{schoolId} where id = #{teacherId};
+    </update>
+</mapper>

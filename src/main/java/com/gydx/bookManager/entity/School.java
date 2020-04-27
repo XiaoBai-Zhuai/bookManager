@@ -1,9 +1,6 @@
 package com.gydx.bookManager.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 public class School implements Serializable {
@@ -15,9 +12,13 @@ public class School implements Serializable {
     @Column
     private String name;
     @Column
+    private Integer userId;
+    @Transient
+    private String principalUser;
+    @Transient
     private String principalName;
-    @Column
-    private String principalTel;
+    @Transient
+    private String principalNumber;
 
     public Integer getId() {
         return id;
@@ -35,6 +36,22 @@ public class School implements Serializable {
         this.name = name;
     }
 
+    public String getPrincipalUser() {
+        return principalUser;
+    }
+
+    public void setPrincipalUser(String principalUser) {
+        this.principalUser = principalUser;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public String getPrincipalName() {
         return principalName;
     }
@@ -43,11 +60,11 @@ public class School implements Serializable {
         this.principalName = principalName;
     }
 
-    public String getPrincipalTel() {
-        return principalTel;
+    public String getPrincipalNumber() {
+        return principalNumber;
     }
 
-    public void setPrincipalTel(String principalTel) {
-        this.principalTel = principalTel;
+    public void setPrincipalNumber(String principalNumber) {
+        this.principalNumber = principalNumber;
     }
 }

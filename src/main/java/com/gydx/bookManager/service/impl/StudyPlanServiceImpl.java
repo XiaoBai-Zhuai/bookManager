@@ -31,6 +31,11 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     @Autowired
     private MajorCourseMapper majorCourseMapper;
 
+    /**
+     * 将查询出来的教学计划列表添加上专业、班级、教材、学院等信息
+     * @param majorCourses
+     * @return
+     */
     public List<MajorCourse> getStudyPlan(List<MajorCourse> majorCourses) {
         for (MajorCourse majorCourse : majorCourses) {
             Integer courseId = majorCourse.getCourseId();
@@ -50,6 +55,12 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return majorCourses;
     }
 
+    /**
+     * 分页查询教学计划列表
+     * @param page
+     * @param limit
+     * @return
+     */
     @Override
     public List<MajorCourse> getStudyPlanListByPage(Integer page, Integer limit) {
         page = (page - 1) * limit;
@@ -63,11 +74,24 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return majorCourses;
     }
 
+    /**
+     * 查询出所有的教学计划列表
+     * @return
+     */
     @Override
     public List<MajorCourse> getAllStudyPlanList() {
         return majorCourseMapper.selectAll();
     }
 
+    /**
+     * 根据条件分页查询出教学计划列表
+     * @param page
+     * @param limit
+     * @param schoolName
+     * @param majorName
+     * @param courseName
+     * @return
+     */
     @Override
     public List<MajorCourse> getStudyPlanListByPageAndCondition(Integer page, Integer limit, String schoolName, String majorName, String courseName) {
         page = (page - 1) * limit;
@@ -81,16 +105,33 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return MajorCourse;
     }
 
+    /**
+     * 根据条件查询出全部的教学计划列表
+     * @param schoolName
+     * @param majorName
+     * @param courseName
+     * @return
+     */
     @Override
     public List<MajorCourse> getAllStudyPlanListByCondition(String schoolName, String majorName, String courseName) {
         return majorCourseMapper.selectAllByCondition(schoolName, majorName, courseName);
     }
 
+    /**
+     * 删除某条教学计划，只要删除major_course表中的对应关系即可
+     * @param majorCourse
+     * @return
+     */
     @Override
     public int deleteOneStudyPlan(MajorCourse majorCourse) {
         return majorCourseMapper.delete(majorCourse);
     }
 
+    /**
+     * 修改教学计划信息
+     * @param majorCourse
+     * @return
+     */
     @Transactional
     @Override
     public int updateStudyPlan(MajorCourse majorCourse) {
@@ -111,12 +152,22 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return 1;
     }
 
+    /**
+     * 批量删除教学计划
+     * @param majorCourses
+     * @return
+     */
     @Override
     public int deleteStudyPlans(List<MajorCourse> majorCourses) {
         majorCourseMapper.deleteSome(majorCourses);
         return 1;
     }
 
+    /**
+     * 添加新的教学计划
+     * @param majorCourse
+     * @return
+     */
     @Transactional
     @Override
     public int addStudyPlan(MajorCourse majorCourse) {
@@ -137,6 +188,11 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return 1;
     }
 
+    /**
+     * 根据专业名获取该专业的教学计划
+     * @param majorName
+     * @return
+     */
     @Override
     public List<MajorCourse> getStudyPlan(String majorName) {
         Integer majorId = majorMapper.selectIdByName(majorName);

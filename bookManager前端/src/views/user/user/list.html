@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>layuiAdmin 网站用户</title>
+  <title>用户管理</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport"
@@ -21,7 +21,7 @@
           <div class="layui-inline">
             <label class="layui-form-label">用户角色</label>
             <div class="layui-input-block">
-              <select name="rolename" lay-filter="LAY-user-adminrole-type">
+              <select name="roleName" lay-filter="LAY-user-adminrole-type">
                 <option value="">全部角色</option>
                 <option value="管理员">管理员</option>
                 <option value="学院负责人">学院负责人</option>
@@ -163,7 +163,7 @@
                   contentType: 'application/json;charset:utf-8',
                   success: function (res) {
                     layer.msg(res.msg);
-                    table.reload('LAY-user-front-submit'); //数据刷新
+                    table.reload('LAY-user-manage'); //数据刷新
                     layer.close(index); //关闭弹层
                   },
                   error: function(res) {

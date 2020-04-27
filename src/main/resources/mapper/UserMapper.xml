@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gydx.bookManager.mapper.UserMapper">
     <select id="selectByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.User">
-        select * from user
+        select * from user where status = 1
         limit #{page}, #{limit};
     </select>
     <select id="selectByPageAndCondition" resultType="com.gydx.bookManager.entity.User">
@@ -12,7 +12,7 @@
         where
             <trim prefixOverrides="and|or">
                 <if test="roleName != null and roleName != ''">
-                    and id IN (select user_id where role_id = (select id from role where name = #{roleName}))
+                    and id IN (select user_id from user_role where role_id = (select id from role where name = #{roleName}))
                 </if>
                 <if test="username != null and username != ''">
                     and username like concat('%', #{username}, '%')
@@ -26,15 +26,19 @@
                 <if test="sex != null and sex != ''">
                     and sex = #{sex}
                 </if>
+                and status = 1
             </trim>
         limit #{page}, #{limit};
+    </select>
+    <select id="selectAllUserList" resultType="com.gydx.bookManager.entity.User">
+        select * from user where status = 1;
     </select>
     <select id="selectAllByCondition" resultType="com.gydx.bookManager.entity.User">
         select * from user
         where
         <trim prefixOverrides="and|or">
             <if test="roleName != null and roleName != ''">
-                and id IN (select user_id where role_id = (select id from role where name = #{roleName}))
+                and id IN (select user_id from user_role where role_id = (select id from role where name = #{roleName}))
             </if>
             <if test="username != null and username != ''">
                 and username like concat('%', #{username}, '%')
@@ -48,7 +52,11 @@
             <if test="sex != null and sex != ''">
                 and sex = #{sex}
             </if>
+            and status = 1
         </trim>
+    </select>
+    <select id="selectOneUser" parameterType="com.gydx.bookManager.entity.User" resultType="com.gydx.bookManager.entity.User">
+        select * from user where username = #{username} and status = 1;
     </select>
     <update id="updateUser" parameterType="com.gydx.bookManager.pojo.UserInfoPojo">
         UPDATE USER u
@@ -57,15 +65,39 @@
          u.email = #{email};
     </update>
     <update id="updateOneUser" parameterType="com.gydx.bookManager.entity.User">
-        update user set username = #{username}, email = #{email}, nickname = #{nickname}, sex = #{sex};
+        update user set
+        <if test="nickname != null and nickname != ''">
+            nickname = #{nickname},
+        </if>
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        <if test="tel != null and tel != ''">
+            tel = #{tel},
+        </if>
+        sex = #{sex}
+        where id = #{id};
     </update>
     <update id="updatePassword">
         update user set password = #{password} where id = #{id};
     </update>
-    <delete id="deleteUsers" parameterType="com.gydx.bookManager.entity.User">
-        delete from user where id =
+    <update id="deleteUsers" parameterType="com.gydx.bookManager.entity.User">
+        update user set status = 0
+        where id =
         <foreach collection="users" item="user" index="index" open="(" close=")" separator=",">
             #{user.id}
         </foreach>
-    </delete>
+    </update>
+    <update id="deleteOneUser" parameterType="com.gydx.bookManager.entity.User">
+        update user set status = 0 where id = #{id};
+    </update>
+    <update id="updateOneStatus" parameterType="com.gydx.bookManager.entity.User">
+        update user set status = 1 where id = #{id};
+    </update>
+    <update id="updateUserByUsername" parameterType="com.gydx.bookManager.entity.User">
+        update user set name = #{nickname}, status = 1 where username = #{username};
+    </update>
+    <update id="updateOneStatusByUsername" parameterType="string">
+        update user set status = 1 where username = #{number};
+    </update>
 </mapper>

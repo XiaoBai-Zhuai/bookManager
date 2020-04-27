@@ -16,14 +16,24 @@ public class UserServiceImpl implements UserService {
     @Autowired
     MD5Util md5Util;
 
+    /**
+     * 根据用户名获取用户信息
+     * @param username
+     * @return
+     */
     @Override
     public User getUserByUsername(String username) {
         User record = new User();
         record.setUsername(username);
-        User user = userMapper.selectOne(record);
+        User user = userMapper.selectOneUser(record);
         return user;
     }
 
+    /**
+     * 根据用户id获取用户信息
+     * @param userId
+     * @return
+     */
     @Override
     public User getUserByUserId(Integer userId) {
         User record = new User();
@@ -32,6 +42,11 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    /**
+     * 更新用户信息
+     * @param userInfoPojo
+     * @return
+     */
     @Override
     public User updateUser(UserInfoPojo userInfoPojo) {
         userMapper.updateUser(userInfoPojo);
@@ -41,6 +56,13 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    /**
+     * 修改用户密码
+     * @param oldPassword
+     * @param password
+     * @param username
+     * @return
+     */
     @Override
     public int updatePassword(String oldPassword, String password, String username) {
         User t = new User();

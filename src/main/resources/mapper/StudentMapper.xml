@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gydx.bookManager.mapper.StudentMapper">
+    <select id="selectAllStudentList" resultType="com.gydx.bookManager.entity.Student">
+        select * from student where status = 1;
+    </select>
+    <update id="updateWorkPlaceById" parameterType="integer">
+        update student set class_id = #{classId}, major_id = #{majorId}, school_id = #{schoolId}
+        where id = #{studentId};
+    </update>
+    <select id="findStudentListByPage" parameterType="integer"
+            resultType="com.gydx.bookManager.entity.Student">
+        select * from student where status = 1
+        limit #{page}, #{limit};
+    </select>
+    <select id="findStudentListByPageAndCondition" parameterType="com.gydx.bookManager.pojo.StudentInfoPojo"
+            resultType="com.gydx.bookManager.entity.Student">
+        select * from student where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="number != null and number != ''">
+                and number like concat('%', #{number}, '%')
+            </if>
+            <if test="className != null and className != ''">
+                and class_id IN (select id from class where name like concat('%', #{className}, '%'))
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id IN (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and school_id IN (select id from school where name like concat('%', #{schoolName}, '%'))
+            </if>
+            and status = 1
+        </trim>
+        limit #{page}, #{limit}
+    </select>
+    <select id="findAllStudentListByCondition" parameterType="com.gydx.bookManager.pojo.StudentInfoPojo"
+            resultType="com.gydx.bookManager.entity.Student">
+        select * from student where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="number != null and number != ''">
+                and number like concat('%', #{number}, '%')
+            </if>
+            <if test="className != null and className != ''">
+                and class_id IN (select id from class where name like concat('%', #{className}, '%'))
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id IN (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and school_id IN (select id from school where name like concat('%', #{schoolName}, '%'))
+            </if>
+            and status = 1
+        </trim>
+    </select>
+    <update id="updateStudent" parameterType="com.gydx.bookManager.entity.Student">
+        update stduent set name = #{name}, number = #{number},
+        class_id = (select id from class where name like concat('%', #{className}, '%')),
+        major_id = (select id from major where id = (select id from class where name like concat('%', #{className}, '%'))),
+        school_id = (select id from school where id = (select id from major where id = (select id from class where name like concat('%', #{className}, '%'))))
+        where id = #{id};
+    </update>
+    <update id="deleteOneStudent" parameterType="com.gydx.bookManager.entity.Student">
+        update student set status = 0 where id = #{id};
+    </update>
+    <update id="updateStatus" parameterType="com.gydx.bookManager.entity.Student">
+        update student set status = 1 where id = #{id};
+    </update>
+    <insert id="addStudent" parameterType="com.gydx.bookManager.entity.Student">
+        insert into student (name, number, class_id, major_id, school_id) value
+        (#{name}, #{number}, #{classId}, #{majorId}, #{schoolId});
+    </insert>
+</mapper>

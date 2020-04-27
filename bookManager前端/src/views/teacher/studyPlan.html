@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>教学计划汇总表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">专业名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="majorName" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">课程名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="courseName" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-studyPlanlist" lay-submit
+                            lay-filter="LAY-studyPlan-front-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+
+                <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form;
+
+            table.render({
+                elem: '#test-table-toolbar',
+                url: 'http://localhost:8080/getStudyPlanList',
+                headers: {
+                    'Authorization': sessionStorage.getItem("token"),
+                    'Access-Control-Allow-Origin': '*'
+                },
+                toolbar: '#test-table-toolbar-toolbarDemo',
+                where: {
+                    schoolName: sessionStorage.getItem("schoolName"),
+                    majorName: '',
+                    courseName: '',
+                    bookName: '',
+                    hour: ''
+                },
+                title: '教学计划汇总表',
+                cols: [
+                    [{
+                        field: 'id',
+                        title: 'ID',
+                        width: 80,
+                        sort: true
+                    }, {
+                        field: 'majorName',
+                        title: '专业名'
+                    }, {
+                        field: 'courseName',
+                        title: '课程名'
+                    }, {
+                        field: 'bookName',
+                        title: '教材名'
+                    }, {
+                        field: 'hour',
+                        title: '课时'
+                    }]
+                ],
+                page: true,
+                groups: 5,
+                limit: 30,
+                height: 'full-130',
+                text: {
+                    none: '无结果'
+                }
+            });
+
+            //监听搜索
+            form.on('submit(LAY-studyPlan-front-search)', function (data) {
+                var field = data.field;
+
+                //执行重载
+                table.reload('test-table-toolbar', {
+                    where: field
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

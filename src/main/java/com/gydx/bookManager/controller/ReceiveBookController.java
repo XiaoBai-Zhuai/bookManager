@@ -21,15 +21,15 @@ public class ReceiveBookController {
 
     @RequestMapping("/getClassBookList")
     @ResponseBody
-    public String getClassBookList(Integer page, Integer limit, String receiveDate, String bookName, String className, Integer bookSum) {
+    public String getClassBookList(Integer page, Integer limit, String receiveDate, String bookName, String className, String schoolName) {
         JSONObject jsonObject = new JSONObject();
         List<ClassBook> classes, classList;
-        if ((receiveDate + bookName + className).equals("")) {
+        if ((receiveDate + bookName + className + schoolName).equals("")) {
             classes = receiveBookService.getClassBookListByPage(page, limit);
             classList = receiveBookService.getAllClassBookList();
         } else {
-            classes = receiveBookService.getClassBookListByPageAndCondition(page, limit, receiveDate, bookName, className);
-            classList = receiveBookService.getAllClassBookListByCondition(receiveDate, bookName, className);
+            classes = receiveBookService.getClassBookListByPageAndCondition(page, limit, receiveDate, bookName, className, schoolName);
+            classList = receiveBookService.getAllClassBookListByCondition(receiveDate, bookName, className, schoolName);
         }
         jsonObject.put("code", 0);
         jsonObject.put("msg", "查询成功");

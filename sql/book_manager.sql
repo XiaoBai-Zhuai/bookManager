@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2020-04-22 10:07:52
+Date: 2020-04-27 16:14:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,10 +33,10 @@ CREATE TABLE `book` (
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES ('1', '《计算机组成原理》', '唐朔飞', '43', '高等教育出版社', '2008-01-01', '8003');
-INSERT INTO `book` VALUES ('2', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2014-01-01', '1397');
+INSERT INTO `book` VALUES ('1', '《计算机组成原理》', '唐朔飞', '43', '高等教育出版社', '2008-01-01', '9042');
+INSERT INTO `book` VALUES ('2', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2014-01-01', '1442');
 INSERT INTO `book` VALUES ('3', '《毛泽东思想和中国特色社会主义理论体系概论》', ' 本书编写组', '25', '高等教育出版社', '2013-01-01', '540');
-INSERT INTO `book` VALUES ('4', '《计算机应用基础》', '姜帆', '42', '武汉理工大学出版社', '2017-09-01', '800');
+INSERT INTO `book` VALUES ('4', '《计算机应用基础》', '姜帆', '42', '武汉理工大学出版社', '2017-09-01', '1200');
 
 -- ----------------------------
 -- Table structure for class
@@ -46,18 +46,21 @@ CREATE TABLE `class` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '班级名',
   `major_id` int(11) NOT NULL COMMENT '专业id',
-  `principal_name` varchar(255) NOT NULL,
-  `principal_tel` varchar(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL COMMENT '班级负责人的用户id',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of class
 -- ----------------------------
-INSERT INTO `class` VALUES ('1', '软件工程1801班', '23', '黑童子', '13245678910');
-INSERT INTO `class` VALUES ('2', '软件工程1802', '23', '白童子', '13245678911');
-INSERT INTO `class` VALUES ('3', '软件工程1803', '23', '鬼使黑', '13245678912');
-INSERT INTO `class` VALUES ('4', '软件工程1804', '23', '鬼使白', '13245678913');
+INSERT INTO `class` VALUES ('1', '软件工程1801', '1', '7', '1');
+INSERT INTO `class` VALUES ('2', '软件工程1802', '1', '8', '1');
+INSERT INTO `class` VALUES ('3', '软件工程1803', '1', '2', '1');
+INSERT INTO `class` VALUES ('4', '软件工程1804', '1', '3', '1');
+INSERT INTO `class` VALUES ('6', '网络工程1802', '2', '6', '1');
+INSERT INTO `class` VALUES ('12', '网络工程1801', '2', '21', '1');
+INSERT INTO `class` VALUES ('15', '信息与计算科学1801', '5', '30', '1');
 
 -- ----------------------------
 -- Table structure for class_book
@@ -70,7 +73,7 @@ CREATE TABLE `class_book` (
   `book_sum` int(11) DEFAULT '0' COMMENT '该班级领了该书的数量',
   `receive_date` date DEFAULT NULL COMMENT '领取日期',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of class_book
@@ -90,6 +93,7 @@ INSERT INTO `class_book` VALUES ('13', '3', '1', '12', '2020-01-03');
 INSERT INTO `class_book` VALUES ('14', '1', '3', '20', '2020-03-20');
 INSERT INTO `class_book` VALUES ('19', '2', '1', '13', '2020-01-03');
 INSERT INTO `class_book` VALUES ('20', '4', '2', '23', '2020-04-01');
+INSERT INTO `class_book` VALUES ('21', '6', '1', '43', '2020-04-09');
 
 -- ----------------------------
 -- Table structure for course
@@ -116,87 +120,19 @@ DROP TABLE IF EXISTS `major`;
 CREATE TABLE `major` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '专业名',
-  `school_id` int(11) NOT NULL COMMENT '学院id',
+  `school_id` int(11) DEFAULT NULL COMMENT '学院id',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of major
 -- ----------------------------
-INSERT INTO `major` VALUES ('1', '包装工程', '2');
-INSERT INTO `major` VALUES ('2', ' 印刷工程', '2');
-INSERT INTO `major` VALUES ('3', ' 高分子材料与工程', '2');
-INSERT INTO `major` VALUES ('4', ' 产品设计', '3');
-INSERT INTO `major` VALUES ('5', '服装与服饰设计', '3');
-INSERT INTO `major` VALUES ('6', ' 艺术设计', '3');
-INSERT INTO `major` VALUES ('7', ' 视觉传达设计', '3');
-INSERT INTO `major` VALUES ('8', ' 动画于数字媒体艺术', '3');
-INSERT INTO `major` VALUES ('9', ' 包装设计', '3');
-INSERT INTO `major` VALUES ('10', ' 环境设计', '3');
-INSERT INTO `major` VALUES ('11', '无机非金属材料', '4');
-INSERT INTO `major` VALUES ('12', ' 粉体材料科学与工程', '4');
-INSERT INTO `major` VALUES ('13', ' 金属材料工程', '4');
-INSERT INTO `major` VALUES ('14', ' 冶金工程', '4');
-INSERT INTO `major` VALUES ('15', ' 道路与桥梁', '5');
-INSERT INTO `major` VALUES ('16', ' 建筑工程', '5');
-INSERT INTO `major` VALUES ('17', ' 建筑环境与能源应用工程', '5');
-INSERT INTO `major` VALUES ('18', ' 给排水科学与工程', '5');
-INSERT INTO `major` VALUES ('19', ' 工程管理', '5');
-INSERT INTO `major` VALUES ('20', ' 城市地下工程', '5');
-INSERT INTO `major` VALUES ('21', ' 计算机科学与技术', '1');
-INSERT INTO `major` VALUES ('22', ' 通信工程', '1');
-INSERT INTO `major` VALUES ('23', ' 软件工程', '1');
-INSERT INTO `major` VALUES ('24', ' 网络工程', '1');
-INSERT INTO `major` VALUES ('25', ' 物联网工程', '1');
-INSERT INTO `major` VALUES ('26', ' 电气工程', '6');
-INSERT INTO `major` VALUES ('27', ' 仪器科学与技术', '6');
-INSERT INTO `major` VALUES ('28', ' 控制科学与工程', '6');
-INSERT INTO `major` VALUES ('29', ' 电子科学与技术', '6');
-INSERT INTO `major` VALUES ('30', ' 电子科学', '7');
-INSERT INTO `major` VALUES ('31', ' 信息工程', '7');
-INSERT INTO `major` VALUES ('32', ' 交通设备与控制工程', '7');
-INSERT INTO `major` VALUES ('33', ' 生物技术', '21');
-INSERT INTO `major` VALUES ('34', ' 生物医学工程', '21');
-INSERT INTO `major` VALUES ('35', ' 应用化学', '21');
-INSERT INTO `major` VALUES ('36', ' 化学工程', '21');
-INSERT INTO `major` VALUES ('37', ' 机械设计制造工程', '22');
-INSERT INTO `major` VALUES ('38', ' 机械电子工程', '22');
-INSERT INTO `major` VALUES ('39', ' 材料成型及控制工程', '22');
-INSERT INTO `major` VALUES ('40', ' 工业设计', '22');
-INSERT INTO `major` VALUES ('41', ' 建筑学', '8');
-INSERT INTO `major` VALUES ('42', ' 城乡规划', '8');
-INSERT INTO `major` VALUES ('43', ' 自然地理与资源环境', '8');
-INSERT INTO `major` VALUES ('44', ' 环境生态工程', '8');
-INSERT INTO `major` VALUES ('45', ' 信息与计算科学', '9');
-INSERT INTO `major` VALUES ('46', ' 应用物理学', '9');
-INSERT INTO `major` VALUES ('47', ' 数学与应用数学', '9');
-INSERT INTO `major` VALUES ('48', ' 工商管理', '10');
-INSERT INTO `major` VALUES ('49', ' 市场营销', '10');
-INSERT INTO `major` VALUES ('50', ' 公共管理', '10');
-INSERT INTO `major` VALUES ('51', ' 信息管理', '10');
-INSERT INTO `major` VALUES ('52', ' 会计学', '11');
-INSERT INTO `major` VALUES ('53', ' 财务管理', '11');
-INSERT INTO `major` VALUES ('54', ' 国际经济与贸易', '11');
-INSERT INTO `major` VALUES ('55', ' 金融工程', '11');
-INSERT INTO `major` VALUES ('56', ' 投资学', '11');
-INSERT INTO `major` VALUES ('57', ' 广告学', '12');
-INSERT INTO `major` VALUES ('58', ' 汉语言文学', '12');
-INSERT INTO `major` VALUES ('59', ' 新闻学', '12');
-INSERT INTO `major` VALUES ('60', ' 戏剧影视文学', '12');
-INSERT INTO `major` VALUES ('61', ' 播音主持与艺术', '12');
-INSERT INTO `major` VALUES ('62', '法学', '13');
-INSERT INTO `major` VALUES ('63', ' 英语', '14');
-INSERT INTO `major` VALUES ('64', ' 日语', '14');
-INSERT INTO `major` VALUES ('65', ' 翻译', '14');
-INSERT INTO `major` VALUES ('66', ' 体育教育', '15');
-INSERT INTO `major` VALUES ('67', ' 社会体育指导与管理', '15');
-INSERT INTO `major` VALUES ('68', ' 运动训练', '15');
-INSERT INTO `major` VALUES ('69', ' 音乐学', '16');
-INSERT INTO `major` VALUES ('70', ' 舞蹈表演', '16');
-INSERT INTO `major` VALUES ('71', '视觉传达设计', '17');
-INSERT INTO `major` VALUES ('72', '会计学', '17');
-INSERT INTO `major` VALUES ('73', ' 市场营销', '17');
-INSERT INTO `major` VALUES ('74', ' 艺术设计', '17');
+INSERT INTO `major` VALUES ('1', '软件工程', '1', '1');
+INSERT INTO `major` VALUES ('2', '网络工程', '1', '1');
+INSERT INTO `major` VALUES ('3', '物联网工程', '1', '1');
+INSERT INTO `major` VALUES ('4', '计算机科学与技术', '1', '0');
+INSERT INTO `major` VALUES ('5', '信息与计算科学', '2', '1');
 
 -- ----------------------------
 -- Table structure for major_course
@@ -212,10 +148,10 @@ CREATE TABLE `major_course` (
 -- ----------------------------
 -- Records of major_course
 -- ----------------------------
-INSERT INTO `major_course` VALUES ('1', '23', '1');
-INSERT INTO `major_course` VALUES ('2', '23', '2');
-INSERT INTO `major_course` VALUES ('3', '24', '1');
-INSERT INTO `major_course` VALUES ('4', '24', '2');
+INSERT INTO `major_course` VALUES ('1', '1', '1');
+INSERT INTO `major_course` VALUES ('2', '1', '2');
+INSERT INTO `major_course` VALUES ('3', '2', '1');
+INSERT INTO `major_course` VALUES ('4', '2', '2');
 
 -- ----------------------------
 -- Table structure for resource
@@ -286,33 +222,16 @@ DROP TABLE IF EXISTS `school`;
 CREATE TABLE `school` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `principal_name` varchar(255) NOT NULL,
-  `principal_tel` varchar(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL COMMENT '学院负责人的用户id',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of school
 -- ----------------------------
-INSERT INTO `school` VALUES ('1', '计算机学院', '不知火', '12345678910');
-INSERT INTO `school` VALUES ('2', '包装与材料工程学院', '茨木童子', '12345678911');
-INSERT INTO `school` VALUES ('3', '包装设计艺术学院', '酒吞童子', '12345678912');
-INSERT INTO `school` VALUES ('4', '冶金与材料工程学院', '鬼童丸', '12345678913');
-INSERT INTO `school` VALUES ('5', '土木工程学院', '八岐大蛇', '12345678914');
-INSERT INTO `school` VALUES ('6', '电气与信息工程学院', '彼岸花', '12345678915');
-INSERT INTO `school` VALUES ('7', '交通工程学院', '雪童子', '12345678916');
-INSERT INTO `school` VALUES ('8', '城市与环境学院', '大天狗', '12345678917');
-INSERT INTO `school` VALUES ('9', '理学院', '白藏主', '12345678918');
-INSERT INTO `school` VALUES ('10', '商学院', ' 阎魔', '12345678919');
-INSERT INTO `school` VALUES ('11', ' 经济与贸易学院', ' 两面佛', '12345678920');
-INSERT INTO `school` VALUES ('12', ' 文学与新闻传播学院', ' 鬼切', '12345678921');
-INSERT INTO `school` VALUES ('13', ' 法学院', ' 辉夜姬', '12345678922');
-INSERT INTO `school` VALUES ('14', ' 外国语学院', '青行灯', '12345678923');
-INSERT INTO `school` VALUES ('15', ' 体育学院', ' 玉藻前', '12345678924');
-INSERT INTO `school` VALUES ('16', ' 音乐学院', ' 荒', '12345678925');
-INSERT INTO `school` VALUES ('17', ' 国际学院', '面灵气', '12345678926');
-INSERT INTO `school` VALUES ('21', ' 生命科学与化学学院', '大岳丸', '12345678930');
-INSERT INTO `school` VALUES ('22', '机械工程学院', '缘结神', '12345678931');
+INSERT INTO `school` VALUES ('1', '计算机学院', '13', '1');
+INSERT INTO `school` VALUES ('2', '理学院', '14', '1');
 
 -- ----------------------------
 -- Table structure for stockin_book_supplier
@@ -400,20 +319,27 @@ CREATE TABLE `student` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '学生姓名(跟登录的昵称相同)',
   `number` varchar(255) NOT NULL COMMENT '学生学号（与登录用户名相同）',
-  `class_id` int(11) NOT NULL COMMENT '班级id',
-  `major_id` int(11) NOT NULL COMMENT '专业id',
-  `school_id` int(11) NOT NULL COMMENT '学院id',
+  `class_id` int(11) DEFAULT NULL COMMENT '班级id',
+  `major_id` int(11) DEFAULT NULL COMMENT '专业id',
+  `school_id` int(11) DEFAULT NULL COMMENT '学院id',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES ('1', '雨女', '18408001003', '4', '23', '1');
-INSERT INTO `student` VALUES ('2', ' 河童', '18408001004', '4', '23', '1');
-INSERT INTO `student` VALUES ('3', ' 座敷童子', '18408001005', '4', '23', '1');
-INSERT INTO `student` VALUES ('4', '鬼使黑', '18408001006', '4', '23', '1');
-INSERT INTO `student` VALUES ('5', ' 黑童子', '18408001007', '1', '23', '1');
+INSERT INTO `student` VALUES ('1', '雨女', '18408001003', '3', '1', '1', '1');
+INSERT INTO `student` VALUES ('2', '河童', '18408001004', '2', '1', '1', '1');
+INSERT INTO `student` VALUES ('3', '座敷童子', '18408001005', '4', '1', '1', '0');
+INSERT INTO `student` VALUES ('4', '鬼使黑', '18408001006', '4', '1', '1', '1');
+INSERT INTO `student` VALUES ('5', '黑童子', '18408001007', '1', '1', '1', '1');
+INSERT INTO `student` VALUES ('6', '久次良', '18408001005', '6', '2', '1', '1');
+INSERT INTO `student` VALUES ('7', '桃花妖', '18408000101', '12', '2', '1', '1');
+INSERT INTO `student` VALUES ('9', '白童子', '18408000202', '1', '1', '1', '1');
+INSERT INTO `student` VALUES ('10', '孟婆', '18408001011', '4', '1', '1', '0');
+INSERT INTO `student` VALUES ('12', '金鱼姬', '18408000910', '6', '2', '1', '1');
+INSERT INTO `student` VALUES ('13', '小松丸', '18408001212', '15', '5', '2', '1');
 
 -- ----------------------------
 -- Table structure for supplier
@@ -448,16 +374,21 @@ CREATE TABLE `teacher` (
   `number` varchar(255) NOT NULL COMMENT '教师工号',
   `school_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of teacher
 -- ----------------------------
 INSERT INTO `teacher` VALUES ('1', '不知火', '1000000001', '1');
-INSERT INTO `teacher` VALUES ('2', '茨木童子', '1000000002', '2');
 INSERT INTO `teacher` VALUES ('3', '酒吞童子', '1000000003', '3');
 INSERT INTO `teacher` VALUES ('4', '鬼童丸', '1000000004', '4');
 INSERT INTO `teacher` VALUES ('5', '八岐大蛇', '1000000005', '5');
+INSERT INTO `teacher` VALUES ('6', '不知火', '10000002', '1');
+INSERT INTO `teacher` VALUES ('7', '不知火', '10002', '1');
+INSERT INTO `teacher` VALUES ('8', '不知火', '1000000000001', '1');
+INSERT INTO `teacher` VALUES ('9', '不知火', '1000003', '1');
+INSERT INTO `teacher` VALUES ('10', '不知火', '1000000004', '1');
+INSERT INTO `teacher` VALUES ('11', '茨木童子', '1000000002', '2');
 
 -- ----------------------------
 -- Table structure for user
@@ -471,18 +402,32 @@ CREATE TABLE `user` (
   `salt` varchar(50) NOT NULL,
   `email` varchar(255) DEFAULT '' COMMENT '用户邮箱',
   `sex` char(1) DEFAULT '男' COMMENT '性别',
+  `tel` varchar(255) DEFAULT NULL COMMENT '用户电话号码',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'zhang', '195d91be1e3ba6f1c857d46f24c5a454', '李四', 'zhang', '123@qq.com', '男');
-INSERT INTO `user` VALUES ('2', '18408001003', '93c50021c6fb7e1732efc968be28a610', '雨女', '18408001003', '134@qq.com', '女');
-INSERT INTO `user` VALUES ('3', '18408001006', '9c60fcb6404567d6dc4a6f5b08984b23', '鬼使黑', '18408001006', '124@qq.com', '男');
-INSERT INTO `user` VALUES ('4', '1000000001', 'a8d8ab10b32f1ab8017b7013b030e35b', '不知火', '1000000001', '111@qq.com', '女');
-INSERT INTO `user` VALUES ('5', '1000000002', 'af21754394ef0b1cc185a658764c12fe', '茨木童子', '1000000002', '112@qq.com', '男');
-INSERT INTO `user` VALUES ('6', '18408001005', '1774b2bf6a1f5d6793906bed7669ae14', '久次良', '18408001005', '1050367616@qq.com', '女');
+INSERT INTO `user` VALUES ('1', 'zhang', '195d91be1e3ba6f1c857d46f24c5a454', '李四', 'zhang', '123@qq.com', '男', '12323232323', '1');
+INSERT INTO `user` VALUES ('2', '18408001003', '93c50021c6fb7e1732efc968be28a610', '雨女', '18408001003', '134@qq.com', '女', '12424242424', '1');
+INSERT INTO `user` VALUES ('3', '18408001006', '9c60fcb6404567d6dc4a6f5b08984b23', '鬼使黑', '18408001006', '124@qq.com', '男', '13245678912', '1');
+INSERT INTO `user` VALUES ('4', '1000000001', 'a8d8ab10b32f1ab8017b7013b030e35b', '不知火', '1000000001', '111@qq.com', '女', '12525252525', '1');
+INSERT INTO `user` VALUES ('6', '18408001005', 'ecd8ee3cda20e24d923570867586fcd8', '久次良', '18408001005', '1050367616@qq.com', '女', '12727272727', '1');
+INSERT INTO `user` VALUES ('7', '18408001007', '1ab407d686f268ad712e323fea5e09b9', '黑童子', '18408001007', '154@qq.com', '男', '12828282828', '1');
+INSERT INTO `user` VALUES ('8', '18408001004', '24070388d7c775cecc8392db8d2a5f0d', '河童', '18408001004', '164@qq.com', '男', '12929292929', '1');
+INSERT INTO `user` VALUES ('9', '10000002', 'cca287b3049cbad831bea31fe878e13f', '不知火', '10000002', '', '男', null, '1');
+INSERT INTO `user` VALUES ('10', '10002', '710a92e1f5787e34dc0b3f0eb01545c1', '不知火', '10002', '', '男', null, '1');
+INSERT INTO `user` VALUES ('11', '1000000000001', '77d3f7ef667bfa628cc1cc17f88b1f60', '不知火', '1000000000001', '', '男', null, '1');
+INSERT INTO `user` VALUES ('12', '1000003', '1976213dcda84f5468d220018df55a88', '不知火', '1000003', '', '男', null, '1');
+INSERT INTO `user` VALUES ('13', '1000000004', 'c88757098c9020a2741ad02120a1fd49', '不知火', '1000000004', '', '男', null, '1');
+INSERT INTO `user` VALUES ('14', '1000000002', 'af21754394ef0b1cc185a658764c12fe', '茨木童子', '1000000002', '', '男', null, '1');
+INSERT INTO `user` VALUES ('21', '18408000101', '21f21b9a67e41f357c02373879bb37a8', '桃花妖', '18408000101', '', '男', null, '1');
+INSERT INTO `user` VALUES ('23', '18408000202', '87fd62e1d6019c7db593f438abf4bd3f', '白童子', '18408000202', '', '男', null, '1');
+INSERT INTO `user` VALUES ('24', '18408001011', 'f52311a1bae0627e6bb63a7df3032de9', '孟婆', '18408001011', '', '男', null, '0');
+INSERT INTO `user` VALUES ('27', '18408000910', '5b205c10767098ea2c3e28c1445899ec', '樱花妖', '18408000910', '', '男', null, '0');
+INSERT INTO `user` VALUES ('30', '18408001212', 'b2f273c39bfa4f87a2df5ca888f14950', '小松丸', '18408001212', '', '男', null, '1');
 
 -- ----------------------------
 -- Table structure for user_role
@@ -498,8 +443,22 @@ CREATE TABLE `user_role` (
 -- Records of user_role
 -- ----------------------------
 INSERT INTO `user_role` VALUES ('1', '1');
-INSERT INTO `user_role` VALUES ('2', '2');
+INSERT INTO `user_role` VALUES ('2', '4');
 INSERT INTO `user_role` VALUES ('3', '4');
 INSERT INTO `user_role` VALUES ('4', '3');
 INSERT INTO `user_role` VALUES ('5', '3');
-INSERT INTO `user_role` VALUES ('6', '2');
+INSERT INTO `user_role` VALUES ('6', '4');
+INSERT INTO `user_role` VALUES ('7', '4');
+INSERT INTO `user_role` VALUES ('8', '4');
+INSERT INTO `user_role` VALUES ('9', '3');
+INSERT INTO `user_role` VALUES ('10', '3');
+INSERT INTO `user_role` VALUES ('11', '3');
+INSERT INTO `user_role` VALUES ('12', '3');
+INSERT INTO `user_role` VALUES ('13', '3');
+INSERT INTO `user_role` VALUES ('14', '3');
+INSERT INTO `user_role` VALUES ('21', '4');
+INSERT INTO `user_role` VALUES ('22', '4');
+INSERT INTO `user_role` VALUES ('23', '2');
+INSERT INTO `user_role` VALUES ('24', '2');
+INSERT INTO `user_role` VALUES ('27', '2');
+INSERT INTO `user_role` VALUES ('30', '4');

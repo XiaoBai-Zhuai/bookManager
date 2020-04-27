@@ -31,6 +31,12 @@ public class StockServiceImpl implements StockService {
     @Autowired
     SBMapper sbMapper;
 
+    /**
+     * 分页查询出入库信息列表
+     * @param page
+     * @param limit
+     * @return
+     */
     @Override
     public List<StockIn> getStockInListByPage(Integer page, Integer limit) {
         page = (page - 1) * limit;
@@ -60,11 +66,20 @@ public class StockServiceImpl implements StockService {
         return stockIns;
     }
 
+    /**
+     * 查询出所有的入库信息列表
+     * @return
+     */
     @Override
     public List<StockIn> getAllStockInList() {
         return stockInMapper.selectAll();
     }
 
+    /**
+     * 根据条件分页查询出入库列表
+     * @param stockInPojo
+     * @return
+     */
     @Override
     public List<StockIn> getStockInListByPageAndCondition(StockInPojo stockInPojo) {
         stockInPojo.setPage((stockInPojo.getPage() - 1) * stockInPojo.getLimit());
@@ -98,6 +113,11 @@ public class StockServiceImpl implements StockService {
         return stockIns;
     }
 
+    /**
+     * 根据条件查询出所有的教材入库信息列表
+     * @param stockInPojo
+     * @return
+     */
     @Override
     public List<StockIn> getAllStockInListByCondition(StockInPojo stockInPojo) {
         List<StockIn> stockIns = null;
@@ -109,6 +129,11 @@ public class StockServiceImpl implements StockService {
         return stockIns;
     }
 
+    /**
+     * 删除某条入库信息
+     * @param id
+     * @return
+     */
     @Transactional
     @Override
     public int deleteStockInById(Integer id) {
@@ -122,6 +147,11 @@ public class StockServiceImpl implements StockService {
         return i + i1;
     }
 
+    /**
+     * 批量删除选中的入库信息
+     * @param stockIns
+     * @return
+     */
     @Transactional
     @Override
     public int deleteStockIns(List<StockIn> stockIns) {
@@ -139,6 +169,11 @@ public class StockServiceImpl implements StockService {
         return i;
     }
 
+    /**
+     * 添加入库信息
+     * @param stockInPojo
+     * @return
+     */
     @Transactional
     @Override
     public int addStockIn(StockInPojo stockInPojo) {
@@ -176,6 +211,11 @@ public class StockServiceImpl implements StockService {
         return 1;
     }
 
+    /**
+     * 修改某条入库信息
+     * @param stockInPojo
+     * @return
+     */
     @Transactional
     @Override
     public int updateStockIn(StockInPojo stockInPojo) {
@@ -208,6 +248,12 @@ public class StockServiceImpl implements StockService {
         return 1;
     }
 
+    /**
+     * 分页查询出库信息
+     * @param page
+     * @param limit
+     * @return
+     */
     @Override
     public List<StockOut> getStockOutByPage(Integer page, Integer limit) {
         page = (page - 1) * limit;
@@ -227,11 +273,20 @@ public class StockServiceImpl implements StockService {
         return stockOuts;
     }
 
+    /**
+     * 查询出所有的出库信息
+     * @return
+     */
     @Override
     public List<StockOut> getAllStockOutList() {
         return stockOutMapper.selectAll();
     }
 
+    /**
+     * 根据条件分页查询出出库信息
+     * @param stockOutPojo
+     * @return
+     */
     @Override
     public List<StockOut> getStockOutByPageAndCondition(StockOutPojo stockOutPojo) {
 
@@ -252,6 +307,11 @@ public class StockServiceImpl implements StockService {
         return stockOuts;
     }
 
+    /**
+     * 根据条件查询出所有的出库信息
+     * @param stockOutPojo
+     * @return
+     */
     @Override
     public List<StockOut> getAllStockOutListByCondition(StockOutPojo stockOutPojo) {
         List<StockOut> stockOuts = null;
@@ -263,6 +323,11 @@ public class StockServiceImpl implements StockService {
         return stockOuts;
     }
 
+    /**
+     * 删除某条出库信息
+     * @param stockOut
+     * @return
+     */
     @Transactional
     @Override
     public int deleteOneStockOut(StockOut stockOut) {
@@ -272,6 +337,11 @@ public class StockServiceImpl implements StockService {
         return stockOutMapper.delete(stockOut);
     }
 
+    /**
+     * 删除选中的多条出库信息
+     * @param stockOuts
+     * @return
+     */
     @Override
     public int deleteStockOuts(List<StockOut> stockOuts) {
         for (StockOut stockOut : stockOuts) {
@@ -280,6 +350,11 @@ public class StockServiceImpl implements StockService {
         return 1;
     }
 
+    /**
+     * 修改某条出库信息
+     * @param stockOut
+     * @return
+     */
     @Transactional
     @Override
     public int updateStockOut(StockOut stockOut) {
@@ -294,6 +369,11 @@ public class StockServiceImpl implements StockService {
         return 1;
     }
 
+    /**
+     * 添加出库信息
+     * @param stockOut
+     * @return
+     */
     @Transactional
     @Override
     public int addStockOut(StockOut stockOut) {

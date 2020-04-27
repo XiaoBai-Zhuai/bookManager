@@ -21,6 +21,7 @@ public class SendMailUtil {
     @Value("${spring.mail.username}")
     private String postName;
 
+    //发送验证码邮件
     @Async("taskExecutor")
     public void sendMail(String nickname, String receiver, String code) throws MessagingException, UnsupportedEncodingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

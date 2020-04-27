@@ -20,6 +20,9 @@
             <if test="className != null and className != ''">
                 and class_id IN (select id from class where name like concat('%', #{className}, '%'))
             </if>
+            <if test="schoolName != null and schoolName != ''">
+                and class_id IN (select id from class where major_id IN (select id from major where school_id = (select id from school where name = #{schoolName})))
+            </if>
         </trim>
         limit #{page}, #{limit}
     </select>
@@ -35,6 +38,9 @@
             </if>
             <if test="className != null and className != ''">
                 and class_id IN (select id from class where name like concat('%', #{className}, '%'))
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and class_id IN (select id from class where major_id IN (select id from school where name like concat('%', #{schoolName}, '%')))
             </if>
         </trim>
     </select>

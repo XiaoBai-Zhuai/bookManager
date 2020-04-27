@@ -45,7 +45,6 @@ public class MyShiroRealm extends AuthorizingRealm {
         User user = userService.getUserByUsername(username);
         if (user == null) {
             throw new UnknownAccountException("用户名或密码错误");
-//            TODO 返回给前端用户不存在
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 user,

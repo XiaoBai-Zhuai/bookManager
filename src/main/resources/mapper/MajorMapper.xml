@@ -12,4 +12,58 @@
     <select id="selectByCourseId" resultType="com.gydx.bookManager.entity.Major" parameterType="integer">
         select * from major where id IN (select major_id from major_course where course_id = #{courseId});
     </select>
+    <select id="findAllMajorList" resultType="com.gydx.bookManager.entity.Major">
+        select * from major where status = 1;
+    </select>
+    <select id="findAllMajorListByCondition" resultType="com.gydx.bookManager.entity.Major">
+        select * from major where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and school_id = (select id from school where name like concat('%', #{schoolName}, '%'))
+            </if>
+            and status = 1
+        </trim>
+    </select>
+    <select id="findMajorListByPage" resultType="com.gydx.bookManager.entity.Major">
+        select * from major where status = 1
+        limit #{page}, #{limit};
+    </select>
+    <select id="findMajorListByPageAndCondition" resultType="com.gydx.bookManager.entity.Major">
+        select * from major where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and school_id = (select id from school where name like concat('%', #{schoolName}, '%'))
+            </if>
+            and status = 1
+        </trim>
+        limit #{page}, #{limit}
+    </select>
+    <select id="findMajorBySchool" parameterType="string" resultType="com.gydx.bookManager.entity.Major">
+        select * from major where school_id = (select id from school where name = #{schoolName});
+    </select>
+    <update id="deleteOneMajor" parameterType="com.gydx.bookManager.entity.Major">
+        update major set status = 0 where id = #{id};
+    </update>
+    <update id="updateMajor" parameterType="com.gydx.bookManager.entity.Major">
+        update major set name = #{name},
+         school_id = (select id from school where name like concat('%', #{schoolName}, '%'))
+         where id = #{id};
+    </update>
+    <update id="deleteMajors" parameterType="com.gydx.bookManager.entity.Major">
+        update major set status = 0
+        where id IN
+        <foreach collection="majors" item="major" index="index" open="(" close=")" separator=",">
+            #{major.id}
+        </foreach>
+    </update>
+    <insert id="addMajor" parameterType="com.gydx.bookManager.entity.Major">
+        insert into major (school_id, name) select id, #{name}
+         from school where name like concat('%', #{schoolName}, '%');
+    </insert>
 </mapper>

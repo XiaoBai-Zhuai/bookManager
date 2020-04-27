@@ -3,11 +3,20 @@ package com.gydx.bookManager.pojo;
 public class ReceiveData {
     private String username;
     private String majorName;
+    private String schoolName;
     private Integer schoolId;
     private String oldPassword;
     private String password;
     private String email;
     private String code;
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
 
     public String getCode() {
         return code;

@@ -45,7 +45,7 @@
                 <label class="layui-form-label">昵称</label>
                 <div class="layui-input-inline">
                   <input type="text" id="nickname" name="nickname" lay-verify="nickname" autocomplete="off"
-                    placeholder="请输入昵称" class="layui-input">
+                    readonly class="layui-input">
                 </div>
               </div>
               <div class="layui-form-item">
@@ -68,13 +68,13 @@
                   <button class="layui-btn layui-btn-primary" layadmin-event="avartatPreview">查看图片</button>
                 </div>
               </div> -->
-              <!-- <div class="layui-form-item">
+              <div class="layui-form-item">
                 <label class="layui-form-label">手机</label>
                 <div class="layui-input-inline">
-                  <input type="text" name="cellphone" value="" lay-verify="phone" autocomplete="off"
+                  <input type="text" id="cellphone" name="cellphone" value="" lay-verify="phone" autocomplete="off"
                     class="layui-input">
                 </div>
-              </div> -->
+              </div>
               <div class="layui-form-item">
                 <label class="layui-form-label">邮箱</label>
                 <div class="layui-input-inline">
@@ -114,7 +114,8 @@
 
       document.getElementById('username').setAttribute('value', sessionStorage.getItem('username'));
       document.getElementById('nickname').setAttribute('value', sessionStorage.getItem('nickname'));
-      document.getElementById('email').setAttribute('value', sessionStorage.getItem('email'));
+      document.getElementById('email').setAttribute('value', sessionStorage.getItem('email') == null ? '' : sessionStorage.getItem('email'));
+      document.getElementById('cellphone').setAttribute('value', sessionStorage.getItem('cellphone') == null ? '' : sessionStorage.getItem('cellphone'));
 
       var sex = sessionStorage.getItem('sex') == '男' ? 'man' : 'woman';
       document.getElementById(sex).setAttribute('checked', "true");
@@ -167,6 +168,7 @@
             sessionStorage.setItem("nickname", res.user.nickname);
             sessionStorage.setItem("sex", res.user.sex);
             sessionStorage.setItem("email", res.user.email);
+            sessionStorage.setItem("cellphone", res.tel);
             form.render();
             layer.msg("修改成功！", {
               offset: '15px'

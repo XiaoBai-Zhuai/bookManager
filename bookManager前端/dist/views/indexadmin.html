@@ -103,16 +103,37 @@
               </dl>
             </li>
             <li data-name="class" class="layui-nav-item">
+              <a href="javascript:;" lay-tips="学院信息" lay-direction="2">
+                <i class="layui-icon layui-icon-senior"></i>
+                <cite>学院信息</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="stockin_list"><a lay-href="app/content//schoolList.html">学院列表</a></dd>
+              </dl>
+              <dl class="layui-nav-child">
+                <dd data-name="class"><a lay-href="app/content/majorList.html">专业列表</a></dd>
+              </dl>
+            </li>
+            <li data-name="class" class="layui-nav-item">
               <a href="javascript:;" lay-tips="班级信息" lay-direction="2">
                 <i class="layui-icon layui-icon-senior"></i>
                 <cite>班级信息</cite>
               </a>
               <dl class="layui-nav-child">
+                <dd data-name="bookStock">
+                  <a href="javascript:;">班级基本信息</a>
+                  <dl class="layui-nav-child">
+                    <dd data-name="stockin_list"><a lay-href="app/content/classList.html">班级列表</a></dd>
+                    <dd data-name="stockout_list"><a lay-href="app/content/studentList.html">学生列表</a></dd>
+                  </dl>
+                </dd>
+              </dl>
+              <dl class="layui-nav-child">
                 <dd data-name="class"><a lay-href="class/classbook.html">班级教材领取情况</a></dd>
               </dl>
             </li>
             <li data-name="class" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="班级信息" lay-direction="2">
+              <a href="javascript:;" lay-tips="教学计划" lay-direction="2">
                 <i class="layui-icon layui-icon-senior"></i>
                 <cite>教学计划</cite>
               </a>
@@ -121,7 +142,7 @@
               </dl>
             </li>
             <li data-name="template" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="页面" lay-direction="2">
+              <a href="javascript:;" lay-tips="教材信息" lay-direction="2">
                 <i class="layui-icon layui-icon-template"></i>
                 <cite>教材信息</cite>
               </a>
@@ -146,7 +167,7 @@
               </a>
               <dl class="layui-nav-child">
                 <dd>
-                  <a lay-href="user/user/list.html">网站用户</a>
+                  <a lay-href="user/user/list.html">用户管理</a>
                 </dd>
               </dl>
             </li>
@@ -221,23 +242,21 @@
       index: 'lib/index' //主入口模块
     }).use('index', function () {
       var $ = layui.$,
-      form = layui.form
+        form = layui.form
       layer = layui.layer;
 
-      layer.ready(function() {
-        if(sessionStorage.getItem("token") == null) {
+      layer.ready(function () {
+        if (sessionStorage.getItem("token") == null) {
           location.href = 'login.html';
         }
       });
       document.getElementById("username").innerHTML = sessionStorage.getItem("nickname");
 
     });
-
   </script>
 
   <!-- 百度统计 -->
   <script>
-
     var _hmt = _hmt || [];
     (function () {
       var hm = document.createElement("script");

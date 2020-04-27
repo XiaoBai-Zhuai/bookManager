@@ -29,4 +29,16 @@ public interface UserMapper extends Mapper<User> {
     int updateOneUser(User user);
 
     int updatePassword(@Param("password") String md5Password, @Param("id") Integer id);
+
+    int deleteOneUser(User user);
+
+    User selectOneUser(User record);
+
+    List<User> selectAllUserList();
+
+    int updateOneStatus(User user);
+
+    int updateUserByUsername(User user);
+
+    int updateOneStatusByUsername(String number);
 }

@@ -5,10 +5,18 @@
 <mapper namespace="com.gydx.bookManager.mapper.UserRoleMapper">
     <insert id="insertOne" parameterType="com.gydx.bookManager.entity.User">
         insert into user_role (role_id, user_id)
-        select role_id, #{id} from role where name = #{roleName};
+        select id, #{id} from role where name = #{roleName};
     </insert>
     <update id="updateUserIdByRoleName" parameterType="string">
         update user_role set role_id = (select id from role where name like concat('%', #{roleName}, '%'))
         where user_id = #{id};
+    </update>
+    <update id="updateByClass" parameterType="integer">
+        update user_role set role_id = (select id from role where name = '班级负责人')
+        where user_id = #{userId};
+    </update>
+    <update id="updateByStudent" parameterType="com.gydx.bookManager.entity.UserRole">
+        update user_role set role_id = (select id from role where name = '普通学生')
+        where user_id = #{userId};
     </update>
 </mapper>

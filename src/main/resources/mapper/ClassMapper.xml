@@ -6,4 +6,89 @@
     <select id="selectNameById" parameterType="integer" resultType="string">
         select name from class where id = #{classId};
     </select>
+    <update id="updateUserIdById" parameterType="integer">
+        update class set user_id = #{userId} where id = #{classId};
+    </update>
+    <select id="findClassListByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.Class">
+        select * from class where status = 1 limit #{page}, #{limit};
+    </select>
+    <select id="findClassListByPageAndCondition" parameterType="com.gydx.bookManager.pojo.ClassInfoPojo"
+            resultType="com.gydx.bookManager.entity.Class">
+        select * from class
+        where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and major_id IN (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+            </if>
+            <if test="principalNumber != null and principalNumber != ''">
+                and user_id = (select id from user where username = #{principalNumber})
+            </if>
+            and status = 1
+        </trim>
+        limit #{page},
+        #{limit};
+    </select>
+    <select id="findAllClassListByCondition" parameterType="com.gydx.bookManager.pojo.ClassInfoPojo"
+            resultType="com.gydx.bookManager.entity.Class">
+        select * from class where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="majorName != null and majorName != ''">
+                and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and major_id IN (select id from school where name like concat('%', #{schoolName}, '%'))
+            </if>
+            <if test="principalNumber != null and principalNumber != ''">
+                and user_id = (select id from user where username = #{principalNumber})
+            </if>
+            and status = 1
+        </trim>
+    </select>
+    <select id="findAllClassList" parameterType="com.gydx.bookManager.pojo.ClassInfoPojo"
+            resultType="com.gydx.bookManager.entity.Class">
+        select * from class where status = 1;
+    </select>
+    <select id="findClassByMajor" resultType="com.gydx.bookManager.entity.Class" parameterType="string">
+        select * from class where major_id = (select id from major where name = #{majorName});
+    </select>
+    <update id="deleteOneClass" parameterType="com.gydx.bookManager.entity.Class">
+        update class set status = 0 where id = #{id};
+    </update>
+    <update id="updateClass" parameterType="com.gydx.bookManager.entity.Class">
+        update class set
+        <trim suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="majorName != null and majorName != ''">
+                major_id = (select id from major where name like concat('%', #{majorName}, '%')),
+            </if>
+            <if test="principalNumber != null and principalNumber != ''">
+                user_id = (select id from user where username = #{principalNumber})
+            </if>
+        </trim>
+        where id = #{id};
+    </update>
+    <update id="deleteClasses" parameterType="com.gydx.bookManager.entity.Class">
+        update class set status = 0
+        where id IN
+        <foreach collection="classes" item="class" index="index" open="(" close=")" separator=",">
+            #{class.id}
+        </foreach>
+    </update>
+    <update id="updateClassStatus" parameterType="com.gydx.bookManager.entity.Class">
+        update class set status = 1 where id = #{id};
+    </update>
+    <insert id="addClass" parameterType="com.gydx.bookManager.entity.Class" useGeneratedKeys="true" keyProperty="id">
+        insert into class (major_id, name, user_id) select id, #{name}, #{userId} from major where name like concat('%', #{majorName}, '%');
+    </insert>
 </mapper>

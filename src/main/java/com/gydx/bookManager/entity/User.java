@@ -21,10 +21,52 @@ public class User implements Serializable {
     private String email;
     @Column
     private String sex;
+    @Column
+    private String tel;
+    @Column
+    private Integer status;
     @Transient
     private Role role;
     @Transient
     private String roleName;
+    @Transient
+    private String className;
+    @Transient
+    private String schoolName;
+    @Transient
+    private String workPlace;
+
+    public String getWorkPlace() {
+        return workPlace;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
 
     public String getRoleName() {
         return roleName;
@@ -96,5 +138,13 @@ public class User implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

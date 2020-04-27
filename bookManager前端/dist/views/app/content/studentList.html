@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>学生列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="name" name="name" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="number" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">班级名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="className" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">专业名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="majorName" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">学院名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="schoolName" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-studentlist" lay-submit
+                            lay-filter="LAY-student-front-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+
+                <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+
+                <script type="text/html" id="test-table-toolbar-toolbarDemo">
+                    <div class="layui-btn-container">
+                        <div style="padding-bottom: 10px;">
+                            <button class="layui-btn layuiadmin-btn-studentlist" data-type="batchdel">删除</button>
+                            <button class="layui-btn layuiadmin-btn-studentlist" data-type="add">添加</button>
+                        </div>
+                    </div>
+                </script>
+
+                <script type="text/html" id="test-table-toolbar-barDemo">
+                    <div class="layui-btn-container">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form;
+
+            table.render({
+                elem: '#test-table-toolbar',
+                url: 'http://localhost:8080/getStudentList',
+                headers: {
+                    'Authorization': sessionStorage.getItem("token"),
+                    'Access-Control-Allow-Origin': '*'
+                },
+                toolbar: '#test-table-toolbar-toolbarDemo',
+                title: '学生信息列表',
+                where: {
+                    name: '',
+                    number: '',
+                    className: '',
+                    majorName: '',
+                    schoolName: ''
+                },
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    }, {
+                        field: 'id',
+                        title: 'ID',
+                        width: 80,
+                        sort: true
+                    }, {
+                        field: 'name',
+                        title: '姓名'
+                    }, {
+                        field: 'number',
+                        title: '学号'
+                    }, {
+                        field: 'className',
+                        title: '班级名'
+                    }, {
+                        field: 'majorName',
+                        title: '专业名'
+                    }, {
+                        field: 'schoolName',
+                        title: '学院名'
+                    }, {
+                        title: '操作',
+                        align: 'center',
+                        toolbar: '#test-table-toolbar-barDemo',
+                        width: 150
+                    }]
+                ],
+                page: true,
+                groups: 5,
+                limit: 30,
+                height: 'full-130',
+                text: {
+                    none: '无结果'
+                }
+            });
+
+            //监听行工具事件
+            table.on('tool(test-table-toolbar)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('确认删除', function (index) {
+                        $.ajax({
+                            url: 'http://localhost:8080/deleteOneStudent',
+                            type: 'post',
+                            headers: {
+                                'Authorization': sessionStorage.getItem("token"),
+                                'Access-Control-Allow-Origin': '*'
+                            },
+                            data: JSON.stringify(data),
+                            contentType: 'application/json;charset=utf-8',
+                            dataType: 'json',
+                            success: function (res) {
+                                layer.msg(res.msg, {
+                                    offset: '15px',
+                                    icon: 1,
+                                    time: 1000
+                                }, function () {
+                                    obj.del();
+                                    layer.close(index);
+                                });
+                            },
+                            error: function () {
+                                layer.msg("删除失败");
+                            }
+                        });
+                    });
+                }
+                if (obj.event === 'edit') {
+                    var tr = $(obj.tr);
+                    var id = obj.data.id;
+                    layer.open({
+                        type: 2,
+                        title: '编辑学生信息',
+                        content: 'studentform.html',
+                        maxmin: true,
+                        area: ['500px', '450px'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index],
+                                submitID = 'LAY-student-front-submit',
+                                submit = layero.find('iframe').contents().find('#' +
+                                    submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')',
+                                function (data) {
+
+                                    var field = data.field;
+                                    field['id'] = id;
+
+                                    //提交 Ajax 成功后，静态更新表格中的数据
+                                    $.ajax({
+                                        url: "http://localhost:8080/updateStudent",
+                                        type: 'post',
+                                        headers: {
+                                            'Authorization': sessionStorage
+                                                .getItem("token"),
+                                            'Access-Control-Allow-Origin': '*'
+                                        },
+                                        data: JSON.stringify(field),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'json',
+                                        success: function (res) {
+                                            layer.msg("修改成功！", {
+                                                offset: '15px',
+                                                icon: 1,
+                                                time: 1000
+                                            })
+                                        }
+                                    });
+                                    table.reload('test-table-toolbar'); //数据刷新
+                                    layer.close(index); //关闭弹层
+                                });
+
+                            submit.trigger('click');
+                        }
+                    });
+                }
+            });
+
+            //监听搜索
+            form.on('submit(LAY-student-front-search)', function (data) {
+                var field = data.field;
+                //执行重载
+                table.reload('test-table-toolbar', {
+                    where: field
+                });
+            });
+
+            var active = {
+                batchdel: function () {
+                    var checkStatus = table.checkStatus('test-table-toolbar'),
+                        checkData = checkStatus.data; //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+
+                    layer.confirm('确定删除', function (index) {
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            url: 'http://localhost:8080/deleteStudents',
+                            type: 'post',
+                            data: JSON.stringify(checkData),
+                            headers: {
+                                'Authorization': sessionStorage.getItem("token"),
+                                'Access-Control-Allow-Origin': '*'
+                            },
+                            contentType: 'application/json;charset=utf-8',
+                            dataType: 'json',
+                            success: function (res) {
+                                table.reload('test-table-toolbar');
+                                layer.msg('已删除');
+                            },
+                            error: function (res) {
+                                layer.msg("删除失败")
+                                table.reload('test-table-toolbar');
+                            }
+                        })
+                    });
+                },
+                add: function () {
+                    layer.open({
+                        type: 2,
+                        title: '添加学生',
+                        content: 'studentform.html',
+                        maxmin: true,
+                        area: ['500px', '450px'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index],
+                                submitID = 'LAY-student-front-submit',
+                                submit = layero.find('iframe').contents().find('#' +
+                                    submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')',
+                                function (data) {
+                                    var field = data.field; //获取提交的字段
+
+                                    $.ajax({
+                                        url: "http://localhost:8080/addStudent",
+                                        type: 'post',
+                                        headers: {
+                                            'Authorization': sessionStorage
+                                                .getItem("token"),
+                                            'Access-Control-Allow-Origin': '*'
+                                        },
+                                        data: JSON.stringify(field),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'json',
+                                        success: function (res) {
+                                            layer.msg("添加成功");
+                                            table.reload(
+                                                'test-table-toolbar'
+                                            ); //数据刷新
+                                            layer.close(index); //关闭弹层
+                                        },
+                                        error: function (res) {
+                                            layer.msg("添加失败");
+                                            // table.reload('book-manage'); //数据刷新
+                                            // layer.close(index); //关闭弹层
+                                        }
+                                    })
+
+                                });
+
+                            submit.trigger('click');
+                        }
+                    });
+                }
+            };
+            $('.layui-btn.layuiadmin-btn-studentlist').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+</body>
+
+</html>

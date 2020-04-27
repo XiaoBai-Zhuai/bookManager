@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class TaskPoolConfig {
 
+    //用于异步发送邮件
     @Bean("taskExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

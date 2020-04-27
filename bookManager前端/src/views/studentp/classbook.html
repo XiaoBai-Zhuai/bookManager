@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>教材入库表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">领取日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="receiveDate" name="receiveDate" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">教材名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="bookName" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">班级名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="className" placeholder="请输入" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-classBooklist" lay-submit
+                            lay-filter="LAY-classBook-front-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+
+                <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table', 'laydate'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#receiveDate'
+            });
+
+            table.render({
+                elem: '#test-table-toolbar',
+                url: 'http://localhost:8080/getClassBookList',
+                headers: {
+                    'Authorization': sessionStorage.getItem("token"),
+                    'Access-Control-Allow-Origin': '*'
+                },
+                where: {
+                    receiveDate: '',
+                    bookName: '',
+                    className: sessionStorage.getItem("className"),
+                    bookSum: ''
+                },
+                title: '班级教材领取情况表',
+                cols: [
+                    [{
+                        field: 'id',
+                        title: 'ID',
+                        width: 80,
+                        sort: true
+                    }, {
+                        field: 'receiveDate',
+                        title: '领取日期'
+                    }, {
+                        field: 'className',
+                        title: '班级名'
+                    }, {
+                        field: 'bookName',
+                        title: '教材名'
+                    }, {
+                        field: 'bookSum',
+                        title: '领取数量'
+                    }, {
+                        field: 'principalName',
+                        title: '班级负责人'
+                    }, {
+                        field: 'principalTel',
+                        title: '负责人电话'
+                    }]
+                ],
+                page: true,
+                groups: 5,
+                limit: 30,
+                height: 'full-130',
+                text: {
+                    none: '无结果'
+                }
+            });
+            //监听搜索
+            form.on('submit(LAY-classBook-front-search)', function (data) {
+                var field = data.field;
+                //执行重载
+                table.reload('test-table-toolbar', {
+                    where: field
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

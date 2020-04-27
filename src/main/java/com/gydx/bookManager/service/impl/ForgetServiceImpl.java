@@ -35,6 +35,12 @@ public class ForgetServiceImpl implements ForgetService {
         return String.valueOf(code);
     }
 
+    /**
+     * 先根据邮箱查找是否有对应用户，若没有则返回提示用户邮箱填错
+     * 然后将邮箱作为键，验证码和发送时间的map作为值，存储在全局变量verCode里，后面检验用户输入的验证码时使用
+     * @param email
+     * @return
+     */
     @Override
     public String getCode(String email) {
         User t = new User();
@@ -58,6 +64,12 @@ public class ForgetServiceImpl implements ForgetService {
         return "发送成功，请注意查收";
     }
 
+    /**
+     * 先检验用户填写的验证码是否有误或者时间是否超时，如果验证码错了或者超时了就将该键值为该邮箱的从verCode里删除
+     * 然后更改该用户的密码
+     * @param receiveData
+     * @return
+     */
     @Override
     public String updatePassword(ReceiveData receiveData) {
         String code = receiveData.getCode(), email = receiveData.getEmail();
@@ -71,7 +83,7 @@ public class ForgetServiceImpl implements ForgetService {
         User t = new User();
         t.setEmail(email);
         User user = userMapper.selectOne(t);
-        String password = md5Util.getMD5(user.getSalt() + receiveData.getPassword());
+        String password = MD5Util.getMD5(user.getSalt() + receiveData.getPassword());
         try {
             userMapper.updatePassword(password, user.getId());
         } catch (Exception e) {

@@ -53,7 +53,8 @@
           </div>
         </div>
         <div class="layui-form-item" style="margin-bottom: 20px;">
-          <input type="checkbox" id="remember" defaultChecked="false" checked="false" name="remember" lay-skin="primary" title="记住密码">
+          <input type="checkbox" id="remember" defaultChecked="false" checked="false" name="remember" lay-skin="primary"
+            title="记住密码">
           <a href="forget.html" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>
         </div>
         <div class="layui-form-item">
@@ -87,12 +88,12 @@
     }).extend({
       index: 'lib/index' //主入口模块
     }).use(['index', 'user'], function () {
-      var $ = layui.$
-        , setter = layui.setter
-        , admin = layui.admin
-        , form = layui.form
-        , router = layui.router()
-        , search = router.search;
+      var $ = layui.$,
+        setter = layui.setter,
+        admin = layui.admin,
+        form = layui.form,
+        router = layui.router(),
+        search = router.search;
 
       form.render();
 
@@ -132,7 +133,7 @@
         if (oRemember.checked) {
           localStorage.setItem("username", oUser.value);
           localStorage.setItem("password", oPswd.value);
-        } 
+        }
         if (oRemember.onchange && !oRemember.checked) {
           localStorage.setItem("username", null);
           localStorage.setItem("password", null);
@@ -147,33 +148,34 @@
         if (b == false) {
           document.getElementById("LAY-user-login-vercode").value = '';
           layer.msg('登录失败，验证码错误！', {
-            offset: '15px'
-            , icon: 2
-            , time: 1000
+            offset: '15px',
+            icon: 2,
+            time: 1000
           });
         } else {
           //请求登入接口
           $.ajax({
             url: 'http://localhost:8080/login' //实际使用请改成服务端真实接口
-            , type: 'post'
-            , contentType: 'application/json;charset=utf-8'
-            , data: JSON.stringify(obj.field)
-            , dataType: 'json'
-            , success: function (res) {
+              ,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify(obj.field),
+            dataType: 'json',
+            success: function (res) {
 
               if (res.msg != '登录成功') {
                 layer.msg(res.msg, {
-                  offset: '15px'
-                  , icon: 2
-                  , time: 1000
+                  offset: '15px',
+                  icon: 2,
+                  time: 1000
                 }, function () {
                   location.href = 'login.html';
                 });
               } else {
                 layer.msg(res.msg, {
-                  offset: '15px'
-                  , icon: 1
-                  , time: 1000
+                  offset: '15px',
+                  icon: 1,
+                  time: 1000
                 }, function () {
                   sessionStorage.setItem("username", res.user.username);
                   sessionStorage.setItem("nickname", res.user.nickname);
@@ -184,6 +186,33 @@
                   sessionStorage.setItem("token", res.token);
 
                   var roleName = sessionStorage.getItem("roleName");
+
+                  if (roleName == '普通学生' || roleName == '班级负责人') {
+                    var username = sessionStorage.getItem("username");
+                    var data = {
+                      "username": username
+                    };
+                    $.ajax({
+                      url: 'http://localhost:8080/getStudentInfo',
+                      type: 'post',
+                      headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                      },
+                      data: JSON.stringify(data),
+                      dataType: 'json',
+                      contentType: 'application/json;charset=utf-8',
+                      success: function (res) {
+                        sessionStorage.setItem("classId", res.student.classId);
+                        sessionStorage.setItem("className", res.student.className);
+                        sessionStorage.setItem("majorId", res.student.majorId);
+                        sessionStorage.setItem("majorName", res.student.majorName);
+                        sessionStorage.setItem("schoolId", res.student.schoolId);
+                        sessionStorage.setItem("schoolName", res.student.schoolName);
+                      }
+                    });
+                  }
+
                   if (roleName == '普通学生') {
                     location.href = 'indexstudent.html';
                   } else if (roleName == '班级负责人') {
@@ -193,14 +222,15 @@
                   } else if (roleName == '管理员') {
                     location.href = 'indexadmin.html';
                   }
+
                 });
               }
-            }
-            , error: function (res) {
+            },
+            error: function (res) {
               layer.msg('登录失败，账号或密码错误！', {
-                offset: '15px'
-                , icon: 2
-                , time: 1000
+                offset: '15px',
+                icon: 2,
+                time: 1000
               }, function () {
                 location.href = 'login.html';
               });

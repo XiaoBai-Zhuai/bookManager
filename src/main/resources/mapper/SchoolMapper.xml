@@ -6,4 +6,67 @@
     <select id="selectNameById" parameterType="integer" resultType="string">
         select name from school where id = #{schoolId};
     </select>
+    <update id="updateUserIdById" parameterType="integer">
+        update school set user_id = #{userId} where id = #{schoolId};
+    </update>
+    <select id="findAll" resultType="com.gydx.bookManager.entity.School">
+        select * from school where status = 1;
+    </select>
+    <select id="findSchoolListByPage" resultType="com.gydx.bookManager.entity.School"
+            parameterType="com.gydx.bookManager.pojo.SchoolInfoPojo">
+        select * from school where status = 1
+        limit #{page}, #{limit};
+    </select>
+    <select id="findSchoolListByPageAndCondition" parameterType="com.gydx.bookManager.pojo.SchoolInfoPojo"
+            resultType="com.gydx.bookManager.entity.School">
+        select * from school where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="principalName != null and principalName != ''">
+                and user_id IN (select id from user where nickname like concat('%', #{principalName}, '%'))
+            </if>
+            <if test="principalNumber != null and principalNumber != ''">
+                and user_id IN (select id from user where username like concat('%', #{principalNumber}, '%'))
+            </if>
+            and status = 1
+        </trim>
+        limit #{page}, #{limit};
+    </select>
+    <select id="findAllSchoolListByCondition" parameterType="com.gydx.bookManager.pojo.SchoolInfoPojo"
+            resultType="com.gydx.bookManager.entity.School">
+        select * from school where
+        <trim prefixOverrides="and|or">
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="principalName != null and principalName != ''">
+                and user_id IN (select id from user where nickname like concat('%', #{principalName}, '%'))
+            </if>
+            <if test="principalNumber != null and principalNumber != ''">
+                and user_id IN (select id from user where username like concat('%', #{principalNumber}, '%'))
+            </if>
+            and status = 1
+        </trim>
+    </select>
+    <update id="deleteOneSchool" parameterType="com.gydx.bookManager.entity.School">
+        update school set status = 0 where id = #{id};
+    </update>
+    <update id="updateSchool" parameterType="com.gydx.bookManager.entity.School">
+        update school set name = #{name}, user_id = #{userId} where id = #{id};
+    </update>
+    <update id="deleteSchools" parameterType="com.gydx.bookManager.entity.School">
+        update school set status = 0
+        where id IN
+        <foreach collection="schools" item="school" index="index" open="(" close=")" separator=",">
+            #{school.id}
+        </foreach>
+    </update>
+    <update id="updateSchoolStatus" parameterType="com.gydx.bookManager.entity.School">
+        update school set user_id = #{userId}, status = 1 where id = #{id};
+    </update>
+    <insert id="addSchool" parameterType="com.gydx.bookManager.entity.School" useGeneratedKeys="true" keyProperty="id">
+        insert into school set name = #{name}, user_id = #{userId};
+    </insert>
 </mapper>

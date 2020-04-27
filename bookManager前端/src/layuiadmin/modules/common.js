@@ -34,7 +34,7 @@ layui.define(function (exports) {
       }
       , success: function (res) {
         //清空本地记录的 token，并跳转到登入页
-        layer.msg(res.msg);
+        layer.msg("退出成功");
         sessionStorage.clear();
         location.href = 'login.html';
       }
