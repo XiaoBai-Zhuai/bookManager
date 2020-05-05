@@ -23,4 +23,19 @@ public interface BookService {
     List<Book> getAllBooksByCondition(BookPageInfoPojo bookPageInfoPojo);
 
     List<Book> getBookListByMajor(String majorName);
+
+    List<Book> getAllBookList();
+
+    List<Book> getAllDBookName();
+
+    List<Book> getAllDBookAuthor();
+
+    List<Book> getAllDBookAuthorByBookName(String bookName);
+
+    List<Book> getAllDBookPublishTimeByBookAuthor(String bookName, String author);
+
+    List<Book> getAllDBookPublisherByBookPublishTime(String bookName, String author, String publishTime);
+
+    List<Book> getAllDBookPriceByBookPublisher(String bookName, String author, String publishTime, String publisher);
+
 }

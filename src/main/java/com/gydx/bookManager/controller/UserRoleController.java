@@ -6,22 +6,18 @@ import com.gydx.bookManager.pojo.ReceiveData;
 import com.gydx.bookManager.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class UserRoleController {
 
     @Autowired
     private UserRoleService userRoleService;
 
     @RequestMapping("/getUserRoleList")
-    @ResponseBody
     public String getUserRoleList(Integer page, Integer limit, String roleName, String username, String nickname, String email, Character sex) {
         JSONObject jsonObject = new JSONObject();
         List<User> users, userList;
@@ -42,7 +38,6 @@ public class UserRoleController {
     }
 
     @RequestMapping("/deleteOneUserRole")
-    @ResponseBody
     public String deleteOneUserRole(@RequestBody User user) {
         JSONObject jsonObject = new JSONObject();
         userRoleService.deleteOneUserRole(user);
@@ -60,7 +55,6 @@ public class UserRoleController {
     }
 
     @RequestMapping("/addUserRole")
-    @ResponseBody
     public String addUserRole(@RequestBody User user) {
         JSONObject jsonObject = new JSONObject();
         int i = userRoleService.addUserRole(user);
@@ -76,7 +70,6 @@ public class UserRoleController {
     }
 
     @RequestMapping("/updateUserRole")
-    @ResponseBody
     public String updateUserRole(@RequestBody User user) {
         JSONObject jsonObject = new JSONObject();
         userRoleService.updateUserRole(user);

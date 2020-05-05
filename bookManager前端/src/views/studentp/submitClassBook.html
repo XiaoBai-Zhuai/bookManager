@@ -93,7 +93,8 @@
                 , element = layui.element
                 , layer = layui.layer
                 , laydate = layui.laydate
-                , form = layui.form;
+                , form = layui.form
+                , setter = layui.setter;
 
             laydate.render({
                 elem: '#receiveDate' //指定元素
@@ -108,7 +109,7 @@
             layer.ready(function () {
                 var data = { "majorName": sessionStorage.getItem("majorName") };
                 $.ajax({
-                    url: 'http://localhost:8080/getBookListByMajor',
+                    url: setter.baseURL + 'getBookListByMajor',
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -133,7 +134,7 @@
                 var field = data.field;
 
                 $.ajax({
-                    url: 'http://localhost:8080/submitClassBook',
+                    url: setter.baseURL + 'submitClassBook',
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),

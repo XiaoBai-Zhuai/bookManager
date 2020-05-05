@@ -18,34 +18,35 @@
         <div class="layui-form-item">
             <label class="layui-form-label">班级名</label>
             <div class="layui-input-inline">
-                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入班级名"
-                    autocomplete="off" class="layui-input">
+                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入班级名" autocomplete="off"
+                    class="layui-input">
             </div>
         </div>
+        <input id="util" style="display: none;"/>
         <div class="layui-form-item">
             <label class="layui-form-label">所属专业</label>
             <div class="layui-input-inline">
-                <input type="text" name="majorName" lay-verify="required" placeholder="请输入所属专业名" autocomplete="off"
-                    class="layui-input">
+                <select lay-search id="majorName" name="majorName" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">负责人姓名</label>
             <div class="layui-input-inline">
-                <input type="text" name="principalName" lay-verify="required" placeholder="请输入该班级负责人姓名" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="principalName" name="principalName" lay-verify="required"
+                    placeholder="请输入该班级负责人姓名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">负责人学号</label>
             <div class="layui-input-inline">
-                <input type="text" name="principalNumber" lay-verify="required" placeholder="请输入该班级负责人学号" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="principalNumber" name="principalNumber" lay-verify="required"
+                    placeholder="请输入该班级负责人学号" autocomplete="off" class="layui-input">
             </div>
-        </div>  
+        </div>
         <div class="layui-form-item layui-hide">
-            <input type="button" lay-submit lay-filter="LAY-class-front-submit" id="LAY-class-front-submit"
-                value="确认">
+            <input type="button" lay-submit lay-filter="LAY-class-front-submit" id="LAY-class-front-submit" value="确认">
         </div>
     </div>
 
@@ -55,9 +56,15 @@
             base: '../../../layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'form', 'upload'], function () {
-            
-        })
+        }).use(['index', 'form', 'upload', 'classform'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                layer = layui.layer,
+                setter = layui.setter;
+
+        });
     </script>
 </body>
 

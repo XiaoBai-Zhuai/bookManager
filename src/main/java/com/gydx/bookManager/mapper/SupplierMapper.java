@@ -23,4 +23,6 @@ public interface SupplierMapper extends Mapper<Supplier> {
     List<Supplier> selectAllSupplierListByCondition(@Param("name") String name, @Param("tel") String tel);
 
     int updateSupplier(Supplier supplier);
+
+    List<Supplier> getAllDSupplierName();
 }

@@ -31,11 +31,12 @@
             var admin = layui.admin
                 , table = layui.table
                 , $ = layui.$
-                , form = layui.form;
+                , form = layui.form
+                , setter = layui.setter;
 
             table.render({
                 elem: '#test-table-toolbar'
-                , url: 'http://localhost:8080/getStudyPlanList'
+                , url: setter.baseURL + 'getStudyPlanList'
                 , headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'

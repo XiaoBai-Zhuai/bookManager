@@ -33,4 +33,8 @@ public interface ClassMapper extends Mapper<Class> {
     int updateClassStatus(Class aClass1);
 
     List<Class> findClassByMajor(String majorName);
+
+    List<Class> getAllClassListBySchoolName(@Param("schoolName") String schoolName);
+
+    List<Class> getAllClassListByMajorName(@Param("majorName") String majorName, @Param("schoolName") String schoolName);
 }

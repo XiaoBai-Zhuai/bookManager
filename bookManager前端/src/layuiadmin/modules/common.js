@@ -14,11 +14,11 @@ layui.define(function (exports) {
     , setter = layui.setter
     , view = layui.view
     , admin = layui.admin
+    , setter = layui.setter
+    , form = layui.form;
 
   //公共业务的逻辑处理可以写在此处，切换任何页面都会执行
   //……
-
-
 
   //退出
   admin.events.logout = function () {
@@ -26,7 +26,7 @@ layui.define(function (exports) {
     location.href = 'login.html'; */
     //执行退出接口
     $.ajax({
-      url: 'http://localhost:8080/logout'
+      url: setter.baseURL + 'logout'
       , type: 'post'
       , headers: {
         'Authorization': sessionStorage.getItem("token"),

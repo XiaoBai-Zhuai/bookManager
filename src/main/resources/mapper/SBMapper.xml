@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gydx.bookManager.mapper.SBMapper">
-    <select id="updateBookIdByStockOutId" parameterType="integer" resultType="integer">
-        update stockOut_book set book_id = #{bookId} where stockOut_id = #{stockOutId};
-    </select>
+    <update id="updateBookIdByStockOutId" parameterType="integer">
+        update stockout_book set book_id = #{bookId} where stock_out_id = #{stockOutId};
+    </update>
 </mapper>

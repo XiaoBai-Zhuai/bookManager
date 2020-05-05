@@ -33,4 +33,8 @@ public interface MajorMapper extends Mapper<Major> {
     int addMajor(Major major);
 
     List<Major> findMajorBySchool(String schoolName);
+
+    List<Major> getMajorListBySchoolName(@Param("schoolName") String schoolName);
+
+    int updateMajorStatus(Major major1);
 }

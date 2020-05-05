@@ -5,22 +5,18 @@ import com.gydx.bookManager.entity.Supplier;
 import com.gydx.bookManager.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class SupplierInfoController {
 
     @Autowired
     private SupplierService supplierService;
 
     @RequestMapping("/getSupplierList")
-    @ResponseBody
     public String getSupplierList(Integer page, Integer limit, String name, String tel) {
         JSONObject jsonObject = new JSONObject();
         List<Supplier> suppliers, supplierList;
@@ -39,7 +35,6 @@ public class SupplierInfoController {
     }
 
     @RequestMapping("/updateSupplier")
-    @ResponseBody
     public String updateSupplier(@RequestBody Supplier supplier) {
         JSONObject jsonObject = new JSONObject();
         supplierService.updateSupplier(supplier);
@@ -48,11 +43,28 @@ public class SupplierInfoController {
     }
 
     @RequestMapping("/addSupplier")
-    @ResponseBody
     public String addSupplier(@RequestBody Supplier supplier) {
         JSONObject jsonObject = new JSONObject();
         supplierService.addSupplier(supplier);
         jsonObject.put("msg", "添加成功");
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDSupplierName")
+    public String getAllDSupplierName() {
+        JSONObject jsonObject = new JSONObject();
+        List<Supplier> suppliers = supplierService.getAllDSupplierName();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", suppliers);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllSupplierList")
+    public String getAllSupplierList() {
+        JSONObject jsonObject = new JSONObject();
+        List<Supplier> suppliers = supplierService.getAllSupplierList();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", suppliers);
         return jsonObject.toJSONString();
     }
 }

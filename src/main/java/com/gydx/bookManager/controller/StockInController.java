@@ -6,27 +6,25 @@ import com.gydx.bookManager.entity.StockIn;
 import com.gydx.bookManager.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.time.Year;
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class StockInController {
 
     @Autowired
     StockService stockService;
 
     @RequestMapping("/getStockInList")
-    @ResponseBody
     public String getStockInList(Integer page, Integer limit, String stockInDate, String bookName, String author,
-                                 Double price, String publisher, String publishTime, Integer bookSum, String supplier,
+                                 Double price, String publisher, String publisherTime, Integer bookSum, String supplier,
                                  String departmentName, String supplierTel) {
         StockInPojo stockInPojo = new StockInPojo(page, limit, stockInDate, bookName, author, price, bookSum, publisher,
-                publishTime, supplier, supplierTel, departmentName);
+                publisherTime, supplier, supplierTel, departmentName);
         JSONObject jsonObject = new JSONObject();
         List<StockIn> stockIns, stockInList;
         if (stockInPojo.flag().equals("")) {
@@ -44,7 +42,6 @@ public class StockInController {
     }
 
     @RequestMapping("/deleteOneStockInById")
-    @ResponseBody
     public String deleteOneStockInById(@RequestBody StockIn stockIn) {
         JSONObject jsonObject = new JSONObject();
         stockService.deleteStockInById(stockIn.getId());
@@ -53,7 +50,6 @@ public class StockInController {
     }
 
     @RequestMapping("/deleteStockIns")
-    @ResponseBody
     public String deleteStockIns(@RequestBody List<StockIn> stockIns) {
         JSONObject jsonObject = new JSONObject();
         stockService.deleteStockIns(stockIns);
@@ -62,7 +58,6 @@ public class StockInController {
     }
 
     @RequestMapping("/addStockIn")
-    @ResponseBody
     public String addStockIn(@RequestBody StockInPojo stockInPojo) {
         JSONObject jsonObject = new JSONObject();
         stockService.addStockIn(stockInPojo);
@@ -71,7 +66,6 @@ public class StockInController {
     }
 
     @RequestMapping("/updateStockIn")
-    @ResponseBody
     public String updateStockIn(@RequestBody StockInPojo stockInPojo) {
         JSONObject jsonObject = new JSONObject();
         stockService.updateStockIn(stockInPojo);

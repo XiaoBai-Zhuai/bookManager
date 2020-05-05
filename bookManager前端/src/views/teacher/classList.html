@@ -17,32 +17,26 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">班级名</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="name" name="name" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">专业名</label>
+                    <div class="layui-input-inline">
+                        <select id="majorName" name="majorName" lay-filter="majorName">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">专业名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="majorName" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">班级名</label>
+                    <div class="layui-input-inline">
+                        <select id="name" name="name">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">负责人学号</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="principalNumber" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">负责人学号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="principalNumber" placeholder="请输入" autocomplete="off"
+                            class="layui-input">
                     </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-classlist" lay-submit
-                            lay-filter="LAY-class-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+                    <button class="layui-btn layuiadmin-btn-classlist" lay-submit lay-filter="LAY-class-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
                 </div>
             </div>
             <div class="layui-card-body">
@@ -78,11 +72,82 @@
             var admin = layui.admin,
                 table = layui.table,
                 $ = layui.$,
-                form = layui.form;
+                form = layui.form,
+                setter = layui.setter,
+                layer = layui.layer;
+
+            layer.ready(function () {
+                $.ajax({
+                    url: setter.baseURL + 'getMajorListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#majorName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getAllClassListBySchoolName',
+                    type: 'post',
+                    data: JSON.stringify({
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#name").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
+
+            form.on('select(majorName)', function (data) {
+                $('#name').find("option").remove();
+                $('#name').append(new Option("", ""));
+                $.ajax({
+                    url: setter.baseURL + 'getAllClassListByMajorName',
+                    type: 'post',
+                    data: JSON.stringify({
+                        'majorName': data.value,
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#name").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
 
             table.render({
                 elem: '#test-table-toolbar',
-                url: 'http://localhost:8080/getClassList',
+                url: setter.baseURL + 'getClassList',
                 headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'
@@ -121,6 +186,7 @@
                         title: '负责人学号'
                     }, {
                         title: '操作',
+                        fixed: 'right',
                         align: 'center',
                         toolbar: '#test-table-toolbar-barDemo',
                         width: 150
@@ -141,7 +207,7 @@
                 if (obj.event === 'del') {
                     layer.confirm('确认删除', function (index) {
                         $.ajax({
-                            url: 'http://localhost:8080/deleteOneClass',
+                            url: setter.baseURL + 'deleteOneClass',
                             type: 'post',
                             headers: {
                                 'Authorization': sessionStorage.getItem("token"),
@@ -176,6 +242,13 @@
                         maxmin: true,
                         area: ['500px', '450px'],
                         btn: ['确定', '取消'],
+                        success: function (layero, index) {
+                            let body = layer.getChildFrame('body', index);
+                            body.find("#name").val(data.name);
+                            body.find("#util").val(data.majorName);
+                            body.find("#principalName").val(data.principalName);
+                            body.find("#principalNumber").val(data.principalNumber);
+                        },
                         yes: function (index, layero) {
                             var iframeWindow = window['layui-layer-iframe' + index],
                                 submitID = 'LAY-class-front-submit',
@@ -191,7 +264,7 @@
 
                                     //提交 Ajax 成功后，静态更新表格中的数据
                                     $.ajax({
-                                        url: "http://localhost:8080/updateClass",
+                                        url: setter.baseURL + "updateClass",
                                         type: 'post',
                                         headers: {
                                             'Authorization': sessionStorage
@@ -240,7 +313,7 @@
                     layer.confirm('确定删除', function (index) {
                         //执行 Ajax 后重载
                         $.ajax({
-                            url: 'http://localhost:8080/deleteClasses',
+                            url: setter.baseURL + 'deleteClasses',
                             type: 'post',
                             data: JSON.stringify(checkData),
                             headers: {
@@ -280,7 +353,7 @@
                                     var field = data.field; //获取提交的字段
 
                                     $.ajax({
-                                        url: "http://localhost:8080/addClass",
+                                        url: setter.baseURL + "addClass",
                                         type: 'post',
                                         headers: {
                                             'Authorization': sessionStorage

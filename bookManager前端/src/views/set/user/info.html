@@ -37,15 +37,14 @@
               <div class="layui-form-item">
                 <label class="layui-form-label">用户名</label>
                 <div class="layui-input-inline">
-                  <input type="text" id="username" name="username" readonly class="layui-input">
+                  <input type="text" id="username" name="username" readonly class="layui-input" disabled>
                 </div>
-                <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
               </div>
               <div class="layui-form-item">
                 <label class="layui-form-label">昵称</label>
                 <div class="layui-input-inline">
-                  <input type="text" id="nickname" name="nickname" lay-verify="nickname" autocomplete="off"
-                    readonly class="layui-input">
+                  <input type="text" id="nickname" name="nickname" lay-verify="nickname" autocomplete="off" readonly
+                    class="layui-input" disabled>
                 </div>
               </div>
               <div class="layui-form-item">
@@ -55,23 +54,10 @@
                   <input type="radio" name="sex" id="woman" value="女" title="女">
                 </div>
               </div>
-              <!-- <div class="layui-form-item">
-                <label class="layui-form-label">头像</label>
-                <div class="layui-input-inline">
-                  <input name="avatar" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址"
-                    value="http://cdn.layui.com/avatar/168.jpg" class="layui-input">
-                </div>
-                <div class="layui-input-inline layui-btn-container" style="width: auto;">
-                  <button type="button" class="layui-btn layui-btn-primary" id="LAY_avatarUpload">
-                    <i class="layui-icon">&#xe67c;</i>上传图片
-                  </button>
-                  <button class="layui-btn layui-btn-primary" layadmin-event="avartatPreview">查看图片</button>
-                </div>
-              </div> -->
               <div class="layui-form-item">
                 <label class="layui-form-label">手机</label>
                 <div class="layui-input-inline">
-                  <input type="text" id="cellphone" name="cellphone" value="" lay-verify="phone" autocomplete="off"
+                  <input type="text" id="tel" name="tel" value="" lay-verify="phone" autocomplete="off"
                     class="layui-input">
                 </div>
               </div>
@@ -82,12 +68,6 @@
                     class="layui-input">
                 </div>
               </div>
-              <!-- <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">备注</label>
-                <div class="layui-input-block">
-                  <textarea name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>
-                </div>
-              </div> -->
               <div class="layui-form-item">
                 <div class="layui-input-block">
                   <button class="layui-btn" lay-submit lay-filter="setmyinfo">确认修改</button>
@@ -108,78 +88,12 @@
       base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
       index: 'lib/index' //主入口模块
-    }).use(['index', 'set'], function () {
+    }).use(['index', 'set', 'userinfo'], function () {
       var $ = layui.$,
-        form = layui.form;
+        form = layui.form,
+        layer = layui.layer,
+        setter = layui.setter;
 
-      document.getElementById('username').setAttribute('value', sessionStorage.getItem('username'));
-      document.getElementById('nickname').setAttribute('value', sessionStorage.getItem('nickname'));
-      document.getElementById('email').setAttribute('value', sessionStorage.getItem('email') == null ? '' : sessionStorage.getItem('email'));
-      document.getElementById('cellphone').setAttribute('value', sessionStorage.getItem('cellphone') == null ? '' : sessionStorage.getItem('cellphone'));
-
-      var sex = sessionStorage.getItem('sex') == '男' ? 'man' : 'woman';
-      document.getElementById(sex).setAttribute('checked', "true");
-
-      var roleName = sessionStorage.getItem("roleName");
-      switch (roleName) {
-        case '管理员':
-          document.getElementById("option1").setAttribute("selected", "selected");
-          document.getElementById("option2").setAttribute("disabled", "disabled");
-          document.getElementById("option3").setAttribute("disabled", "disabled");
-          document.getElementById("option4").setAttribute("disabled", "disabled");
-          break;
-        case '学院负责人':
-          document.getElementById("option2").setAttribute("selected", "selected");
-          document.getElementById("option1").setAttribute("disabled", "disabled");
-          document.getElementById("option3").setAttribute("disabled", "disabled");
-          document.getElementById("option4").setAttribute("disabled", "disabled");
-          break;
-        case '班级负责人':
-          document.getElementById("option3").setAttribute("selected", "selected");
-          document.getElementById("option2").setAttribute("disabled", "disabled");
-          document.getElementById("option1").setAttribute("disabled", "disabled");
-          document.getElementById("option4").setAttribute("disabled", "disabled");
-          break;
-        case '普通学生':
-          document.getElementById("option4").setAttribute("selected", "selected");
-          document.getElementById("option2").setAttribute("disabled", "disabled");
-          document.getElementById("option3").setAttribute("disabled", "disabled");
-          document.getElementById("option1").setAttribute("disabled", "disabled");
-          break;
-      }
-      form.render();
-
-
-      form.on('submit(setmyinfo)', function (obj) {
-        // layer.msg(JSON.stringify(obj.field));
-
-        $.ajax({
-          url: 'http://localhost:8080/updateUserInfo',
-          type: 'post',
-          headers: {
-            'Authorization': sessionStorage.getItem("token"),
-            'Access-Control-Allow-Origin': '*'
-          },
-          // xhrFields: { withCredentials: true },
-          data: JSON.stringify(obj.field),
-          contentType: 'application/json;charset=utf-8',
-          dataType: 'json',
-          success: function (res) {
-            sessionStorage.setItem("nickname", res.user.nickname);
-            sessionStorage.setItem("sex", res.user.sex);
-            sessionStorage.setItem("email", res.user.email);
-            sessionStorage.setItem("cellphone", res.tel);
-            form.render();
-            layer.msg("修改成功！", {
-              offset: '15px'
-              , icon: 1
-              , time: 1000
-            }, function() {
-              parent.location.reload();
-            });
-          }
-        })
-      });
     });
   </script>
 </body>

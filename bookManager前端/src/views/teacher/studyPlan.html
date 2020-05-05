@@ -20,15 +20,17 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">专业名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="majorName" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
+                            <select id="majorName" name="majorName" lay-filter="majorName">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">课程名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="courseName" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
+                            <select id="courseName" name="courseName">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -56,11 +58,85 @@
             var admin = layui.admin,
                 table = layui.table,
                 $ = layui.$,
-                form = layui.form;
+                form = layui.form,
+                setter = layui.setter,
+                layer = layui.layer;
+
+            layer.ready(function () {
+                $.ajax({
+                    url: setter.baseURL + 'getMajorListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#majorName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getCourseListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        $("#courseName").find("option").remove();
+                        $("#courseName").append(new Option("", ""));
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#courseName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                })
+            })
+
+            form.on('select(majorName)', function (data) {
+                var majorName = data.value;
+                $.ajax({
+                    url: setter.baseURL + 'getCourseListByMajorName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'majorName': majorName,
+                        'schoolName': sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        $("#courseName").find("option").remove();
+                        $("#courseName").append(new Option("", ""));
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#courseName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                })
+            })
 
             table.render({
                 elem: '#test-table-toolbar',
-                url: 'http://localhost:8080/getStudyPlanList',
+                url: setter.baseURL + 'getStudyPlanList',
                 headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'

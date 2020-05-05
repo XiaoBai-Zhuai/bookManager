@@ -15,22 +15,6 @@
 <body>
     <div class="layui-fluid">
         <div class="layui-card">
-            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">专业名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-majorlist" lay-submit
-                            lay-filter="LAY-major-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
             <div class="layui-card-body">
 
                 <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
@@ -64,11 +48,12 @@
             var admin = layui.admin,
                 table = layui.table,
                 $ = layui.$,
-                form = layui.form;
+                form = layui.form
+            setter = layui.setter;
 
             table.render({
                 elem: '#test-table-toolbar',
-                url: 'http://localhost:8080/getMajorList',
+                url: setter.baseURL + 'getMajorList',
                 headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'
@@ -104,7 +89,7 @@
                 page: true,
                 groups: 5,
                 limit: 30,
-                height: 'full-130',
+                height: 'full-50',
                 text: {
                     none: '无结果'
                 }
@@ -116,7 +101,7 @@
                 if (obj.event === 'del') {
                     layer.confirm('确认删除', function (index) {
                         $.ajax({
-                            url: 'http://localhost:8080/deleteOneMajor',
+                            url: setter.baseURL + 'deleteOneMajor',
                             type: 'post',
                             headers: {
                                 'Authorization': sessionStorage.getItem("token"),
@@ -151,6 +136,10 @@
                         maxmin: true,
                         area: ['500px', '450px'],
                         btn: ['确定', '取消'],
+                        success: function (layero, index) {
+                            let body = layer.getChildFrame('body', index);
+                            body.find("#name").val(data.name);
+                        },
                         yes: function (index, layero) {
                             var iframeWindow = window['layui-layer-iframe' + index],
                                 submitID = 'LAY-major-front-submit',
@@ -166,7 +155,7 @@
 
                                     //提交 Ajax 成功后，静态更新表格中的数据
                                     $.ajax({
-                                        url: "http://localhost:8080/updateMajor",
+                                        url: setter.baseURL + "updateMajor",
                                         type: 'post',
                                         headers: {
                                             'Authorization': sessionStorage
@@ -194,15 +183,6 @@
                 }
             });
 
-            //监听搜索
-            form.on('submit(LAY-major-front-search)', function (data) {
-                var field = data.field;
-                //执行重载
-                table.reload('test-table-toolbar', {
-                    where: field
-                });
-            });
-
             var active = {
                 batchdel: function () {
                     var checkStatus = table.checkStatus('test-table-toolbar'),
@@ -215,7 +195,7 @@
                     layer.confirm('确定删除', function (index) {
                         //执行 Ajax 后重载
                         $.ajax({
-                            url: 'http://localhost:8080/deleteMajors',
+                            url: setter.baseURL + 'deleteMajors',
                             type: 'post',
                             data: JSON.stringify(checkData),
                             headers: {
@@ -238,7 +218,7 @@
                 add: function () {
                     layer.open({
                         type: 2,
-                        title: '添加班级',
+                        title: '添加专业',
                         content: 'majorform.html',
                         maxmin: true,
                         area: ['500px', '450px'],
@@ -254,8 +234,13 @@
                                 function (data) {
                                     var field = data.field; //获取提交的字段
 
+                                    field['schoolName'] = sessionStorage.getItem(
+                                        "schoolName");
+
+                                    console.log(field);
+
                                     $.ajax({
-                                        url: "http://localhost:8080/addMajor",
+                                        url: setter.baseURL + "addMajor",
                                         type: 'post',
                                         headers: {
                                             'Authorization': sessionStorage
@@ -266,11 +251,15 @@
                                         contentType: 'application/json;charset=utf-8',
                                         dataType: 'json',
                                         success: function (res) {
-                                            layer.msg("添加成功");
-                                            table.reload(
-                                                'test-table-toolbar'
-                                            ); //数据刷新
-                                            layer.close(index); //关闭弹层
+                                            if (res.msg != '添加成功') {
+                                                layer.msg(res.msg);
+                                            } else {
+                                                layer.msg("添加成功");
+                                                table.reload(
+                                                    'test-table-toolbar'
+                                                ); //数据刷新
+                                                layer.close(index); //关闭弹层
+                                            }
                                         },
                                         error: function (res) {
                                             layer.msg("添加失败");

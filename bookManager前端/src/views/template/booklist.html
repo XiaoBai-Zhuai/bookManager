@@ -18,49 +18,25 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">教材名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">教材名</label>
+                    <div class="layui-input-inline">
+                        <select class="form-control" id="name" lay-search lay-filter="name" name="name">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">作者名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="author" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">作者名</label>
+                    <div class="layui-input-inline">
+                        <select class="form-control" id="author" lay-search name="author">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">出版社</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="publisher" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">出版社</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="publisher" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
-                    <!-- <div class="layui-inline">
-                        <label class="layui-form-label">出版时间</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="publishTime" id="publishTime" class="layui-input" placeholder="请输入"
-                                autocomplete="off">
-                        </div>
-                    </div> -->
-                    
-
-                    <!-- <div class="layui-inline">
-                        <label class="layui-form-label">性别</label>
-                        <div class="layui-input-block">
-                            <select name="sex">
-                                <option value="0">不限</option>
-                                <option value="1">男</option>
-                                <option value="2">女</option>
-                            </select>
-                        </div>
-                    </div> -->
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-booklist" lay-submit lay-filter="LAY-book-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+                    <button class="layui-btn layuiadmin-btn-booklist" lay-submit lay-filter="LAY-book-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
                 </div>
             </div>
 
@@ -72,8 +48,10 @@
 
                 <table id="book-manage" lay-filter="book-manage"></table>
                 <script type="text/html" id="table-book">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                            class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                            class="layui-icon layui-icon-delete"></i>删除</a>
                 </script>
             </div>
         </div>
@@ -86,9 +64,50 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'booklist', 'table'], function () {
-            var $ = layui.$
-                , form = layui.form
-                , table = layui.table;
+            var $ = layui.$,
+                form = layui.form,
+                table = layui.table,
+                setter = layui.setter,
+                layer = layui.layer;
+
+            function LayuiCreateSelect(selectId, url, value) {
+
+                $.ajax({
+                    url: setter.baseURL + url,
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+
+                        var data = res.data;
+
+                        //判断id是否有“#”
+                        if (selectId.indexOf('#') != 0) {
+                            selectId = '#' + selectId;
+                        }
+
+                        $(selectId).empty();
+                        $(selectId).append(new Option("", ""));
+                        for (i = 0; i < data.length; i++) {
+                            if (value == 'name') {
+                                $(selectId).append(new Option(data[i].name, data[i].name));
+                            } else if (value == 'author') {
+                                $(selectId).append(new Option(data[i].author, data[i].author));
+                            }
+                        }
+                        form.render();
+                    }
+                });
+            }
+
+            layer.ready(function () {
+                LayuiCreateSelect("#name", "getAllDBookName", "name");
+                LayuiCreateSelect("#author", "getAllDBookAuthor", "author");
+            })
 
             //监听搜索
             form.on('submit(LAY-book-front-search)', function (data) {
@@ -103,8 +122,8 @@
             //事件
             var active = {
                 batchdel: function () {
-                    var checkStatus = table.checkStatus('book-manage')
-                        , checkData = checkStatus.data; //得到选中的数据
+                    var checkStatus = table.checkStatus('book-manage'),
+                        checkData = checkStatus.data; //得到选中的数据
 
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
@@ -114,7 +133,7 @@
 
                         //执行 Ajax 后重载
                         $.ajax({
-                            url: 'http://localhost:8080/deleteBooks',
+                            url: setter.baseURL + 'deleteBooks',
                             type: 'post',
                             data: JSON.stringify(checkData),
                             headers: {
@@ -133,47 +152,55 @@
                             }
                         })
                     });
-                }
-                , add: function () {
+                },
+                add: function () {
                     layer.open({
-                        type: 2
-                        , title: '添加教材'
-                        , content: 'bookform.html'
-                        , maxmin: true
-                        , area: ['500px', '450px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'LAY-book-front-submit'
-                                , submit = layero.find('iframe').contents().find('#' + submitID);
+                        type: 2,
+                        title: '添加教材',
+                        content: 'bookform.html',
+                        maxmin: true,
+                        area: ['500px', '450px'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index],
+                                submitID = 'LAY-book-front-submit',
+                                submit = layero.find('iframe').contents().find('#' +
+                                    submitID);
 
                             //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-                                var field = data.field; //获取提交的字段
+                            iframeWindow.layui.form.on('submit(' + submitID + ')',
+                                function (data) {
+                                    var field = data.field; //获取提交的字段
 
-                                $.ajax({
-                                    url: "http://localhost:8080/addBook",
-                                    type: 'post',
-                                    headers: {
-                                        'Authorization': sessionStorage.getItem("token"),
-                                        'Access-Control-Allow-Origin': '*'
-                                    },
-                                    data: JSON.stringify(field),
-                                    contentType: 'application/json;charset=utf-8',
-                                    dataType: 'json',
-                                    success: function (res) {
-                                        layer.msg("添加成功");
-                                        table.reload('book-manage'); //数据刷新
-                                        layer.close(index); //关闭弹层
-                                    },
-                                    error: function (res) {
-                                        layer.msg("添加失败");
-                                        // table.reload('book-manage'); //数据刷新
-                                        // layer.close(index); //关闭弹层
-                                    }
-                                })
+                                    $.ajax({
+                                        url: setter.baseURL + "addBook",
+                                        type: 'post',
+                                        headers: {
+                                            'Authorization': sessionStorage
+                                                .getItem("token"),
+                                            'Access-Control-Allow-Origin': '*'
+                                        },
+                                        data: JSON.stringify(field),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'json',
+                                        success: function (res) {
+                                            if (res.msg == '添加成功') {
+                                                layer.msg("添加成功");
+                                                table.reload(
+                                                    'book-manage'); //数据刷新
+                                                layer.close(index); //关闭弹层
+                                            } else {
+                                                layer.msg(res.msg);
+                                            }
+                                        },
+                                        error: function (res) {
+                                            layer.msg("添加失败");
+                                            // table.reload('book-manage'); //数据刷新
+                                            // layer.close(index); //关闭弹层
+                                        }
+                                    })
 
-                            });
+                                });
 
                             submit.trigger('click');
                         }

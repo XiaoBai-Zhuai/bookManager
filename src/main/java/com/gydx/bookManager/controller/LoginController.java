@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class LoginController {
 
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -32,7 +32,6 @@ public class LoginController {
     private RoleService roleService;
 
     @RequestMapping("/login")
-    @ResponseBody
     public String login(@RequestBody LoginPojo loginPojo) {
         logger.info( loginPojo.getUsername()+ "登录");
         JSONObject jsonObject = new JSONObject();
@@ -48,7 +47,6 @@ public class LoginController {
             jsonObject.put("token", subject.getSession().getId());
             jsonObject.put("msg", "登录成功");
         } catch (UnknownAccountException e) {
-//            e.printStackTrace();
             jsonObject.put("msg", "该用户不存在");
             return jsonObject.toJSONString();
         } catch (Exception e) {
@@ -67,7 +65,6 @@ public class LoginController {
     }
 
     @RequestMapping("/logout")
-    @ResponseBody
     public String logout() {
         JSONObject jsonObject = new JSONObject();
         Subject subject = SecurityUtils.getSubject();

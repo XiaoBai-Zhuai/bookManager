@@ -29,11 +29,13 @@
                     autocomplete="off" class="layui-input">
             </div>
         </div>
+        <input id="util" style="display: none;"/>
         <div class="layui-form-item">
             <label class="layui-form-label">班级名</label>
             <div class="layui-input-inline">
-                <input type="text" id="className" name="className" lay-verify="required" placeholder="请输入班级名"
-                    autocomplete="off" class="layui-input">
+                <select lay-search id="className" name="className" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item layui-hide">
@@ -48,9 +50,15 @@
             base: '../../../layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'form', 'upload'], function () {
-
-        })
+        }).use(['index', 'form', 'upload', 'studentform'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                layer = layui.layer,
+                setter = layui.setter;
+            
+        });
     </script>
 </body>
 

@@ -58,23 +58,10 @@
           <a href="forget.html" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>
         </div>
         <div class="layui-form-item">
-          <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="user-login-submit">登 入</button>
+          <button class="layui-btn layui-btn-fluid" id="user-login-submit" lay-submit lay-filter="user-login-submit">登 入</button>
         </div>
       </div>
     </div>
-
-    <!--<div class="ladmin-user-login-theme">
-      <script type="text/html" template>
-        <ul>
-          <li data-theme=""><img src="{{ layui.setter.base }}style/res/bg-none.jpg"></li>
-          <li data-theme="#03152A" style="background-color: #03152A;"></li>
-          <li data-theme="#2E241B" style="background-color: #2E241B;"></li>
-          <li data-theme="#50314F" style="background-color: #50314F;"></li>
-          <li data-theme="#344058" style="background-color: #344058;"></li>
-          <li data-theme="#20222A" style="background-color: #20222A;"></li>
-        </ul>
-      </script>
-    </div>-->
 
   </div>
 
@@ -96,6 +83,13 @@
         search = router.search;
 
       form.render();
+
+      $(document).keydown(function(event) {
+        if(event.keyCode == 13) {
+          $("#user-login-submit").trigger('click');
+          return false;
+        }
+      });
 
       layer.ready(function () {
         var oRemember = document.getElementById('remember');
@@ -155,8 +149,7 @@
         } else {
           //请求登入接口
           $.ajax({
-            url: 'http://localhost:8080/login' //实际使用请改成服务端真实接口
-              ,
+            url: setter.baseURL + 'login',
             type: 'post',
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify(obj.field),
@@ -180,6 +173,7 @@
                   sessionStorage.setItem("username", res.user.username);
                   sessionStorage.setItem("nickname", res.user.nickname);
                   sessionStorage.setItem("email", res.user.email);
+                  sessionStorage.setItem("tel", res.user.tel);
                   sessionStorage.setItem("sex", res.user.sex);
                   sessionStorage.setItem("id", res.user.id);
                   sessionStorage.setItem("roleName", res.role.name);
@@ -193,7 +187,7 @@
                       "username": username
                     };
                     $.ajax({
-                      url: 'http://localhost:8080/getStudentInfo',
+                      url: setter.baseURL + 'getStudentInfo',
                       type: 'post',
                       headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -209,14 +203,13 @@
                         sessionStorage.setItem("majorName", res.student.majorName);
                         sessionStorage.setItem("schoolId", res.student.schoolId);
                         sessionStorage.setItem("schoolName", res.student.schoolName);
+                        if (roleName == '普通学生') {
+                          location.href = 'indexstudent.html';
+                        } else if (roleName == '班级负责人') {
+                          location.href = 'indexstudentp.html';
+                        }
                       }
                     });
-                  }
-
-                  if (roleName == '普通学生') {
-                    location.href = 'indexstudent.html';
-                  } else if (roleName == '班级负责人') {
-                    location.href = 'indexstudentp.html';
                   } else if (roleName == '学院负责人') {
                     location.href = 'indexteacher.html';
                   } else if (roleName == '管理员') {

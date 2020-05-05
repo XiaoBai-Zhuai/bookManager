@@ -41,4 +41,8 @@ public interface UserMapper extends Mapper<User> {
     int updateUserByUsername(User user);
 
     int updateOneStatusByUsername(String number);
+
+    List<User> getDUserNickname();
+
+    void updateAUser(User u);
 }

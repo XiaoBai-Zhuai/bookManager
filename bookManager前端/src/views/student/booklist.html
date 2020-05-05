@@ -18,49 +18,25 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">教材名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">教材名</label>
+                    <div class="layui-input-inline">
+                        <select class="form-control" id="name" lay-search lay-filter="name" name="name">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">作者名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="author" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">作者名</label>
+                    <div class="layui-input-inline">
+                        <select class="form-control" id="author" lay-search name="author">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">出版社</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="publisher" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">出版社</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="publisher" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
-                    <!-- <div class="layui-inline">
-                        <label class="layui-form-label">出版时间</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="publishTime" id="publishTime" class="layui-input" placeholder="请输入"
-                                autocomplete="off">
-                        </div>
-                    </div> -->
-                    
-
-                    <!-- <div class="layui-inline">
-                        <label class="layui-form-label">性别</label>
-                        <div class="layui-input-block">
-                            <select name="sex">
-                                <option value="0">不限</option>
-                                <option value="1">男</option>
-                                <option value="2">女</option>
-                            </select>
-                        </div>
-                    </div> -->
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-booklist" lay-submit lay-filter="LAY-book-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+                    <button class="layui-btn layuiadmin-btn-booklist" lay-submit lay-filter="LAY-book-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
                 </div>
             </div>
 
@@ -77,9 +53,50 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'studentbooklist', 'table'], function () {
-            var $ = layui.$
-                , form = layui.form
-                , table = layui.table;
+            var $ = layui.$,
+                form = layui.form,
+                table = layui.table,
+                setter = layui.setter,
+                layer = layui.layer;
+
+            function LayuiCreateSelect(selectId, url, value) {
+
+                $.ajax({
+                    url: setter.baseURL + url,
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+
+                        var data = res.data;
+
+                        //判断id是否有“#”
+                        if (selectId.indexOf('#') != 0) {
+                            selectId = '#' + selectId;
+                        }
+
+                        $(selectId).empty();
+                        $(selectId).append(new Option("", ""));
+                        for (i = 0; i < data.length; i++) {
+                            if (value == 'name') {
+                                $(selectId).append(new Option(data[i].name, data[i].name));
+                            } else if (value == 'author') {
+                                $(selectId).append(new Option(data[i].author, data[i].author));
+                            }
+                        }
+                        form.render();
+                    }
+                });
+            }
+
+            layer.ready(function () {
+                LayuiCreateSelect("#name", "getAllDBookName", "name");
+                LayuiCreateSelect("#author", "getAllDBookAuthor", "author");
+            })
 
             //监听搜索
             form.on('submit(LAY-book-front-search)', function (data) {

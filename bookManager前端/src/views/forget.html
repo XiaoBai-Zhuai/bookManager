@@ -81,7 +81,7 @@
         return layer.msg("邮箱格式不正确！");
       }
       $.ajax({
-        url: 'http://localhost:8080/forget/getCode',
+        url: setter.baseURL + 'forget/getCode',
         type: 'post',
         data: JSON.stringify({ 'email': email }),
         dataType: 'json',
@@ -100,7 +100,7 @@
       var field = obj.field;
 
       $.ajax({
-        url: 'http://localhost:8080/forget/updatePassword',
+        url: setter.baseURL + 'forget/updatePassword',
         type: 'post',
         data: JSON.stringify(field),
         dataType: 'json',

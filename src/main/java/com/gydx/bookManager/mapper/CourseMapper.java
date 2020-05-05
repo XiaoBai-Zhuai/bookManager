@@ -12,4 +12,11 @@ public interface CourseMapper extends Mapper<Course> {
     List<Course> selectCourseListByPage(@Param("page") Integer page,@Param("limit") Integer limit);
 
     int updateCourse(Course course);
+
+    List<Course> getCourseListBySchoolName(@Param("schoolName") String schoolName);
+
+    List<Course> getCourseListByMajorName(@Param("majorName") String majorName, @Param("schoolName") String schoolName);
+
+    List<Course> findAll();
+
 }

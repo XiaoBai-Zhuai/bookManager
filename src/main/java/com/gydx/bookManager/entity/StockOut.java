@@ -11,6 +11,14 @@ public class StockOut implements Serializable {
     private Integer id;
     @Transient
     private String bookName;
+    @Transient
+    private String author;
+    @Transient
+    private String publisher;
+    @Transient
+    private String publishTime;
+    @Transient
+    private Double bookPrice;
     @Column
     private Integer bookSum;
     @Column
@@ -56,5 +64,37 @@ public class StockOut implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public Double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(Double bookPrice) {
+        this.bookPrice = bookPrice;
     }
 }

@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin()
-@Controller
+@RestController
 public class UserInfoController {
 
     @Autowired
     private UserService userService;
 
     @RequestMapping("/updateUserInfo")
-    @ResponseBody
     public String updateUserInfo(@RequestBody UserInfoPojo userInfoPojo) {
         JSONObject jsonObject = new JSONObject();
         User user = userService.updateUser(userInfoPojo);
@@ -27,7 +28,6 @@ public class UserInfoController {
     }
 
     @RequestMapping("/updatePassword")
-    @ResponseBody
     public String updatePassword(@RequestBody ReceiveData receiveData) {
         JSONObject jsonObject = new JSONObject();
         int i = userService.updatePassword(receiveData.getOldPassword(), receiveData.getPassword(),
@@ -39,4 +39,21 @@ public class UserInfoController {
         }
         return jsonObject.toJSONString();
     }
+
+    @RequestMapping("/getAllUserList")
+    public String getAllUserList() {
+        JSONObject jsonObject = new JSONObject();
+        List<User> users = userService.getAllUserList();
+        jsonObject.put("data", users);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getDUserNickname")
+    public String getDUserNickname() {
+        JSONObject jsonObject = new JSONObject();
+        List<User> users = userService.getDUserNickname();
+        jsonObject.put("data", users);
+        return jsonObject.toJSONString();
+    }
+
 }

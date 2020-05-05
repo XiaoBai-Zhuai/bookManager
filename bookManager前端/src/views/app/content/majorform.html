@@ -18,15 +18,17 @@
         <div class="layui-form-item">
             <label class="layui-form-label">专业名</label>
             <div class="layui-input-inline">
-                <input type="text" id="className" name="name" lay-verify="required" placeholder="请输入专业名" autocomplete="off"
+                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入专业名" autocomplete="off"
                     class="layui-input">
             </div>
         </div>
+        <input id="util" style="display: none;"/>
         <div class="layui-form-item">
             <label class="layui-form-label">所属学院</label>
             <div class="layui-input-inline">
-                <input type="text" name="schoolName" lay-verify="required" placeholder="请输入所属学院名" autocomplete="off"
-                    class="layui-input">
+                <select lay-search id="schoolName" name="schoolName" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item layui-hide">
@@ -40,9 +42,14 @@
             base: '../../../layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'form', 'upload'], function () {
-
-        })
+        }).use(['index', 'form', 'upload', 'majorform'], function () {
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                setter = layui.setter,
+                layer = layui.layer;
+        });
     </script>
 </body>
 

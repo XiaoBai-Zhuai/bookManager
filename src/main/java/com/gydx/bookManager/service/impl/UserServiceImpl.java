@@ -5,11 +5,17 @@ import com.gydx.bookManager.mapper.UserMapper;
 import com.gydx.bookManager.entity.User;
 import com.gydx.bookManager.service.UserService;
 import com.gydx.bookManager.util.MD5Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
+
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -75,5 +81,25 @@ public class UserServiceImpl implements UserService {
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    public List<User> getAllUserList() {
+        return userMapper.selectAllUserList();
+    }
+
+    /**
+     * 获取不重复的所有用户的昵称
+     * @return
+     */
+    @Override
+    public List<User> getDUserNickname() {
+        List<User> users = null;
+        try {
+            users = userMapper.getDUserNickname();
+        } catch (Exception e) {
+            logger.error("获取不重复的所有用户的昵称出错，错误：" + e);
+        }
+        return users;
     }
 }

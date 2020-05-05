@@ -8,6 +8,42 @@ public class StockOutPojo {
     private String bookName;
     private Integer bookSum;
     private String departmentName;
+    private String author;
+    private String publishTime;
+    private String publisher;
+    private String bookPrice;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(String bookPrice) {
+        this.bookPrice = bookPrice;
+    }
 
     public String flag() {
         return this.bookName + this.departmentName + this.stockOutDate;

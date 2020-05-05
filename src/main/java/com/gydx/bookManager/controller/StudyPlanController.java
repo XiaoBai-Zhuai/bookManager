@@ -6,22 +6,18 @@ import com.gydx.bookManager.entity.MajorCourse;
 import com.gydx.bookManager.service.StudyPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class StudyPlanController {
 
     @Autowired
     private StudyPlanService studyPlanService;
 
     @RequestMapping("/getStudyPlanList")
-    @ResponseBody
     public String getStudyPlanList(Integer page, Integer limit, String schoolName, String majorName, String courseName) {
         JSONObject jsonObject = new JSONObject();
         List<MajorCourse> majorCourses, majorCourseList;
@@ -40,7 +36,6 @@ public class StudyPlanController {
     }
 
     @RequestMapping("/getStudyPlan")
-    @ResponseBody
     public String getStudyPlan(String majorName) {
         JSONObject jsonObject = new JSONObject();
         List<MajorCourse> majorCourses = studyPlanService.getStudyPlan(majorName);
@@ -51,7 +46,6 @@ public class StudyPlanController {
     }
 
     @RequestMapping("/deleteOneStudyPlan")
-    @ResponseBody
     public String deleteOneStudyPlan(@RequestBody MajorCourse majorCourse) {
         JSONObject jsonObject = new JSONObject();
         studyPlanService.deleteOneStudyPlan(majorCourse);
@@ -60,7 +54,6 @@ public class StudyPlanController {
     }
 
     @RequestMapping("/updateStudyPlan")
-    @ResponseBody
     public String updateStudyPlan(@RequestBody MajorCourse majorCourse) {
         JSONObject jsonObject = new JSONObject();
         int i = studyPlanService.updateStudyPlan(majorCourse);
@@ -73,7 +66,6 @@ public class StudyPlanController {
     }
 
     @RequestMapping("/deleteStudyPlans")
-    @ResponseBody
     public String deleteStudyPlans(@RequestBody List<MajorCourse> majorCourses) {
         JSONObject jsonObject = new JSONObject();
         studyPlanService.deleteStudyPlans(majorCourses);
@@ -82,7 +74,6 @@ public class StudyPlanController {
     }
 
     @RequestMapping("/addStudyPlan")
-    @ResponseBody
     public String addStudyPlan(@RequestBody MajorCourse majorCourse) {
         JSONObject jsonObject = new JSONObject();
         int i = studyPlanService.addStudyPlan(majorCourse);

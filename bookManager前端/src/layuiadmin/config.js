@@ -16,6 +16,8 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     ,engine: '.html' //视图文件后缀名
     ,pageTabs: true //是否开启页面选项卡功能。iframe版推荐开启
 
+    ,baseURL: 'http://localhost:8080/'
+
     ,name: 'layuiAdmin'
     ,tableName: 'layuiAdmin' //本地存储表名
     ,MOD_NAME: 'admin' //模块事件名

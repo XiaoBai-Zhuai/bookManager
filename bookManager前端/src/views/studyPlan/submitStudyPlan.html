@@ -18,12 +18,12 @@
         <div class="layui-card">
             <div class="layui-card-header">提交专业教学计划</div>
             <div class="layui-card-body" style="padding: 15px;">
-                <form class="layui-form" action="" lay-filter="component-form-group">
+                <form class="layui-form" action="" lay-filter="component-form-group" id="studyPlan">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">学院名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="school" name="schoolName" readonly autocomplete="off"
+                                <input type="text" id="school" name="schoolName" readonly disabled autocomplete="off"
                                     class="layui-input">
                             </div>
                         </div>
@@ -31,27 +31,58 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">专业名</label>
                         <div class="layui-input-inline">
-                            <select name="majorName" id="majorName">
+                            <select name="majorName" id="majorName" lay-verify="required">
                                 <option value=""></option>
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="layui-form-item">
-                        <label class="layui-form-label"></label>
-                        <div class="layui-input-inline">
-                            <button type="button" id="addCourse" class="layui-btn">增加课程</button>
-                        </div>
-                    </div> -->
                     <div class="layui-form-item">
                         <label class="layui-form-label">课程名</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="courseName" name="courseName" autocomplete="off" class="layui-input">
+                            <input type="text" id="courseName" name="courseName" lay-verify="required" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">教材名</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="bookName" name="bookName" autocomplete="off" class="layui-input">
+                            <select lay-search id="bookName" name="bookName" lay-verify="required"
+                                lay-filter="bookName">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">作者</label>
+                        <div class="layui-input-inline">
+                            <select lay-search id="author" name="author" lay-verify="required" lay-filter="author">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">出版日期</label>
+                        <div class="layui-input-inline">
+                            <select lay-search id="publishTime" name="publishTime" lay-verify="required"
+                                lay-filter="publishTime">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">出版社</label>
+                        <div class="layui-input-inline">
+                            <select lay-search id="publisher" name="publisher" lay-verify="required"
+                                lay-filter="publisher">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">教材定价(元)</label>
+                        <div class="layui-input-inline">
+                            <select lay-search id="bookPrice" name="bookPrice" lay-verify="required">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -62,12 +93,12 @@
                     </div>
                     <div class="layui-form-item layui-layout-admin">
                         <div class="layui-input-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                            <button class="layui-btn" id="component-form-demo1" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
                             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         </div>
                     </div>
             </div>
-            
+
             </form>
         </div>
     </div>
@@ -81,12 +112,54 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'form', 'laydate'], function () {
-            var $ = layui.$
-                , admin = layui.admin
-                , element = layui.element
-                , layer = layui.layer
-                , laydate = layui.laydate
-                , form = layui.form;
+            var $ = layui.$,
+                admin = layui.admin,
+                element = layui.element,
+                layer = layui.layer,
+                laydate = layui.laydate,
+                form = layui.form,
+                setter = layui.setter;
+
+
+            $(document).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#component-form-demo1").trigger('click');
+                    return false;
+                }
+            });
+
+            function LayuiCreateSelect(selectId, url, value) {
+
+                $.ajax({
+                    url: setter.baseURL + url,
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+
+                        var data = res.data;
+
+                        //判断id是否有“#”
+                        if (selectId.indexOf('#') != 0) {
+                            selectId = '#' + selectId;
+                        }
+
+                        $(selectId).empty();
+                        $(selectId).append(new Option("", ""));
+                        for (i = 0; i < data.length; i++) {
+                            if (value == 'name')
+                                $(selectId).append(new Option(data[i].name, data[i].name));
+                            else if (value == 'author')
+                                $(selectId).append(new Option(data[i].author, data[i].author));
+                        }
+                        form.render();
+                    }
+                });
+            }
 
             form.render(null, 'component-form-group');
 
@@ -97,9 +170,12 @@
             document.getElementById("school").setAttribute("value", sessionStorage.getItem("schoolName"));
 
             layer.ready(function () {
-                var data = { "schoolId": sessionStorage.getItem("schoolId") };
+
+                var data = {
+                    "schoolName": sessionStorage.getItem("schoolName")
+                };
                 $.ajax({
-                    url: 'http://localhost:8080/getMajorListBySchool',
+                    url: setter.baseURL + 'getMajorListBySchoolName',
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -115,33 +191,237 @@
                         }
                         form.render();
                     }
-                })
+                });
+
+                $.ajax({
+                    url: setter.baseURL + 'getAllDBookName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        var data = res.data;
+                        var bookName = $("#butil").val();
+                        for (i = 0; i < data.length; i++) {
+                            $("#bookName").append(new Option(data[i].name, data[i].name));
+                            if (bookName != undefined && bookName == data[i].name) {
+                                $("#bookName").get(0).selectedIndex = i + 1;
+                            }
+                        }
+                        form.render();
+                    }
+                });
+            });
+
+            form.on('select(bookName)', function (data) {
+                var bookName = data.value;
+                if ((bookName != '' && bookName != null && bookName != undefined)) {
+                    $("#author").find("option").remove();
+                    $("#author").append(new Option("", ""));
+                    $("#publishTime").find("option").remove();
+                    $("#publishTime").append(new Option("", ""));
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                    $.ajax({
+                        url: setter.baseURL + 'getAllDBookAuthorByBookName',
+                        type: 'post',
+                        headers: {
+                            'Authorization': sessionStorage.getItem("token"),
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        data: JSON.stringify({
+                            'bookName': data.value
+                        }),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            $("#author").find("option").remove();
+                            $("#author").append(new Option("", ""));
+                            var data = res.data;
+                            for (i = 0; i < data.length; i++) {
+                                $("#author").append(new Option(data[i].author, data[i]
+                                    .author));
+                            }
+                            form.render();
+                        }
+                    });
+                }
+                if (bookName == '') {
+                    $("#author").find("option").remove();
+                    $("#author").append(new Option("", ""));
+                    $("#publishTime").find("option").remove();
+                    $("#publishTime").append(new Option("", ""));
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                }
+            });
+
+            form.on('select(author)', function (data) {
+                var author = data.value;
+                if (author == '') {
+                    $("#publishTime").find("option").remove();
+                    $("#publishTime").append(new Option("", ""));
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                }
+                if (author != '' && author != null && author != undefined) {
+                    $("#publishTime").find("option").remove();
+                    $("#publishTime").append(new Option("", ""));
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                    $.ajax({
+                        url: setter.baseURL + 'getAllDBookPublishTimeByBookAuthor',
+                        type: 'post',
+                        headers: {
+                            'Authorization': sessionStorage.getItem("token"),
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        data: JSON.stringify({
+                            'bookName': $("#bookName").val(),
+                            'author': data.value
+                        }),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            $("#publishTime").find("option").remove();
+                            $("#publishTime").append(new Option("", ""));
+                            var data = res.data;
+
+                            for (i = 0; i < data.length; i++) {
+                                $("#publishTime").append(new Option(data[i].publishTime,
+                                    data[i].publishTime));
+                            }
+                            form.render();
+                        }
+                    });
+                }
+            });
+
+            form.on('select(publishTime)', function (data) {
+                var publishTime = data.value;
+                if (publishTime != '' && publishTime != null && publishTime != undefined) {
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                    $.ajax({
+                        url: setter.baseURL + 'getAllDBookPublisherByBookPublishTime',
+                        type: 'post',
+                        headers: {
+                            'Authorization': sessionStorage.getItem("token"),
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        data: JSON.stringify({
+                            'bookName': $("#bookName").val(),
+                            'author': $("#author").val(),
+                            'publishTime': data.value
+                        }),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            $("#publisher").find("option").remove();
+                            $("#publisher").append(new Option("", ""));
+                            var data = res.data;
+
+                            for (i = 0; i < data.length; i++) {
+                                $("#publisher").append(new Option(data[i].publisher, data[i]
+                                    .publisher));
+                            }
+                            form.render();
+                        }
+                    });
+                } else {
+                    $("#publisher").find("option").remove();
+                    $("#publisher").append(new Option("", ""));
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                }
+            });
+
+            form.on('select(publisher)', function (data) {
+                var publisher = data.value;
+                if (publisher != '' && publisher != undefined && publisher != null) {
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                    $.ajax({
+                        url: setter.baseURL + 'getAllDBookPriceByBookPublisher',
+                        type: 'post',
+                        headers: {
+                            'Authorization': sessionStorage.getItem("token"),
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        data: JSON.stringify({
+                            'bookName': $("#bookName").val(),
+                            'author': $("#author").val(),
+                            'publishTime': $("#publishTime").val(),
+                            'publisher': data.value
+                        }),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            $("#bookPrice").find("option").remove();
+                            $("#bookPrice").append(new Option("", ""));
+                            var data = res.data;
+                            for (i = 0; i < data.length; i++) {
+                                $("#bookPrice").append(new Option(data[i].price, data[i]
+                                    .price));
+                            }
+                            form.render();
+                        }
+                    });
+                } else {
+                    $("#bookPrice").find("option").remove();
+                    $("#bookPrice").append(new Option("", ""));
+                    form.render('select');
+                }
             });
 
             /* 监听提交 */
             form.on('submit(component-form-demo1)', function (data) {
 
                 $.ajax({
-                    url: 'http://localhost:8080/addStudyPlan',
+                    url: setter.baseURL + 'addStudyPlan',
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
                         'Access-Control-Allow-Origin': '*'
                     },
-                    data: JSON.stringify(data),
+                    data: JSON.stringify(data.field),
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    success: function(res) {
-                        layer.msg("提交成功");
-                        form.render();
+                    success: function (res) {
+                        if (res.msg != '添加成功') {
+                            layer.msg(res.msg);
+                        } else {
+                            layer.msg("提交成功");
+                            $("#studyPlan")[0].reset();
+                            form.render();
+                        }
                     },
-                    error: function(res) {
+                    error: function (res) {
                         layer.msg("提交失败");
                     }
-                })
+                });
                 return false;
             });
-
         });
     </script>
 </body>

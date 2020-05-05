@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Date;
+import java.time.Year;
 
 public class Book implements Serializable {
     @Column
@@ -23,6 +25,8 @@ public class Book implements Serializable {
     private String publishTime;
     @Column
     private Integer stockSum;
+    @Column
+    private Integer status;
 
     public Integer getId() {
         return id;
@@ -78,5 +82,13 @@ public class Book implements Serializable {
 
     public void setStockSum(Integer stockSum) {
         this.stockSum = stockSum;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

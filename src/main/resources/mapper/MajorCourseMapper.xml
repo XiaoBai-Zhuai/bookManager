@@ -16,13 +16,13 @@
         where
         <trim prefixOverrides="and|or">
             <if test="schoolName != null and schoolName != ''">
-                and major_id = (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+                and major_id IN (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
             </if>
             <if test="majorName != null and majorName != ''">
                 and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
             </if>
             <if test="courseName != null and courseName != ''">
-                and course_id = (select id from course where name like concat('%', #{courseName}, '%'))
+                and course_id IN (select id from course where name like concat('%', #{courseName}, '%'))
             </if>
         </trim>
         limit #{page}, #{limit};
@@ -32,7 +32,7 @@
         where
         <trim prefixOverrides="and|or">
             <if test="schoolName != null and schoolName != ''">
-                and major_id = (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+                and major_id IN (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
             </if>
             <if test="majorName != null and majorName != ''">
                 and major_id = (select id from major where name like concat('%', #{majorName}, '%'))
