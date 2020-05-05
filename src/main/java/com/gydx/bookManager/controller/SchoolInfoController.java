@@ -6,22 +6,18 @@ import com.gydx.bookManager.pojo.SchoolInfoPojo;
 import com.gydx.bookManager.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class SchoolInfoController {
 
     @Autowired
     private SchoolService schoolService;
 
     @RequestMapping("/getSchoolList")
-    @ResponseBody
     public String getSchoolList(Integer page, Integer limit, String name, String principalName, String principalNumber) {
         SchoolInfoPojo schoolInfoPojo = new SchoolInfoPojo(page, limit, name, principalName, principalNumber);
         JSONObject jsonObject = new JSONObject();
@@ -41,7 +37,6 @@ public class SchoolInfoController {
     }
 
     @RequestMapping("/deleteOneSchool")
-    @ResponseBody
     public String deleteOneSchool(@RequestBody School school) {
         JSONObject jsonObject = new JSONObject();
         schoolService.deleteOneSchool(school);
@@ -50,7 +45,6 @@ public class SchoolInfoController {
     }
 
     @RequestMapping("/updateSchool")
-    @ResponseBody
     public String updateSchool(@RequestBody School school) {
         JSONObject jsonObject = new JSONObject();
         int i = schoolService.updateSchool(school);
@@ -63,7 +57,6 @@ public class SchoolInfoController {
     }
 
     @RequestMapping("/deleteSchools")
-    @ResponseBody
     public String deleteSchools(@RequestBody List<School> schools) {
         JSONObject jsonObject = new JSONObject();
         schoolService.deleteSchools(schools);
@@ -72,7 +65,6 @@ public class SchoolInfoController {
     }
 
     @RequestMapping("/addSchool")
-    @ResponseBody
     public String addSchool(@RequestBody School school) {
         JSONObject jsonObject = new JSONObject();
         int i = schoolService.addSchool(school);
@@ -81,6 +73,15 @@ public class SchoolInfoController {
             return jsonObject.toJSONString();
         }
         jsonObject.put("msg", "增加成功");
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllSchoolList")
+    public String getAllSchoolList() {
+        JSONObject jsonObject = new JSONObject();
+        List<School> schools = schoolService.getAllSchoolList();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", schools);
         return jsonObject.toJSONString();
     }
 

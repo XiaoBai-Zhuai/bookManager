@@ -170,6 +170,22 @@ public class MajorServiceImpl implements MajorService {
      */
     @Override
     public int addMajor(Major major) {
+        Major m = new Major();
+        m.setName(major.getName());
+        m.setSchoolName(major.getSchoolName());
+        Major major1 = majorMapper.selectOne(m);
+        if (major1 != null) {
+            if (major1.getStatus() == 1) {
+                return 0;
+            } else if (major1.getStatus() == 0) {
+                try {
+                    majorMapper.updateMajorStatus(major1);
+                } catch (Exception e) {
+                    logger.error("将专业的status由 0 改为 1 出错，错误：" + e);
+                }
+                return 1;
+            }
+        }
         try {
             majorMapper.addMajor(major);
         } catch (Exception e) {
@@ -190,6 +206,22 @@ public class MajorServiceImpl implements MajorService {
             majors = majorMapper.findMajorBySchool(schoolName);
         } catch (Exception e) {
             logger.error("根据学院名查询专业名出错，错误：" + e);
+        }
+        return majors;
+    }
+
+    /**
+     * 根据学院名查询出该学院下所有的专业
+     * @param schoolName
+     * @return
+     */
+    @Override
+    public List<Major> getMajorListBySchoolName(String schoolName) {
+        List<Major> majors = null;
+        try {
+            majors = majorMapper.getMajorListBySchoolName(schoolName);
+        } catch (Exception e) {
+            logger.error("根据学院名查询专业列表出错，错误：" + e);
         }
         return majors;
     }

@@ -25,4 +25,6 @@ public interface MajorService {
     int addMajor(Major major);
 
     List<Major> getMajorNameBySchoolName(String schoolName);
+
+    List<Major> getMajorListBySchoolName(String schoolName);
 }

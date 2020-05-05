@@ -7,22 +7,18 @@ import com.gydx.bookManager.pojo.ReceiveData;
 import com.gydx.bookManager.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class ClassInfoController {
 
     @Autowired
     private ClassService classService;
 
     @RequestMapping("/getClassNameByMajorName")
-    @ResponseBody
     public String getClassNameByMajorName(@RequestBody ReceiveData receiveData) {
         JSONObject jsonObject = new JSONObject();
         List<Class> classes = classService.getClassNameByMajorName(receiveData.getMajorName());
@@ -32,7 +28,6 @@ public class ClassInfoController {
     }
 
     @RequestMapping("/getClassList")
-    @ResponseBody
     public String getClassList(Integer page, Integer limit, String name, String majorName, String schoolName, String principalNumber) {
         ClassInfoPojo classInfoPojo = new ClassInfoPojo(page, limit, name, majorName, schoolName, principalNumber);
         JSONObject jsonObject = new JSONObject();
@@ -52,7 +47,6 @@ public class ClassInfoController {
     }
 
     @RequestMapping("/deleteOneClass")
-    @ResponseBody
     public String deleteOneClass(@RequestBody Class c) {
         JSONObject jsonObject = new JSONObject();
         classService.deleteOneClass(c);
@@ -61,7 +55,6 @@ public class ClassInfoController {
     }
 
     @RequestMapping("/updateClass")
-    @ResponseBody
     public String updateClass(@RequestBody Class c) {
         JSONObject jsonObject = new JSONObject();
         int i = classService.updateClass(c);
@@ -73,7 +66,6 @@ public class ClassInfoController {
     }
 
     @RequestMapping("/deleteClasses")
-    @ResponseBody
     public String deleteClasses(@RequestBody List<Class> classes) {
         JSONObject jsonObject = new JSONObject();
         classService.deleteClasses(classes);
@@ -82,7 +74,6 @@ public class ClassInfoController {
     }
 
     @RequestMapping("/addClass")
-    @ResponseBody
     public String addClass(@RequestBody Class c) {
         JSONObject jsonObject = new JSONObject();
         int i = classService.addClass(c);
@@ -90,6 +81,33 @@ public class ClassInfoController {
             jsonObject.put("msg", "负责人姓名与学号不符，请检查！");
         }
         jsonObject.put("msg", "增加成功");
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllClassList")
+    public String getAllClassList() {
+        JSONObject jsonObject = new JSONObject();
+        List<Class> classes = classService.getAllClassList();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", classes);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllClassListBySchoolName")
+    public String getAllClassListBySchoolName(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Class> classes = classService.getAllClassListBySchoolName(receiveData.getSchoolName());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", classes);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllClassListByMajorName")
+    public String getAllClassListByMajorName(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Class> classes = classService.getAllClassListByMajorName(receiveData.getMajorName(), receiveData.getSchoolName());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", classes);
         return jsonObject.toJSONString();
     }
 

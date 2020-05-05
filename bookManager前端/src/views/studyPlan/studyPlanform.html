@@ -16,30 +16,34 @@
     <div class="layui-form" lay-filter="layuiadmin-form-booklist" id="layuiadmin-form-booklist"
         style="padding: 20px 0 0 0;">
         <div class="layui-form-item">
+            <input id="mutil" style="display: none;"/>
             <label class="layui-form-label">专业名</label>
             <div class="layui-input-inline">
-                <input type="text" name="majorName" lay-verify="required" placeholder="请输入专业" autocomplete="off"
-                    class="layui-input">
+                <select lay-search id="majorName" name="majorName" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">课程名</label>
             <div class="layui-input-inline">
-                <input type="text" name="courseName" lay-verify="required" placeholder="请输入课程名" autocomplete="off"
+                <input type="text" id="courseName" name="courseName" lay-verify="required" placeholder="请输入课程名" autocomplete="off"
                     class="layui-input">
             </div>
         </div>
+        <input id="butil" style="display: none;"/>
         <div class="layui-form-item">
             <label class="layui-form-label">教材名</label>
             <div class="layui-input-inline">
-                <input type="text" name="bookName" lay-verify="required" placeholder="请输入教材名" autocomplete="off"
-                    class="layui-input">
+                <select lay-search id="bookName" name="bookName" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">课时</label>
             <div class="layui-input-inline">
-                <input type="text" name="hour" lay-verify="required" placeholder="请输入课时" autocomplete="off"
+                <input type="text" id="hour" name="hour" lay-verify="required" placeholder="请输入课时" autocomplete="off"
                     class="layui-input">
             </div>
         </div>
@@ -55,9 +59,58 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'form', 'upload'], function () {
-            var $ = layui.$
-                , form = layui.form
-                , upload = layui.upload;
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                layer = layui.layer,
+                setter = layui.setter;
+
+            layer.ready(function() {
+                $.ajax({
+                    url: setter.baseURL + 'getAllMajorList',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function(res) {
+                        var majorName = $("#mutil").val();
+                        var data = res.data;
+                        for(i = 0; i < data.length; i++) {
+                            $("#majorName").append(new Option(data[i].name, data[i].name));
+                            if(majorName != undefined && majorName == data[i].name) {
+                                $("#majorName").get(0).selectedIndex = i + 1;
+                            }
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getAllBookList',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function(res) {
+                        var bookName = $("#butil").val();
+                        var data = res.data;
+                        for(i = 0; i < data.length; i++) {
+                            $("#bookName").append(new Option(data[i].name, data[i].name));
+                            if(bookName != undefined && bookName == data[i].name) {
+                                $("#bookName").get(0).selectedIndex = i + 1;
+                            }
+                        }
+                        form.render();
+                    }
+                });
+            });
+            
         })
     </script>
 </body>

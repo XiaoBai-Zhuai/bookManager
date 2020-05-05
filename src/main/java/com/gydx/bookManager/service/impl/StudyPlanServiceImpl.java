@@ -33,6 +33,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 将查询出来的教学计划列表添加上专业、班级、教材、学院等信息
+     *
      * @param majorCourses
      * @return
      */
@@ -40,16 +41,20 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         for (MajorCourse majorCourse : majorCourses) {
             Integer courseId = majorCourse.getCourseId();
             Integer majorId = majorCourse.getMajorId();
-            Course c = new Course(); Major m = new Major();
-            c.setId(courseId); m.setId(majorId);
+            Course c = new Course();
+            Major m = new Major();
+            c.setId(courseId);
+            m.setId(majorId);
             Course course = courseMapper.selectOne(c);
             Major major = majorMapper.selectOne(m);
             Integer bookId = course.getBookId();
             Integer schoolId = major.getSchoolId();
             String bookName = bookMapper.selectNameById(bookId);
             String schoolName = schoolMapper.selectNameById(schoolId);
-            majorCourse.setBookName(bookName); majorCourse.setSchoolName(schoolName);
-            majorCourse.setHour(course.getHour()); majorCourse.setMajorName(major.getName());
+            majorCourse.setBookName(bookName);
+            majorCourse.setSchoolName(schoolName);
+            majorCourse.setHour(course.getHour());
+            majorCourse.setMajorName(major.getName());
             majorCourse.setCourseName(course.getName());
         }
         return majorCourses;
@@ -57,6 +62,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 分页查询教学计划列表
+     *
      * @param page
      * @param limit
      * @return
@@ -70,12 +76,15 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         } catch (Exception e) {
             logger.error("教学计划分页查询出错，错误：" + e);
         }
+        if (majorCourses == null)
+            return null;
         majorCourses = getStudyPlan(majorCourses);
         return majorCourses;
     }
 
     /**
      * 查询出所有的教学计划列表
+     *
      * @return
      */
     @Override
@@ -85,6 +94,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 根据条件分页查询出教学计划列表
+     *
      * @param page
      * @param limit
      * @param schoolName
@@ -95,18 +105,21 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     @Override
     public List<MajorCourse> getStudyPlanListByPageAndCondition(Integer page, Integer limit, String schoolName, String majorName, String courseName) {
         page = (page - 1) * limit;
-        List<MajorCourse> MajorCourse = null;
+        List<MajorCourse> majorCourses = null;
         try {
-            MajorCourse = majorCourseMapper.selectByPageAndCondition(page, limit, schoolName, majorName, courseName);
+            majorCourses = majorCourseMapper.selectByPageAndCondition(page, limit, schoolName, majorName, courseName);
         } catch (Exception e) {
             logger.error("教学计划带条件分页查询出错，错误：" + e);
         }
-        MajorCourse = getStudyPlan(MajorCourse);
-        return MajorCourse;
+        if (majorCourses == null)
+            return null;
+        majorCourses = getStudyPlan(majorCourses);
+        return majorCourses;
     }
 
     /**
      * 根据条件查询出全部的教学计划列表
+     *
      * @param schoolName
      * @param majorName
      * @param courseName
@@ -119,6 +132,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 删除某条教学计划，只要删除major_course表中的对应关系即可
+     *
      * @param majorCourse
      * @return
      */
@@ -129,6 +143,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 修改教学计划信息
+     *
      * @param majorCourse
      * @return
      */
@@ -140,13 +155,17 @@ public class StudyPlanServiceImpl implements StudyPlanService {
             return 0;
         Course course = new Course();
         Integer bookId = bookMapper.selectIdByName(majorCourse.getBookName());
-        course.setBookId(bookId); course.setHour(majorCourse.getHour()); course.setName(majorCourse.getCourseName());
+        course.setBookId(bookId);
+        course.setHour(majorCourse.getHour());
+        course.setName(majorCourse.getCourseName());
         Course course1 = courseMapper.selectOne(course);
         if (course1 == null) {
             courseMapper.insert(course);
-            majorCourse.setMajorId(majorId); majorCourse.setCourseId(course.getId());
+            majorCourse.setMajorId(majorId);
+            majorCourse.setCourseId(course.getId());
         } else {
-            majorCourse.setMajorId(majorId); majorCourse.setCourseId(course1.getId());
+            majorCourse.setMajorId(majorId);
+            majorCourse.setCourseId(course1.getId());
         }
         majorCourseMapper.updateOne(majorCourse);
         return 1;
@@ -154,6 +173,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 批量删除教学计划
+     *
      * @param majorCourses
      * @return
      */
@@ -165,6 +185,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 添加新的教学计划
+     *
      * @param majorCourse
      * @return
      */
@@ -176,13 +197,17 @@ public class StudyPlanServiceImpl implements StudyPlanService {
             return 0;
         Course course = new Course();
         Integer bookId = bookMapper.selectIdByName(majorCourse.getBookName());
-        course.setBookId(bookId); course.setHour(majorCourse.getHour()); course.setName(majorCourse.getCourseName());
+        course.setBookId(bookId);
+        course.setHour(majorCourse.getHour());
+        course.setName(majorCourse.getCourseName());
         Course course1 = courseMapper.selectOne(course);
         if (course1 == null) {
             courseMapper.insert(course);
-            majorCourse.setMajorId(majorId); majorCourse.setCourseId(course.getId());
+            majorCourse.setMajorId(majorId);
+            majorCourse.setCourseId(course.getId());
         } else {
-            majorCourse.setMajorId(majorId); majorCourse.setCourseId(course1.getId());
+            majorCourse.setMajorId(majorId);
+            majorCourse.setCourseId(course1.getId());
         }
         majorCourseMapper.insert(majorCourse);
         return 1;
@@ -190,6 +215,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
 
     /**
      * 根据专业名获取该专业的教学计划
+     *
      * @param majorName
      * @return
      */

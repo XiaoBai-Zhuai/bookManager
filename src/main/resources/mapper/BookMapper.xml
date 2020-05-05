@@ -3,11 +3,36 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gydx.bookManager.mapper.BookMapper">
+    <select id="getAllDBookPriceByBookPublisher" resultType="com.gydx.bookManager.entity.Book">
+        select price from book where
+        name = #{bookName} and author = #{author} and publish_time = #{publishTime}
+        and publisher = #{publisher};
+    </select>
+    <select id="getAllDBookPublisherByBookPublishTime" resultType="com.gydx.bookManager.entity.Book">
+        select distinct publisher from book
+        where name = #{bookName} and author = #{author} and publish_time = #{publishTime};
+    </select>
+    <select id="getAllDBookPublishTimeByBookAuthor" resultType="com.gydx.bookManager.entity.Book">
+        select distinct publish_time from book
+        where name = #{bookName} and author = #{author};
+    </select>
+    <select id="getAllDBookAuthorByBookName" resultType="com.gydx.bookManager.entity.Book">
+        select distinct author from book
+        where name = #{bookName};
+    </select>
+    <select id="getAllDBookName" resultType="com.gydx.bookManager.entity.Book">
+        select distinct name from book where status = 1;
+    </select>
+    <select id="getAllDBookAuthor" resultType="com.gydx.bookManager.entity.Book">
+        select distinct author from book where status = 1;
+    </select>
     <select id="selectBookList" parameterType="integer" resultType="com.gydx.bookManager.entity.Book">
         SELECT
             *
         FROM
             book
+        WHERE
+            status = 1
         LIMIT #{page},
          #{limit};
     </select>
@@ -45,8 +70,9 @@
                 and author = #{author}
             </if>
             <if test="publisher != null and publisher != ''">
-                and publisher = #{publisher}
+                and publisher like concat('%', #{publisher}, '%')
             </if>
+            and status = 1
         </trim>
         LIMIT #{page},
         #{limit};
@@ -63,6 +89,10 @@
             </foreach>
          )
     </select>
+    <update id="updateStockSum" parameterType="integer">
+        update book set stock_sum = #{bookSum}
+        where id = #{bookId};
+    </update>
     <update id="updateBook" parameterType="com.gydx.bookManager.entity.Book">
         UPDATE
         book b
@@ -90,13 +120,19 @@
         WHERE
         b.id = #{id};
     </update>
-    <delete id="deleteBatchById" parameterType="com.gydx.bookManager.entity.Book">
-        delete from
-        book
+    <update id="deleteOne" parameterType="com.gydx.bookManager.entity.Book">
+        update book set status = 0 where id = #{id};
+    </update>
+    <update id="deleteBatchById" parameterType="com.gydx.bookManager.entity.Book">
+        update book
+        set status = 0
         where
         id IN
         <foreach collection="books" item="book" index="index" open="(" close=")" separator=",">
             #{book.id}
         </foreach>
-    </delete>
+    </update>
+    <update id="updateBookStatus" parameterType="com.gydx.bookManager.entity.Book">
+        update book set status = 1 where id = #{id};
+    </update>
 </mapper>

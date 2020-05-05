@@ -17,32 +17,21 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">领取日期</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="receiveDate" name="receiveDate" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">领取日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="receiveDate" name="receiveDate" placeholder="请输入" autocomplete="off"
+                            class="layui-input">
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">教材名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="bookName" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">教材名</label>
+                    <div class="layui-input-inline">
+                        <select id="bookName" name="bookName">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">班级名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="className" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-classBooklist" lay-submit
-                            lay-filter="LAY-classBook-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+                    <button class="layui-btn layuiadmin-btn-classBooklist" lay-submit
+                        lay-filter="LAY-classBook-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
                 </div>
             </div>
             <div class="layui-card-body">
@@ -62,8 +51,35 @@
             var admin = layui.admin,
                 table = layui.table,
                 $ = layui.$,
+                layer = layui.layer,
                 form = layui.form,
-                laydate = layui.laydate;
+                laydate = layui.laydate,
+                setter = layui.setter;
+
+            layer.ready(function () {
+                var data = {
+                    "majorName": sessionStorage.getItem("majorName")
+                };
+                $.ajax({
+                    url: setter.baseURL + 'getBookListByMajor',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            document.getElementById("bookName").append(new Option(data[i]
+                                .name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
 
             laydate.render({
                 elem: '#receiveDate'
@@ -71,7 +87,7 @@
 
             table.render({
                 elem: '#test-table-toolbar',
-                url: 'http://localhost:8080/getClassBookList',
+                url: setter.baseURL + 'getClassBookList',
                 headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'

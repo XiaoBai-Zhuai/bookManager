@@ -84,10 +84,13 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = null;
         try {
             students = studentMapper.findStudentListByPage(page, limit);
-            students = addInfo(students);
         } catch (Exception e) {
             logger.error("学生分页查询出错，错误：" + e);
         }
+        if (students == null) {
+            return null;
+        }
+        students = addInfo(students);
         return students;
     }
 
@@ -111,10 +114,13 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = null;
         try {
             students = studentMapper.findStudentListByPageAndCondition(studentInfoPojo);
-            students = addInfo(students);
         } catch (Exception e) {
             logger.error("学生带条件分页查询出错，错误：" + e);
         }
+        if (students == null) {
+            return null;
+        }
+        students = addInfo(students);
         return students;
     }
 

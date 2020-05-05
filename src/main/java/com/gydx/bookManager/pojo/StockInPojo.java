@@ -1,5 +1,8 @@
 package com.gydx.bookManager.pojo;
 
+import java.sql.Date;
+import java.time.Year;
+
 public class StockInPojo {
     private Integer id;
     private Integer page;
@@ -8,12 +11,21 @@ public class StockInPojo {
     private String bookName;
     private String author;
     private Double price;
+    private Double bookPrice;
     private Integer bookSum;
     private String publisher;
-    private String publisherTime;
+    private String publishTime;
     private String supplier;
     private String supplierTel;
     private String departmentName;
+
+    public Double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(Double bookPrice) {
+        this.bookPrice = bookPrice;
+    }
 
     public Integer getId() {
         return id;
@@ -56,11 +68,11 @@ public class StockInPojo {
     }
 
     public String getPublisherTime() {
-        return publisherTime;
+        return publishTime;
     }
 
     public void setPublisherTime(String publisherTime) {
-        this.publisherTime = publisherTime;
+        this.publishTime = publisherTime;
     }
 
     public String getSupplierTel() {
@@ -123,7 +135,7 @@ public class StockInPojo {
         return this.departmentName + this.bookName + this.supplier + this.stockInDate;
     }
 
-    public StockInPojo(Integer page, Integer limit, String stockInDate, String bookName, String author, Double price, Integer bookSum, String publisher, String publisherTime, String supplier, String supplierTel, String departmentName) {
+    public StockInPojo(Integer page, Integer limit, String stockInDate, String bookName, String author, Double price, Integer bookSum, String publisher, String publishTime, String supplier, String supplierTel, String departmentName) {
         this.page = page;
         this.limit = limit;
         this.stockInDate = stockInDate;
@@ -132,7 +144,7 @@ public class StockInPojo {
         this.price = price;
         this.bookSum = bookSum;
         this.publisher = publisher;
-        this.publisherTime = publisherTime;
+        this.publishTime = publishTime;
         this.supplier = supplier;
         this.supplierTel = supplierTel;
         this.departmentName = departmentName;

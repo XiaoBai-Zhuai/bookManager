@@ -6,20 +6,16 @@ import com.gydx.bookManager.pojo.ReceiveData;
 import com.gydx.bookManager.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@Controller
+@RestController
 public class TeacherInfoController {
 
     @Autowired
     private TeacherService teacherService;
 
     @RequestMapping("/getTeacherInfo")
-    @ResponseBody
     public String getTeacherInfo(@RequestBody ReceiveData receiveData) {
         JSONObject jsonObject = new JSONObject();
         Teacher teacher = teacherService.getTeacherInfo(receiveData.getUsername());

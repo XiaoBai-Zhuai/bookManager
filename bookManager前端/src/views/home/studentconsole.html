@@ -147,12 +147,13 @@
           layer = layui.layer,
           laydate = layui.laydate,
           form = layui.form,
-          table = layui.table;
+          table = layui.table,
+          setter = layui.setter;
 
         table.render({
           elem: '#test-table-toolbar',
           title: '教学计划',
-          url: 'http://localhost:8080/getStudyPlanList',
+          url: setter.baseURL + 'getStudyPlanList',
           headers: {
             'Authorization': sessionStorage.getItem("token"),
             'Access-Control-Allow-Origin': '*'
@@ -180,13 +181,13 @@
           ]
         });
 
-        layer.ready(function() {
+        layer.ready(function () {
           document.getElementById("nickname").innerHTML = sessionStorage.getItem(
             "nickname");
           document.getElementById("studentNumber").innerHTML = sessionStorage
-          .getItem("username");
+            .getItem("username");
           document.getElementById("schoolName").innerHTML = sessionStorage
-          .getItem("schoolName");
+            .getItem("schoolName");
           document.getElementById("majorName").innerHTML = sessionStorage.getItem(
             "majorName");
           document.getElementById("className").innerHTML = sessionStorage.getItem(

@@ -3,6 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gydx.bookManager.mapper.ClassMapper">
+    <select id="getAllClassListByMajorName" parameterType="string" resultType="com.gydx.bookManager.entity.Class">
+        select * from class where
+        <trim prefixOverrides="and">
+            <if test="majorName != null and majorName != ''">
+                and major_id = (select id from major where name = #{majorName} and status = 1)
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and major_id IN (select id from major where school_id = (select id from school where name like concat('%', #{schoolName}, '%')))
+            </if>
+            and status = 1;
+        </trim>
+    </select>
+    <select id="getAllClassListBySchoolName" parameterType="string" resultType="com.gydx.bookManager.entity.Class">
+        select * from class where
+        <trim prefixOverrides="and">
+            <if test="schoolName != null and schoolName != ''">
+                and major_id IN (select id from major where school_id = (select id from school where name = #{schoolName} and status = 1))
+            </if>
+            and status = 1;
+        </trim>
+    </select>
     <select id="selectNameById" parameterType="integer" resultType="string">
         select name from class where id = #{classId};
     </select>

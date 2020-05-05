@@ -12,12 +12,13 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
     var $ = layui.$
         , table = layui.table
         , form = layui.form
-        , laydate = layui.laydate;
+        , laydate = layui.laydate
+        , setter = layui.setter;
 
     //用户管理
     table.render({
         elem: '#book-manage'
-        , url: 'http://localhost:8080/getBookList'
+        , url: setter.baseURL + 'getBookList'
         , headers: {
             'Authorization': sessionStorage.getItem("token"),
             'Access-Control-Allow-Origin': '*'

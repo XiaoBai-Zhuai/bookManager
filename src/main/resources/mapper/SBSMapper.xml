@@ -7,6 +7,6 @@
         select * from stockIn_book_supplier where stock_in_id = #{stockInId};
     </select>
     <update id="updateByStockInId" parameterType="com.gydx.bookManager.entity.StockInBookSupplier">
-        update stockIn_book_supplier set book_id = #{bookId}, supplier_id = #{supplierId} where stockIn_id = #{stockInId};
+        update stockIn_book_supplier set book_id = #{bookId}, supplier_id = #{supplierId} where stock_in_id = #{stockInId};
     </update>
 </mapper>

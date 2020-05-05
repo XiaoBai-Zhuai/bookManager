@@ -19,4 +19,6 @@ public interface SupplierService {
     int updateSupplier(Supplier supplier);
 
     int addSupplier(Supplier supplier);
+
+    List<Supplier> getAllDSupplierName();
 }

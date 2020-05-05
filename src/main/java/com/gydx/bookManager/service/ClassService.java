@@ -23,4 +23,8 @@ public interface ClassService {
     int addClass(Class c);
 
     List<Class> getClassNameByMajorName(String majorName);
+
+    List<Class> getAllClassListBySchoolName(String schoolName);
+
+    List<Class> getAllClassListByMajorName(String majorName, String schoolName);
 }

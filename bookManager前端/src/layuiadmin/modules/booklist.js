@@ -9,40 +9,68 @@
 
 
 layui.define(['table', 'form', 'laydate'], function (exports) {
-    var $ = layui.$
-        , table = layui.table
-        , form = layui.form
-        , laydate = layui.laydate;
+    var $ = layui.$,
+        table = layui.table,
+        form = layui.form,
+        laydate = layui.laydate
+        setter = layui.setter;
 
     //用户管理
     table.render({
-        elem: '#book-manage'
-        , url: 'http://localhost:8080/getBookList'
-        , headers: {
+        elem: '#book-manage',
+        url: setter.baseURL + 'getBookList',
+        headers: {
             'Authorization': sessionStorage.getItem("token"),
             'Access-Control-Allow-Origin': '*'
-        }
-        , where: {
+        },
+        where: {
             name: '',
             author: '',
             publisher: ''
-        }
-        , cols: [[
-            { type: 'checkbox', fixed: 'left' }
-            , { field: 'id', width: 100, title: 'ID', sort: true }
-            , { field: 'name', title: '教材名', minWidth: 100 }
-            , { field: 'author', title: '作者' }
-            , { field: 'publisher', title: '出版社' }
-            , { field: 'publishTime', title: '出版时间' }
-            , { field: 'price', title: '定价（元）' }
-            , {field: 'stockSum', title: '库存'}
-            , { title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-book' }
-        ]]
-        , page: true
-        , groups: 5
-        , limit: 30
-        , height: 'full-180'
-        , text: {none: '无结果'}
+        },
+        cols: [
+            [{
+                type: 'checkbox',
+                fixed: 'left'
+            }, {
+                field: 'id',
+                width: 100,
+                title: 'ID',
+                sort: true
+            }, {
+                field: 'name',
+                title: '教材名',
+                minWidth: 100
+            }, {
+                field: 'author',
+                title: '作者'
+            }, {
+                field: 'publisher',
+                title: '出版社'
+            }, {
+                field: 'publishTime',
+                title: '出版时间'
+            }, {
+                field: 'price',
+                title: '定价（元）'
+            }, {
+                field: 'stockSum',
+                title: '库存'
+            }, {
+                title: '操作',
+                width: 150,
+                align: 'center',
+                fixed: 'right',
+                toolbar: '#table-book'
+            }]
+        ],
+        page: true,
+        groups: 5,
+        limit: 30,
+        height: 'full-180',
+        text: {
+            none: '无结果'
+        },
     });
 
     //监听工具条
@@ -53,7 +81,7 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
             layer.confirm('确认删除', function (index) {
 
                 $.ajax({
-                    url: 'http://localhost:8080/deleteOneBookById',
+                    url: setter.baseURL + 'deleteOneBookById',
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -64,9 +92,9 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                     dataType: 'json',
                     success: function (res) {
                         layer.msg(res.msg, {
-                            offset: '15px'
-                            , icon: 1
-                            , time: 1000
+                            offset: '15px',
+                            icon: 1,
+                            time: 1000
                         }, function () {
                             obj.del();
                             layer.close(index);
@@ -78,16 +106,24 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
             var tr = $(obj.tr);
             var id = obj.data.id;
             layer.open({
-                type: 2
-                , title: '编辑教材信息'
-                , content: '../../views/template/bookform.html'
-                , maxmin: true
-                , area: ['500px', '450px']
-                , btn: ['确定', '取消']
-                , yes: function (index, layero) {
-                    var iframeWindow = window['layui-layer-iframe' + index]
-                        , submitID = 'LAY-book-front-submit'
-                        , submit = layero.find('iframe').contents().find('#' + submitID);
+                type: 2,
+                title: '编辑教材信息',
+                content: '../../views/template/bookform.html',
+                maxmin: true,
+                area: ['500px', '450px'],
+                btn: ['确定', '取消'],
+                success: function (layero, index) {
+                    let body = layer.getChildFrame('body', index);
+                    body.find("#publishTime").val(data.publishTime);
+                    body.find("#publisher").val(data.publisher);
+                    body.find("#name").val(data.name);
+                    body.find("#author").val(data.author);
+                    body.find("#price").val(data.price);
+                },
+                yes: function (index, layero) {
+                    var iframeWindow = window['layui-layer-iframe' + index],
+                        submitID = 'LAY-book-front-submit',
+                        submit = layero.find('iframe').contents().find('#' + submitID);
 
                     //监听提交
                     iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
@@ -97,7 +133,7 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
 
                         //提交 Ajax 成功后，静态更新表格中的数据
                         $.ajax({
-                            url: "http://localhost:8080/updateBookInfo",
+                            url: setter.baseURL + "updateBookInfo",
                             type: 'post',
                             headers: {
                                 'Authorization': sessionStorage.getItem("token"),
@@ -109,9 +145,9 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                             dataType: 'json',
                             success: function (res) {
                                 layer.msg("修改成功！", {
-                                    offset: '15px'
-                                    , icon: 1
-                                    , time: 1000
+                                    offset: '15px',
+                                    icon: 1,
+                                    time: 1000
                                 })
                             }
                         });
@@ -120,10 +156,7 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                     });
 
                     submit.trigger('click');
-                }
-                , success: function (layero, index) {
-
-                }
+                },
             });
         }
     });

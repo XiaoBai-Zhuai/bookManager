@@ -18,71 +18,78 @@
         <div class="layui-form-item">
             <label class="layui-form-label">入库日期</label>
             <div class="layui-input-inline">
-                <input type="text" id="stockInDate" name="stockInDate" lay-verify="required" placeholder="请输入入库日期" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="stockInDate" name="stockInDate" lay-verify="required" placeholder="请输入入库日期"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">教材名</label>
             <div class="layui-input-inline">
-                <input type="text" name="bookName" lay-verify="required" placeholder="请输入教材名" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="bookName" name="bookName" lay-verify="required" placeholder="请输入教材名"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">作者</label>
             <div class="layui-input-inline">
-                <input type="text" name="author" lay-verify="required" placeholder="请输入作者名" autocomplete="off"
-                    class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">单价</label>
-            <div class="layui-input-inline">
-                <input type="text" name="price" lay-verify="required" placeholder="请输入单价" autocomplete="off"
-                    class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">出版社</label>
-            <div class="layui-input-inline">
-                <input type="text" name="publisher" lay-verify="required" placeholder="请输入出版社" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="author" name="author" lay-verify="required" placeholder="请输入作者名"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">出版时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="publisherTime" lay-verify="required" placeholder="请输入教材出版时间" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="publishTime" name="publishTime" lay-verify="required" placeholder="请输入教材出版时间"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">数量</label>
+            <label class="layui-form-label">出版社</label>
             <div class="layui-input-inline">
-                <input type="text" name="bookSum" lay-verify="required" placeholder="请输入教材数量" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="publisher" name="publisher" lay-verify="required" placeholder="请输入出版社"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">定价(元)</label>
+            <div class="layui-input-inline">
+                <input type="text" id="bookPrice" name="bookPrice" lay-verify="required" placeholder="请输入教材定价"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单价(元)</label>
+            <div class="layui-input-inline">
+                <input type="text" id="price" name="price" lay-verify="required" placeholder="请输入入库订单单价"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量(本)</label>
+            <div class="layui-input-inline">
+                <input type="text" id="bookSum" name="bookSum" lay-verify="required" placeholder="请输入教材数量"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">供应商</label>
             <div class="layui-input-inline">
-                <input type="text" name="supplier" lay-verify="requried" placeholder="请输入供应商" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="supplier" name="supplier" lay-verify="requried" placeholder="请输入供应商"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">供应商电话号码</label>
             <div class="layui-input-inline">
-                <input type="text" name="supplierTel" lay-verify="requried" placeholder="请输入供应商电话号码" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="supplierTel" name="supplierTel" lay-verify="phone" placeholder="请输入供应商电话号码"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">经办单位</label>
             <div class="layui-input-inline">
-                <input type="text" name="departmentName" lay-verify="requried" placeholder="请输入经办单位" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="departmentName" name="departmentName" lay-verify="requried" placeholder="请输入经办单位"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-hide">
@@ -98,12 +105,15 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'form', 'upload', 'laydate'], function () {
-            var $ = layui.$
-                , form = layui.form
-                , upload = layui.upload
-                , laydate = layui.laydate;
+            var $ = layui.$,
+                form = layui.form,
+                upload = layui.upload,
+                laydate = layui.laydate;
             laydate.render({
                 elem: '#stockInDate' //指定元素
+            });
+            laydate.render({
+                elem: '#publishTime' //指定元素
             });
         })
     </script>

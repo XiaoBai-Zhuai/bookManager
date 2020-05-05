@@ -54,6 +54,9 @@
             </if>
         </trim>
     </select>
+    <select id="getAllDSupplierName" resultType="com.gydx.bookManager.entity.Supplier">
+        select distinct name from supplier;
+    </select>
     <update id="updateSupplier" parameterType="com.gydx.bookManager.entity.Supplier">
         update supplier set name = #{name}, tel = #{tel} where id = #{id};
     </update>

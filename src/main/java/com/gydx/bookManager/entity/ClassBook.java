@@ -21,6 +21,14 @@ public class ClassBook {
     private Integer bookId;
     @Transient
     private String bookName;
+    @Transient
+    private String author;
+    @Transient
+    private String publishTime;
+    @Transient
+    private String publisher;
+    @Transient
+    private Double bookPrice;
     @Column
     private Integer bookSum;
     @Column
@@ -96,5 +104,37 @@ public class ClassBook {
 
     public void setReceiveDate(String receiveDate) {
         this.receiveDate = receiveDate;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public Double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(Double bookPrice) {
+        this.bookPrice = bookPrice;
     }
 }

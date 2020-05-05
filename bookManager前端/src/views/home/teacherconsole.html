@@ -59,101 +59,51 @@
                   <div carousel-item>
                     <ul class="layui-row layui-col-space10">
                       <li class="layui-col-xs3">
-                        <a lay-href="home/homepage1.html">
-                          <i class="layui-icon layui-icon-console"></i>
-                          <cite>主页一</cite>
+                        <a lay-href="../teacher/majorList.html">
+                          <i class="layui-icon layui-icon-survey"></i>
+                          <cite>专业列表</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a lay-href="home/homepage2.html">
-                          <i class="layui-icon layui-icon-chart"></i>
-                          <cite>主页二</cite>
+                        <a lay-href="../teacher/classList.html">
+                          <i class="layui-icon layui-icon-table"></i>
+                          <cite>班级列表</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a lay-href="component/layer/list.html">
-                          <i class="layui-icon layui-icon-template-1"></i>
-                          <cite>弹层</cite>
+                        <a lay-href="../teacher/studentList.html">
+                          <i class="layui-icon layui-icon-group"></i>
+                          <cite>学生列表</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a layadmin-event="im">
-                          <i class="layui-icon layui-icon-chat"></i>
-                          <cite>聊天</cite>
+                        <a layadmin-event="../teacher/classbook.html">
+                          <i class="layui-icon layui-icon-list"></i>
+                          <cite>教材领取情况</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a lay-href="component/progress/index.html">
-                          <i class="layui-icon layui-icon-find-fill"></i>
-                          <cite>进度条</cite>
+                        <a lay-href="../studyPlan/submitStudyPlan.html">
+                          <i class="layui-icon layui-icon-form"></i>
+                          <cite>提交教学计划</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
                         <a lay-href="app/workorder/list.html">
-                          <i class="layui-icon layui-icon-survey"></i>
-                          <cite>工单</cite>
+                          <i class="layui-icon layui-icon-chart-screen"></i>
+                          <cite>教学计划汇总</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a lay-href="user/user/list.html">
-                          <i class="layui-icon layui-icon-user"></i>
-                          <cite>用户</cite>
+                        <a lay-href="../template/booklist.html">
+                          <i class="layui-icon layui-icon-file"></i>
+                          <cite>教材列表</cite>
                         </a>
                       </li>
                       <li class="layui-col-xs3">
-                        <a lay-href="set/system/website.html">
+                        <a lay-href="../set/user/info.html">
                           <i class="layui-icon layui-icon-set"></i>
                           <cite>设置</cite>
-                        </a>
-                      </li>
-                    </ul>
-                    <ul class="layui-row layui-col-space10">
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
-                        </a>
-                      </li>
-                      <li class="layui-col-xs3">
-                        <a lay-href="set/user/info.html">
-                          <i class="layui-icon layui-icon-set"></i>
-                          <cite>我的资料</cite>
                         </a>
                       </li>
                     </ul>
@@ -209,13 +159,14 @@
           , element = layui.element
           , layer = layui.layer
           , laydate = layui.laydate
-          , form = layui.form;
+          , form = layui.form
+          , setter = layui.setter;
 
         layer.ready(function () {
           var username = sessionStorage.getItem("username");
           var data = { "username": username };
           $.ajax({
-            url: 'http://localhost:8080/getTeacherInfo',
+            url: setter.baseURL + 'getTeacherInfo',
             type: 'post',
             headers: {
               'Authorization': sessionStorage.getItem("token"),

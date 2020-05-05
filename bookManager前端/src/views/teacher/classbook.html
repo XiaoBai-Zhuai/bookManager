@@ -25,16 +25,17 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">教材名</label>
+                        <label class="layui-form-label">班级名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="bookName" placeholder="请输入" autocomplete="off" class="layui-input">
+                            <select lay-search id="className" name="className">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">班级名</label>
+                        <label class="layui-form-label">教材名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="className" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
+                            <input type="text" name="bookName" placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -46,7 +47,7 @@
                 </div>
             </div>
             <div class="layui-card-body">
-                
+
                 <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
             </div>
         </div>
@@ -59,46 +60,90 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'table', 'laydate'], function () {
-            var admin = layui.admin
-                , table = layui.table
-                , $ = layui.$
-                , form = layui.form
-                , laydate = layui.laydate;
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                laydate = layui.laydate,
+                setter = layui.setter,
+                layer = layui.layer;
+
+            layer.ready(function () {
+                $.ajax({
+                    url: setter.baseURL + 'getAllClassListBySchoolName',
+                    type: 'post',
+                    data: JSON.stringify({
+                        schoolName: sessionStorage.getItem("schoolName")
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#className").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
 
             laydate.render({
                 elem: '#receiveDate'
             });
 
             table.render({
-                elem: '#test-table-toolbar'
-                , url: 'http://localhost:8080/getClassBookList'
-                , headers: {
+                elem: '#test-table-toolbar',
+                url: setter.baseURL + 'getClassBookList',
+                headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'
-                }
-                ,toolbar: '#test-table-toolbar-toolbarDemo'
-                , where: {
+                },
+                toolbar: '#test-table-toolbar-toolbarDemo',
+                where: {
                     receiveDate: '',
                     bookName: '',
                     className: '',
                     bookSum: '',
                     schoolName: sessionStorage.getItem("schoolName")
+                },
+                title: '班级教材领取情况表',
+                cols: [
+                    [{
+                        field: 'id',
+                        title: 'ID',
+                        width: 80,
+                        sort: true
+                    }, {
+                        field: 'receiveDate',
+                        title: '领取日期'
+                    }, {
+                        field: 'className',
+                        title: '班级名'
+                    }, {
+                        field: 'bookName',
+                        title: '教材名'
+                    }, {
+                        field: 'bookSum',
+                        title: '领取数量'
+                    }, {
+                        field: 'principalName',
+                        title: '班级负责人'
+                    }, {
+                        field: 'principalTel',
+                        title: '负责人电话'
+                    }]
+                ],
+                page: true,
+                groups: 5,
+                limit: 30,
+                height: 'full-130',
+                text: {
+                    none: '无结果'
                 }
-                , title: '班级教材领取情况表'
-                , cols: [[
-                    { field: 'id', title: 'ID', width: 80, sort: true }
-                    , { field: 'receiveDate', title: '领取日期' }
-                    , { field: 'className', title: '班级名'}
-                    , { field: 'bookName', title: '教材名' }
-                    , { field: 'bookSum', title: '领取数量' }
-                    , { field: 'principalName', title: '班级负责人'}
-                    , { field: 'principalTel', title: '负责人电话' }
-                ]]
-                , page: true
-                , groups: 5
-                , limit: 30
-                , height: 'full-130'
-                , text: { none: '无结果' }
             });
 
             //监听搜索

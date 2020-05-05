@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class BookInfoController {
 
     @Autowired
     private BookService bookService;
 
     @RequestMapping("/getBookList")
-    @ResponseBody
     public String getBookList(Integer page, Integer limit, String name, String author, String publisher) {
         BookPageInfoPojo bookPageInfoPojo = new BookPageInfoPojo();
         bookPageInfoPojo.setPage(page);
@@ -46,7 +45,6 @@ public class BookInfoController {
     }
 
     @RequestMapping("/deleteOneBookById")
-    @ResponseBody
     public String deleteOneBookById(@RequestBody Book book) {
         JSONObject jsonObject = new JSONObject();
         bookService.deleteOneBookById(book.getId());
@@ -55,7 +53,6 @@ public class BookInfoController {
     }
 
     @RequestMapping("/updateBookInfo")
-    @ResponseBody
     public String updateBookInfo(@RequestBody Book book) {
         JSONObject jsonObject = new JSONObject();
         bookService.updateBookInfo(book);
@@ -64,7 +61,6 @@ public class BookInfoController {
     }
 
     @RequestMapping("/deleteBooks")
-    @ResponseBody
     public String deleteBooks(@RequestBody List<Book> books) {
         JSONObject jsonObject = new JSONObject();
         bookService.deleteBooks(books);
@@ -73,19 +69,84 @@ public class BookInfoController {
     }
 
     @RequestMapping("/addBook")
-    @ResponseBody
     public String addBook(@RequestBody Book book) {
         JSONObject jsonObject = new JSONObject();
-        bookService.addBook(book);
-        jsonObject.put("msg", "添加成功！");
+        int i = bookService.addBook(book);
+        if (i == 0) {
+            jsonObject.put("msg", "该教材已存在！");
+            return jsonObject.toJSONString();
+        }
+        jsonObject.put("msg", "添加成功");
         return jsonObject.toJSONString();
     }
 
     @RequestMapping("/getBookListByMajor")
-    @ResponseBody
     public String getBookListByMajor(@RequestBody ReceiveData receiveData) {
         JSONObject jsonObject = new JSONObject();
         List<Book> books = bookService.getBookListByMajor(receiveData.getMajorName());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllBookList")
+    public String getAllBookList() {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllBookList();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookName")
+    public String getAllDBookName() {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookName();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookAuthor")
+    public String getAllDBookAuthor() {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookAuthor();
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookAuthorByBookName")
+    public String getAllDBookAuthorByBookName(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookAuthorByBookName(receiveData.getBookName());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookPublishTimeByBookAuthor")
+    public String getAllDBookPublishTimeByBookAuthor(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookPublishTimeByBookAuthor(receiveData.getBookName(), receiveData.getAuthor());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookPublisherByBookPublishTime")
+    public String getAllDBookPublisherByBookPublishTime(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookPublisherByBookPublishTime(receiveData.getBookName(), receiveData.getAuthor(), receiveData.getPublishTime());
+        jsonObject.put("msg", "查询成功");
+        jsonObject.put("data", books);
+        return jsonObject.toJSONString();
+    }
+
+    @RequestMapping("/getAllDBookPriceByBookPublisher")
+    public String getAllDBookPriceByBookPublisher(@RequestBody ReceiveData receiveData) {
+        JSONObject jsonObject = new JSONObject();
+        List<Book> books = bookService.getAllDBookPriceByBookPublisher(receiveData.getBookName(), receiveData.getAuthor(), receiveData.getPublishTime(), receiveData.getPublisher());
         jsonObject.put("msg", "查询成功");
         jsonObject.put("data", books);
         return jsonObject.toJSONString();

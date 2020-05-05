@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class StudentInfoController {
 
     @Autowired
     private StudentService studentService;
 
     @RequestMapping("/getStudentInfo")
-    @ResponseBody
     public String getStudentInfo(@RequestBody ReceiveData receiveData) {
         JSONObject jsonObject = new JSONObject();
         Student student = studentService.getStudentInfo(receiveData.getUsername());
@@ -29,7 +28,6 @@ public class StudentInfoController {
     }
 
     @RequestMapping("/getStudentList")
-    @ResponseBody
     public String getStudentList(Integer page, Integer limit, String name, String number,
                                  String className, String majorName, String schoolName) {
         StudentInfoPojo studentInfoPojo = new StudentInfoPojo(page, limit, name, number, className, majorName, schoolName);
@@ -50,7 +48,6 @@ public class StudentInfoController {
     }
 
     @RequestMapping("/deleteOneStudent")
-    @ResponseBody
     public String deleteOneStudent(@RequestBody Student student) {
         JSONObject jsonObject = new JSONObject();
         studentService.deleteOneStudent(student);
@@ -59,7 +56,6 @@ public class StudentInfoController {
     }
 
     @RequestMapping("/updateStudent")
-    @ResponseBody
     public String updateStudent(@RequestBody Student student) {
         JSONObject jsonObject = new JSONObject();
         int i = studentService.updateStudent(student);
@@ -72,7 +68,6 @@ public class StudentInfoController {
     }
 
     @RequestMapping("/addStudent")
-    @ResponseBody
     public String addStudent(@RequestBody Student student) {
         JSONObject jsonObject = new JSONObject();
         int i = studentService.addStudent(student);
@@ -85,7 +80,6 @@ public class StudentInfoController {
     }
 
     @RequestMapping("/deleteStudents")
-    @ResponseBody
     public String deleteStudents(@RequestBody List<Student> students) {
         JSONObject jsonObject = new JSONObject();
         studentService.deleteStudents(students);

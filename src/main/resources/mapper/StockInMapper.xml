@@ -22,18 +22,14 @@
             <if test="stockInDate != null and stockInDate != ''">
                 and stock_in_date = #{stockInDate}
             </if>
-            <if test="bookName != null and bookName != '' and (supplier == null or supplier == '')">
-                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')))
+            <if test="bookName != null and bookName != ''">
+                and id IN (select stock_in_id from stockIn_book_supplier where book_id IN (select id from book where name like concat('%', #{bookName}, '%')))
             </if>
-            <if test="supplier != null and supplier != '' and (bookName == null or bookName == '')">
-                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%'))
-            </if>
-            <if test="supplier != null and supplier != '' and bookName != null and bookName != ''">
-                and id = (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')) and
-                    supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%')))
+            <if test="supplier != null and supplier != ''">
+                and id IN (select stock_in_id from stockIn_book_supplier where supplier_id IN (select id from supplier where name like concat('%', #{supplier}, '%')))
             </if>
             <if test="departmentName != null and departmentName != ''">
-                and department_name = #{departmentName}
+                and department_name like concat('%', #{departmentName}, '%')
             </if>
         </trim>
         LIMIT #{page},
@@ -50,18 +46,14 @@
             <if test="stockInDate != null and stockInDate != ''">
                 and stock_in_date = #{stockInDate}
             </if>
-            <if test="bookName != null and bookName != '' and (supplier == null or supplier == '')">
-                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')))
+            <if test="bookName != null and bookName != ''">
+                and id IN (select stock_in_id from stockIn_book_supplier where book_id IN (select id from book where name like concat('%', #{bookName}, '%')))
             </if>
-            <if test="supplier != null and supplier != '' and (bookName == null or bookName == '')">
-                and id IN (SELECT stock_in_id from stockIn_book_supplier WHERE supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%'))
-            </if>
-            <if test="supplier != null and supplier != '' and bookName != null and bookName != ''">
-                and id = (SELECT stock_in_id from stockIn_book_supplier WHERE book_id = (SELECT id FROM book WHERE name like concat('%', #{bookName}, '%')) and
-                supplier_id = (SELECT id FROM supplier WHERE name like concat('%', #{supplier}, '%')))
+            <if test="supplier != null and supplier != ''">
+                and id IN (select stock_in_id from stockIn_book_supplier where supplier_id IN (select id from supplier where name like concat('%', #{supplier}, '%')))
             </if>
             <if test="departmentName != null and departmentName != ''">
-                and department_name = #{departmentName}
+                and department_name like concat('%', #{departmentName}, '%')
             </if>
         </trim>
         LIMIT #{page},

@@ -74,6 +74,9 @@ public class ClassServiceImpl implements ClassService {
         List<Class> classes = null;
         try {
             classes = classMapper.findClassListByPage(page, limit);
+            if (classes == null) {
+                return null;
+            }
             classes = addInfo(classes);
         } catch (Exception e) {
             logger.error("分页查询班级列表出错，错误：" + e);
@@ -101,6 +104,9 @@ public class ClassServiceImpl implements ClassService {
         List<Class> classes = null;
         try {
             classes = classMapper.findClassListByPageAndCondition(classInfoPojo);
+            if (classes == null) {
+                return null;
+            }
             classes = addInfo(classes);
         } catch (Exception e) {
             logger.error("班级列表分页条件查询出错，错误：" + e);
@@ -295,6 +301,38 @@ public class ClassServiceImpl implements ClassService {
             classes = classMapper.findClassByMajor(majorName);
         } catch (Exception e) {
             logger.error("根据专业名查询班级名出错，错误：" + e);
+        }
+        return classes;
+    }
+
+    /**
+     * 根据学院名查询出该学院下的所有班级
+     * @param schoolName
+     * @return
+     */
+    @Override
+    public List<Class> getAllClassListBySchoolName(String schoolName) {
+        List<Class> classes = null;
+        try {
+            classes = classMapper.getAllClassListBySchoolName(schoolName);
+        } catch (Exception e) {
+            logger.error("根据学院名查询班级列表出错，错误：" + schoolName);
+        }
+        return classes;
+    }
+
+    /**
+     * 根据专业名查询该专业下的所有班级
+     * @param majorName
+     * @return
+     */
+    @Override
+    public List<Class> getAllClassListByMajorName(String majorName, String schoolName) {
+        List<Class> classes = null;
+        try {
+            classes = classMapper.getAllClassListByMajorName(majorName, schoolName);
+        } catch (Exception e) {
+            logger.error("根据专业名查询班级列表出错，错误：" + e);
         }
         return classes;
     }

@@ -49,6 +49,8 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
             User user = userMapper.selectOne(u);
             classBook.setBookName(book.getName()); classBook.setClassName(aClass.getName());
             classBook.setPrincipalName(user.getNickname()); classBook.setPrincipalTel(user.getTel());
+            classBook.setAuthor(book.getAuthor()); classBook.setPublishTime(book.getPublishTime());
+            classBook.setPublisher(book.getPublisher()); classBook.setBookPrice(book.getPrice());
         }
         return classBooks;
     }
@@ -66,6 +68,9 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
             classBooks = classBookMapper.selectClassBookListByPage((page - 1) * limit, limit);
         } catch (Exception e) {
             logger.error("领书情况分页查询出错，错误：" + e);
+        }
+        if (classBooks == null) {
+            return null;
         }
         classBooks = getClassBook(classBooks);
         return classBooks;
@@ -99,6 +104,9 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
         } catch (Exception e) {
             logger.error("领书情况带条件查询出错，错误：" + e);
         }
+        if (classBooks == null) {
+            return null;
+        }
         classBooks = getClassBook(classBooks);
         return classBooks;
     }
@@ -110,9 +118,12 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
      */
     @Override
     public int deleteOneClassBook(ClassBook classBook) {
-        ClassBook cb = new ClassBook();
-        cb.setId(classBook.getId());
-        return classBookMapper.delete(cb);
+        Book b = new Book();
+        b.setId(classBook.getBookId());
+        Book book = bookMapper.selectOne(b);
+        //删除一条领书记录时将原来减掉的库存加回去
+        bookMapper.updateStockSum(book.getId(), book.getStockSum() + classBook.getBookSum());
+        return classBookMapper.delete(classBook);
     }
 
     /**
@@ -123,6 +134,26 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
     @Override
     public int updateClassBook(ClassBook classBook) {
         int i = 0;
+        ClassBook cb = new ClassBook();
+        cb.setId(classBook.getId());
+        ClassBook classBook1 = classBookMapper.selectOne(cb);
+        Book b = new Book();
+        b.setId(classBook1.getId());
+        Book book = bookMapper.selectOne(b);
+        Book b1 = new Book();
+        b1.setPrice(classBook.getBookPrice()); b1.setPublishTime(classBook.getPublishTime());
+        b1.setPublisher(classBook.getPublisher()); b1.setAuthor(classBook.getAuthor());
+        b1.setName(classBook.getBookName());
+        Book book1 = bookMapper.selectOne(b1);
+        if (!book.getId().equals(book1.getId())) {
+            //如果用户修改了教材，则将原来的教材的库存加回原来用户输入的领取数量
+            bookMapper.updateStockSum(book.getId(), book.getStockSum() + classBook1.getBookSum());
+            //同时新的教材要减去用户现在输入的领取数量
+            bookMapper.updateStockSum(book1.getId(), book1.getStockSum() - classBook.getBookSum());
+        } else {
+            //如果用户未修改教材则将教材库存量减去用户现在输入的领取数量再加上原来的领取数量
+            bookMapper.updateStockSum(book.getId(), book.getStockSum() - classBook.getBookSum() + classBook1.getBookSum());
+        }
         try {
             i = classBookMapper.updateClassBook(classBook);
         } catch (Exception e) {
@@ -138,6 +169,12 @@ public class ReceiveBookServiceImpl implements ReceiveBookService {
      */
     @Override
     public int deleteClassBooks(List<ClassBook> classBooks) {
+        for (ClassBook classBook : classBooks) {
+            Book b = new Book();
+            b.setId(classBook.getBookId());
+            Book book = bookMapper.selectOne(b);
+            bookMapper.updateStockSum(book.getId(), book.getStockSum() + classBook.getBookSum());
+        }
         return classBookMapper.deleteClassBooks(classBooks);
     }
 

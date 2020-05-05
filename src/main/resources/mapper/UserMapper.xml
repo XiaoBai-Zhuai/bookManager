@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gydx.bookManager.mapper.UserMapper">
+    <select id="getDUserNickname" resultType="com.gydx.bookManager.entity.User">
+        select distinct nickname from user where status = 1;
+    </select>
     <select id="selectByPage" parameterType="integer" resultType="com.gydx.bookManager.entity.User">
         select * from user where status = 1
         limit #{page}, #{limit};
@@ -60,9 +63,15 @@
     </select>
     <update id="updateUser" parameterType="com.gydx.bookManager.pojo.UserInfoPojo">
         UPDATE USER u
-        SET u.nickname = #{nickname},
-         u.sex = #{sex},
-         u.email = #{email};
+        SET
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        <if test="tel != null and tel != ''">
+            tel = #{tel},
+        </if>
+        sex = #{sex}
+        where username = #{username};
     </update>
     <update id="updateOneUser" parameterType="com.gydx.bookManager.entity.User">
         update user set
@@ -78,12 +87,20 @@
         sex = #{sex}
         where id = #{id};
     </update>
+    <update id="updateAUser" parameterType="com.gydx.bookManager.entity.User">
+        update user set
+        nickname = #{nickname},
+        sex = #{sex},
+        email = #{email},
+        tel = #{tel}
+        where id = #{id};
+    </update>
     <update id="updatePassword">
         update user set password = #{password} where id = #{id};
     </update>
     <update id="deleteUsers" parameterType="com.gydx.bookManager.entity.User">
         update user set status = 0
-        where id =
+        where id IN
         <foreach collection="users" item="user" index="index" open="(" close=")" separator=",">
             #{user.id}
         </foreach>

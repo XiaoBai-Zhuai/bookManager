@@ -12,14 +12,14 @@
         select * from stock_out
         where
             <trim prefixOverrides="and|or">
-                <if test="stockOutDate != null and stockOut != ''">
+                <if test="stockOutDate != null and stockOutDate != ''">
                     and stock_out_date = #{stockOutDate}
                 </if>
                 <if test="departmentName != null and departmentName != ''">
-                    and departmentName like concat('%', #{departmentName}, '%')
+                    and department_name like concat('%', #{departmentName}, '%')
                 </if>
                 <if test="bookName != null and bookName != ''">
-                    and id IN (select stockOut_id from book_id = (select id from book where name like concat('%', #{bookName}, '%')))
+                    and id IN (select stock_out_id from stockout_book where book_id IN (select id from book where name like concat('%', #{bookName}, '%')))
                 </if>
             </trim>
         limit #{page}, #{limit};
@@ -28,19 +28,19 @@
         select * from stock_out
         where
         <trim prefixOverrides="and|or">
-            <if test="stockOutDate != null and stockOut != ''">
+            <if test="stockOutDate != null and stockOutDate != ''">
                 and stock_out_date = #{stockOutDate}
             </if>
             <if test="departmentName != null and departmentName != ''">
-                and departmentName like concat('%', #{departmentName}, '%')
+                and department_name like concat('%', #{departmentName}, '%')
             </if>
             <if test="bookName != null and bookName != ''">
-                and id IN (select stockOut_id from book_id = (select id from book where name like concat('%', #{bookName}, '%')))
+                and id IN (select stock_out_id from stockout_book where book_id IN (select id from book where name like concat('%', #{bookName}, '%')))
             </if>
         </trim>
     </select>
     <update id="updateStockOut" parameterType="com.gydx.bookManager.entity.StockOut">
-        update stock_out set stock_out_date = #{stockOutDate}, departmentName = #{departmentName},
+        update stock_out set stock_out_date = #{stockOutDate}, department_name = #{departmentName},
         book_sum = #{bookSum} where id = #{id};
     </update>
 </mapper>

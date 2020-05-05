@@ -15,7 +15,8 @@ layui.define(['form', 'upload'], function (exports) {
     view = layui.view,
     admin = layui.admin,
     form = layui.form,
-    upload = layui.upload;
+    upload = layui.upload
+    setter = layui.setter;
 
   var $body = $('body');
 
@@ -157,7 +158,7 @@ layui.define(['form', 'upload'], function (exports) {
     var field = obj.field;
     field['username'] = sessionStorage.getItem("username");
     $.ajax({
-      url: 'http://localhost:8080/updatePassword',
+      url: setter.baseURL + 'updatePassword',
       type: 'post',
       headers: {
         'Authorization': sessionStorage.getItem("token"),

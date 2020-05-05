@@ -6,22 +6,18 @@ import com.gydx.bookManager.entity.StockOut;
 import com.gydx.bookManager.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class StockOutController {
 
     @Autowired
     StockService stockService;
 
     @RequestMapping("/getStockOutList")
-    @ResponseBody
     public String getStockOutList(Integer page, Integer limit, String stockOutDate, String bookName, Integer bookSum, String departmentName) {
         JSONObject jsonObject = new JSONObject();
         StockOutPojo stockOutPojo = new StockOutPojo();
@@ -42,8 +38,7 @@ public class StockOutController {
         return jsonObject.toJSONString();
     }
 
-    @RequestMapping("/deleteOneStockOutById")
-    @ResponseBody
+    @RequestMapping("/deleteOneStockOut")
     public String deleteOneStockOut(@RequestBody StockOut stockOut) {
         JSONObject jsonObject = new JSONObject();
         stockService.deleteOneStockOut(stockOut);
@@ -52,7 +47,6 @@ public class StockOutController {
     }
 
     @RequestMapping("/deleteStockOuts")
-    @ResponseBody
     public String deleteStockOuts(@RequestBody List<StockOut> stockOuts) {
         JSONObject jsonObject = new JSONObject();
         stockService.deleteStockOuts(stockOuts);
@@ -61,7 +55,6 @@ public class StockOutController {
     }
 
     @RequestMapping("/updateStockOut")
-    @ResponseBody
     public String updateStockOut(@RequestBody StockOut stockOut) {
         JSONObject jsonObject = new JSONObject();
         stockService.updateStockOut(stockOut);
@@ -70,7 +63,6 @@ public class StockOutController {
     }
 
     @RequestMapping("/addStockOut")
-    @ResponseBody
     public String addStockOut(@RequestBody StockOut stockOut) {
         JSONObject jsonObject = new JSONObject();
         stockService.addStockOut(stockOut);

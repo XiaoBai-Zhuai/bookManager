@@ -18,34 +18,50 @@
     <div class="layui-form-item">
       <label class="layui-form-label">用户账号</label>
       <div class="layui-input-inline">
-        <input type="text" name="username" lay-verify="required" placeholder="请输入用户账号" autocomplete="off"
+        <input type="text" id="username" name="username" lay-verify="required" placeholder="请输入用户账号" autocomplete="off"
           class="layui-input">
       </div>
     </div>
     <div class="layui-form-item">
       <label class="layui-form-label">真实姓名</label>
       <div class="layui-input-inline">
-        <input type="text" name="nickname" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off"
+        <input type="text" id="nickname" name="nickname" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off"
           class="layui-input">
       </div>
     </div>
     <div class="layui-form-item">
       <label class="layui-form-label">角色</label>
       <div class="layui-input-inline">
-          <select name="roleName" lay-filter="LAY-user-adminrole-type">
-            <option value="">全部角色</option>
-            <option value="管理员">管理员</option>
-            <option value="学院负责人">学院负责人</option>
-            <option value="班级负责人">班级负责人</option>
-            <option value="普通学生">普通学生</option>
-          </select>
+        <select name="roleName" id="roleName" lay-filter="LAY-user-adminrole-type">
+          <option value="学院负责人">学院负责人</option>
+          <option value="管理员">管理员</option>
+          <option value="班级负责人">班级负责人</option>
+          <option value="普通学生">普通学生</option>
+        </select>
       </div>
     </div>
-    <div class="layui-form-item" id="workPlace">
-      <label class="layui-form-label">所属单位（班级/学院）</label>
+    <div class="layui-form-item" id="workPlace_t">
+      <label class="layui-form-label">所属学院</label>
       <div class="layui-input-inline">
-        <input type="text" name="" id="workPlace_input" lay-verify="required" placeholder="请输入该用户所属单位"
-          autocomplete="off" class="layui-input">
+        <select name="schoolName" id="schoolName" lay-filter="schoolName">
+          <option value=""></option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="workPlace_m">
+      <label class="layui-form-label">所属专业</label>
+      <div class="layui-input-inline">
+        <select name="majorName" id="majorName" lay-filter="majorName">
+          <option value=""></option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="workPlace_s">
+      <label class="layui-form-label">所属班级</label>
+      <div class="layui-input-inline">
+        <select name="className" id="className">
+          <option value=""></option>
+        </select>
       </div>
     </div>
     <div class="layui-form-item" lay-filter="sex">
@@ -66,28 +82,14 @@
       base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
       index: 'lib/index' //主入口模块
-    }).use(['index', 'form', 'upload'], function () {
+    }).use(['index', 'form', 'upload', 'tree', 'userform'], function () {
       var $ = layui.$,
         form = layui.form,
-        upload = layui.upload;
+        upload = layui.upload,
+        setter = layui.setter,
+        layer = layui.layer;
 
-      form.on('select(LAY-user-adminrole-type)', function (data) {
-        var value = data.value;
-        if (value == '管理员') {
-          document.getElementById("workPlace").style.display = "none";
-        }
-        if (value == '普通学生' || value == '班级负责人') {
-          document.getElementById("workPlace").style.display = "block";
-          document.getElementById("workPlace_input").setAttribute("name", "className");
-        }
-        if (value == '学院负责人') {
-          document.getElementById("workPlace").style.display = "block";
-          document.getElementById("workPlace_input").setAttribute("name", "schoolName");
-        }
-      });
-
-
-    })
+    });
   </script>
 </body>
 

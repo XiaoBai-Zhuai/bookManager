@@ -5,22 +5,18 @@ import com.gydx.bookManager.entity.ClassBook;
 import com.gydx.bookManager.service.ReceiveBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
-@Controller
+@RestController
 public class ReceiveBookController {
 
     @Autowired
     ReceiveBookService receiveBookService;
 
     @RequestMapping("/getClassBookList")
-    @ResponseBody
     public String getClassBookList(Integer page, Integer limit, String receiveDate, String bookName, String className, String schoolName) {
         JSONObject jsonObject = new JSONObject();
         List<ClassBook> classes, classList;
@@ -39,7 +35,6 @@ public class ReceiveBookController {
     }
 
     @RequestMapping("/deleteOneClassBook")
-    @ResponseBody
     public String deleteOneClassBook(@RequestBody ClassBook classBook) {
         JSONObject jsonObject = new JSONObject();
         receiveBookService.deleteOneClassBook(classBook);
@@ -48,7 +43,6 @@ public class ReceiveBookController {
     }
 
     @RequestMapping("/updateClassBook")
-    @ResponseBody
     public String updateClassBook(@RequestBody ClassBook classBook) {
         JSONObject jsonObject = new JSONObject();
         receiveBookService.updateClassBook(classBook);
@@ -57,7 +51,6 @@ public class ReceiveBookController {
     }
 
     @RequestMapping("/deleteClassBooks")
-    @ResponseBody
     public String deleteClassBooks(@RequestBody List<ClassBook> classBooks) {
         JSONObject jsonObject = new JSONObject();
         receiveBookService.deleteClassBooks(classBooks);
@@ -66,7 +59,6 @@ public class ReceiveBookController {
     }
 
     @RequestMapping(value = {"/addClassBook", "/submitClassBook"})
-    @ResponseBody
     public String addClassBook(@RequestBody ClassBook classBook) {
         JSONObject jsonObject = new JSONObject();
         receiveBookService.addClassBook(classBook);

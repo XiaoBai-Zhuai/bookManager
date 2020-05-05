@@ -11,18 +11,68 @@ public class StockIn implements Serializable {
     private Integer id;
     @Transient
     private String bookName;
+    @Transient
+    private String author;
+    @Transient
+    private String publishTime;
+    @Transient
+    private String publisher;
     @Column
     private Integer bookSum;
     @Column
     private Double price;
     @Transient
+    private Double bookPrice;
+    @Transient
     private Double priceSum;
     @Transient
     private String supplier;
+    @Transient
+    private String supplierTel;
     @Column
     private String stockInDate;
     @Column
     private String departmentName;
+
+    public Double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(Double bookPrice) {
+        this.bookPrice = bookPrice;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getSupplierTel() {
+        return supplierTel;
+    }
+
+    public void setSupplierTel(String supplierTel) {
+        this.supplierTel = supplierTel;
+    }
 
     public String getBookName() {
         return bookName;

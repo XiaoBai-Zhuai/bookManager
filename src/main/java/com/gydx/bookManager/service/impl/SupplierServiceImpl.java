@@ -5,6 +5,8 @@ import com.gydx.bookManager.entity.Supplier;
 import com.gydx.bookManager.mapper.SBSMapper;
 import com.gydx.bookManager.mapper.SupplierMapper;
 import com.gydx.bookManager.service.SupplierService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
+
+    private Logger logger = LoggerFactory.getLogger(SupplierServiceImpl.class);
 
     @Autowired
     private SupplierMapper supplierMapper;
@@ -82,5 +86,20 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public int addSupplier(Supplier supplier) {
         return supplierMapper.insert(supplier);
+    }
+
+    /**
+     * 查询名字不重复的供应商
+     * @return
+     */
+    @Override
+    public List<Supplier> getAllDSupplierName() {
+        List<Supplier> suppliers = null;
+        try {
+            suppliers = supplierMapper.getAllDSupplierName();
+        } catch (Exception e) {
+            logger.error("查询名字不重复的供应商出错，错误：" + e);
+        }
+        return suppliers;
     }
 }

@@ -59,10 +59,13 @@ public class SchoolServiceImpl implements SchoolService {
         List<School> schools = null;
         try {
             schools = schoolMapper.findSchoolListByPage(page, limit);
-            schools = addInfo(schools);
         } catch (Exception e) {
             logger.error("学院分页查询出错，错误：" + e);
         }
+        if (schools == null) {
+            return null;
+        }
+        schools = addInfo(schools);
         return schools;
     }
 
@@ -86,10 +89,13 @@ public class SchoolServiceImpl implements SchoolService {
         List<School> schools = null;
         try {
             schools = schoolMapper.findSchoolListByPageAndCondition(schoolInfoPojo);
-            schools = addInfo(schools);
         } catch (Exception e) {
             logger.error("学院带条件分页查询出错，错误：" + e);
         }
+        if (schools == null) {
+            return null;
+        }
+        schools = addInfo(schools);
         return schools;
     }
 
@@ -185,6 +191,14 @@ public class SchoolServiceImpl implements SchoolService {
     @Transactional
     @Override
     public int updateSchool(School school) {
+        //将之前的学院负责人的账户注销
+        School s = new School();
+        s.setId(school.getId());
+        School school1 = schoolMapper.selectOne(s);
+        User u1 = new User();
+        u1.setId(school1.getUserId());
+        userMapper.deleteOneUser(u1);
+
         User u = new User();
         u.setUsername(school.getPrincipalNumber());
         User user = userMapper.selectOne(u);

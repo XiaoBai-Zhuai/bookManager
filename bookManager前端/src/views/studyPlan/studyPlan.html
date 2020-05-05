@@ -17,36 +17,32 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">学院名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="schoolName" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">学院名</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="schoolName" name="schoolName" id="schoolName">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">专业名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="majorName" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label">专业名</label>
+                    <div class="layui-input-inline">
+                        <select id="majorName" name="majorName" lay-filter="majorName">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">课程名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="courseName" placeholder="请输入" autocomplete="off"
-                                class="layui-input">
-                        </div>
+                    <label class="layui-form-label">课程名</label>
+                    <div class="layui-input-inline">
+                        <select id="courseName" name="courseName">
+                            <option value=""></option>
+                        </select>
                     </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-studyPlanlist" lay-submit
-                            lay-filter="LAY-studyPlan-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+                    <button class="layui-btn layuiadmin-btn-studyPlanlist" lay-submit
+                        lay-filter="LAY-studyPlan-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
                 </div>
             </div>
             <div class="layui-card-body">
-                
+
                 <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
 
                 <script type="text/html" id="test-table-toolbar-toolbarDemo">
@@ -57,7 +53,7 @@
                         </div>
                     </div>
                 </script>
-                
+
                 <script type="text/html" id="test-table-toolbar-barDemo">
                     <div class="layui-btn-container">
                         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -75,42 +71,190 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'table'], function () {
-            var admin = layui.admin
-                , table = layui.table
-                , $ = layui.$
-                , form = layui.form;
+            var admin = layui.admin,
+                table = layui.table,
+                $ = layui.$,
+                form = layui.form,
+                layer = layui.layer,
+                setter = layui.setter;
+
+            layer.ready(function () {
+                $.ajax({
+                    url: setter.baseURL + 'getAllSchoolList',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#schoolName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getAllMajorList',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#majorName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getAllCourseList',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#courseName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
+
+            form.on('select(schoolName)', function (data) {
+                $.ajax({
+                    url: setter.baseURL + 'getMajorListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': data.value
+                    }),
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+                        $("#majorName").find("option").remove();
+                        $("#majorName").append(new Option("", ""))
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#majorName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+                $.ajax({
+                    url: setter.baseURL + 'getCourseListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': data.value
+                    }),
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function(res) {
+                        $("#courseName").find("option").remove();
+                        $("#courseName").append(new Option("", ""));
+                        var data = res.data;
+                        for(i = 0; i < data.length; i++) {
+                            $("#courseName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                })
+            });
+
+            form.on('select(majorName)', function(data) {
+                $.ajax({
+                    url: setter.baseURL + 'getCourseListByMajorName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({
+                        'schoolName': $("#schoolName").val(),
+                        'majorName': data.value
+                    }),
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (res) {
+                        $("#courseName").find("option").remove();
+                        $("#courseName").append(new Option("", ""))
+                        var data = res.data;
+                        for (i = 0; i < data.length; i++) {
+                            $("#courseName").append(new Option(data[i].name, data[i].name));
+                        }
+                        form.render();
+                    }
+                });
+            });
 
             table.render({
-                elem: '#test-table-toolbar'
-                , url: 'http://localhost:8080/getStudyPlanList'
-                , headers: {
+                elem: '#test-table-toolbar',
+                url: setter.baseURL + 'getStudyPlanList',
+                headers: {
                     'Authorization': sessionStorage.getItem("token"),
                     'Access-Control-Allow-Origin': '*'
-                }
-                ,toolbar: '#test-table-toolbar-toolbarDemo'
-                , where: {
+                },
+                toolbar: '#test-table-toolbar-toolbarDemo',
+                where: {
                     schoolName: '',
                     majorName: '',
                     courseName: '',
                     bookName: '',
                     hour: ''
+                },
+                title: '教学计划汇总表',
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    }, {
+                        field: 'schoolName',
+                        title: '学院名'
+                    }, {
+                        field: 'majorName',
+                        title: '专业名'
+                    }, {
+                        field: 'courseName',
+                        title: '课程名'
+                    }, {
+                        field: 'bookName',
+                        title: '教材名'
+                    }, {
+                        field: 'hour',
+                        title: '课时'
+                    }, {
+                        title: '操作',
+                        fixed: 'right',
+                        align: 'center',
+                        toolbar: '#test-table-toolbar-barDemo',
+                        width: 150
+                    }]
+                ],
+                page: true,
+                groups: 5,
+                limit: 30,
+                height: 'full-130',
+                text: {
+                    none: '无结果'
                 }
-                , title: '教学计划汇总表'
-                , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'id', title: 'ID', width: 80, sort: true }
-                    , { field: 'schoolName', title: '学院名' }
-                    , { field: 'majorName', title: '专业名'}
-                    , { field: 'courseName', title: '课程名' }
-                    , { field: 'bookName', title: '教材名'}
-                    , { field: 'hour', title: '课时' }
-                    , { title: '操作', align: 'center', toolbar: '#test-table-toolbar-barDemo', width: 150 }
-                ]]
-                , page: true
-                , groups: 5
-                , limit: 30
-                , height: 'full-130'
-                , text: { none: '无结果' }
             });
 
             //监听行工具事件
@@ -120,7 +264,7 @@
                     layer.confirm('确认删除', function (index) {
 
                         $.ajax({
-                            url: 'http://localhost:8080/deleteOneStudyPlan',
+                            url: 'deleteOneStudyPlan',
                             type: 'post',
                             headers: {
                                 'Authorization': sessionStorage.getItem("token"),
@@ -131,9 +275,9 @@
                             dataType: 'json',
                             success: function (res) {
                                 layer.msg(res.msg, {
-                                    offset: '15px'
-                                    , icon: 1
-                                    , time: 1000
+                                    offset: '15px',
+                                    icon: 1,
+                                    time: 1000
                                 }, function () {
                                     obj.del();
                                     layer.close(index);
@@ -146,46 +290,56 @@
                     var tr = $(obj.tr);
                     var id = obj.data.id;
                     layer.open({
-                        type: 2
-                        , title: '编辑教学计划信息'
-                        , content: 'studyPlanform.html'
-                        , maxmin: true
-                        , area: ['500px', '450px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'LAY-studyPlan-front-submit'
-                                , submit = layero.find('iframe').contents().find('#' + submitID);
+                        type: 2,
+                        title: '编辑教学计划信息',
+                        content: 'studyPlanform.html',
+                        maxmin: true,
+                        area: ['500px', '450px'],
+                        btn: ['确定', '取消'],
+                        success: function (layero, index) {
+                            let body = layer.getChildFrame('body', index);
+                            body.find("#mutil").val(data.majorName);
+                            body.find("#courseName").val(data.courseName);
+                            body.find("#butil").val(data.bookName);
+                            body.find("#hour").val(data.hour);
+                        },
+                        yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index],
+                                submitID = 'LAY-studyPlan-front-submit',
+                                submit = layero.find('iframe').contents().find('#' +
+                                    submitID);
 
                             //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                            iframeWindow.layui.form.on('submit(' + submitID + ')',
+                                function (data) {
 
-                                var field = data.field;
-                                field['id'] = id;
+                                    var field = data.field;
+                                    field['id'] = id;
 
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    url: "http://localhost:8080/updateStudyPlan",
-                                    type: 'post',
-                                    headers: {
-                                        'Authorization': sessionStorage.getItem("token"),
-                                        'Content-Type': 'application/json',
-                                        'Access-Control-Allow-Origin': '*'
-                                    },
-                                    data: JSON.stringify(field),
-                                    contentType: 'application/json;charset=utf-8',
-                                    dataType: 'json',
-                                    success: function (res) {
-                                        layer.msg("修改成功！", {
-                                            offset: '15px'
-                                            , icon: 1
-                                            , time: 1000
-                                        })
-                                    }
+                                    //提交 Ajax 成功后，静态更新表格中的数据
+                                    $.ajax({
+                                        url: setter.baseURL + "updateStudyPlan",
+                                        type: 'post',
+                                        headers: {
+                                            'Authorization': sessionStorage
+                                                .getItem("token"),
+                                            'Content-Type': 'application/json',
+                                            'Access-Control-Allow-Origin': '*'
+                                        },
+                                        data: JSON.stringify(field),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'json',
+                                        success: function (res) {
+                                            layer.msg("修改成功！", {
+                                                offset: '15px',
+                                                icon: 1,
+                                                time: 1000
+                                            })
+                                        }
+                                    });
+                                    table.reload('test-table-toolbar'); //数据刷新
+                                    layer.close(index); //关闭弹层
                                 });
-                                table.reload('test-table-toolbar'); //数据刷新
-                                layer.close(index); //关闭弹层
-                            });
 
                             submit.trigger('click');
                         }
@@ -205,8 +359,8 @@
 
             var active = {
                 batchdel: function () {
-                    var checkStatus = table.checkStatus('test-table-toolbar')
-                        , checkData = checkStatus.data; //得到选中的数据
+                    var checkStatus = table.checkStatus('test-table-toolbar'),
+                        checkData = checkStatus.data; //得到选中的数据
 
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
@@ -216,7 +370,7 @@
 
                         //执行 Ajax 后重载
                         $.ajax({
-                            url: 'http://localhost:8080/deleteStudyPlans',
+                            url: setter.baseURL + 'deleteStudyPlans',
                             type: 'post',
                             data: JSON.stringify(checkData),
                             headers: {
@@ -235,47 +389,52 @@
                             }
                         })
                     });
-                }
-                , add: function () {
+                },
+                add: function () {
                     layer.open({
-                        type: 2
-                        , title: '添加教学计划'
-                        , content: 'studyPlanform.html'
-                        , maxmin: true
-                        , area: ['500px', '450px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'LAY-studyPlan-front-submit'
-                                , submit = layero.find('iframe').contents().find('#' + submitID);
+                        type: 2,
+                        title: '添加教学计划',
+                        content: 'studyPlanform.html',
+                        maxmin: true,
+                        area: ['500px', '450px'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index],
+                                submitID = 'LAY-studyPlan-front-submit',
+                                submit = layero.find('iframe').contents().find('#' +
+                                    submitID);
 
                             //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-                                var field = data.field; //获取提交的字段
+                            iframeWindow.layui.form.on('submit(' + submitID + ')',
+                                function (data) {
+                                    var field = data.field; //获取提交的字段
 
-                                $.ajax({
-                                    url: "http://localhost:8080/addStudyPlan",
-                                    type: 'post',
-                                    headers: {
-                                        'Authorization': sessionStorage.getItem("token"),
-                                        'Access-Control-Allow-Origin': '*'
-                                    },
-                                    data: JSON.stringify(field),
-                                    contentType: 'application/json;charset=utf-8',
-                                    dataType: 'json',
-                                    success: function (res) {
-                                        layer.msg("添加成功");
-                                        table.reload('test-table-toolbar'); //数据刷新
-                                        layer.close(index); //关闭弹层
-                                    },
-                                    error: function (res) {
-                                        layer.msg("添加失败");
-                                        // table.reload('book-manage'); //数据刷新
-                                        // layer.close(index); //关闭弹层
-                                    }
-                                })
+                                    $.ajax({
+                                        url: setter.baseURL + "addStudyPlan",
+                                        type: 'post',
+                                        headers: {
+                                            'Authorization': sessionStorage
+                                                .getItem("token"),
+                                            'Access-Control-Allow-Origin': '*'
+                                        },
+                                        data: JSON.stringify(field),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'json',
+                                        success: function (res) {
+                                            layer.msg("添加成功");
+                                            table.reload(
+                                                'test-table-toolbar'
+                                            ); //数据刷新
+                                            layer.close(index); //关闭弹层
+                                        },
+                                        error: function (res) {
+                                            layer.msg("添加失败");
+                                            // table.reload('book-manage'); //数据刷新
+                                            // layer.close(index); //关闭弹层
+                                        }
+                                    })
 
-                            });
+                                });
 
                             submit.trigger('click');
                         }

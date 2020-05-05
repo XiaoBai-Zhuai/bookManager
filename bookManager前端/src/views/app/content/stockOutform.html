@@ -22,25 +22,63 @@
                     autocomplete="off" class="layui-input">
             </div>
         </div>
+        <input id="butil" style="display: none;" />
         <div class="layui-form-item">
             <label class="layui-form-label">教材名</label>
             <div class="layui-input-inline">
-                <input type="text" name="bookName" lay-verify="required" placeholder="请输入教材名" autocomplete="off"
-                    class="layui-input">
+                <select lay-search id="bookName" name="bookName" lay-verify="required" lay-filter="bookName">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <input id="autil" style="display: none;" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">作者</label>
+            <div class="layui-input-inline">
+                <select lay-search id="author" name="author" lay-verify="required" lay-filter="author">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <input id="ptutil" style="display: none;" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">出版日期</label>
+            <div class="layui-input-inline">
+                <select lay-search id="publishTime" name="publishTime" lay-verify="required" lay-filter="publishTime">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <input id="putil" style="display: none;" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">出版社</label>
+            <div class="layui-input-inline">
+                <select lay-search id="publisher" name="publisher" lay-verify="required" lay-filter="publisher">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <input id="prutil" style="display: none;" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">教材定价(元)</label>
+            <div class="layui-input-inline">
+                <select lay-search id="bookPrice" name="bookPrice" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">数量</label>
+            <label class="layui-form-label">数量(本)</label>
             <div class="layui-input-inline">
-                <input type="text" name="bookSum" lay-verify="required" placeholder="请输入教材数量" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="bookSum" name="bookSum" lay-verify="required" placeholder="请输入教材数量"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">经办单位</label>
             <div class="layui-input-inline">
-                <input type="text" name="departmentName" lay-verify="requried" placeholder="请输入经办单位" autocomplete="off"
-                    class="layui-input">
+                <input type="text" id="departmentName" name="departmentName" lay-verify="requried" placeholder="请输入经办单位"
+                    autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-hide">
@@ -55,14 +93,13 @@
             base: '../../../layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'form', 'upload', 'laydate'], function () {
-            var $ = layui.$
-                , form = layui.form
-                , upload = layui.upload
-                , laydate = layui.laydate;
-            laydate.render({
-                elem: '#stockOutDate' //指定元素
-            });
+        }).use(['index', 'form', 'upload', 'laydate', 'stockOutform'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                upload = layui.upload,
+                laydate = layui.laydate,
+                layer = layui.layer,
+                setter = layui.setter;
         })
     </script>
 </body>

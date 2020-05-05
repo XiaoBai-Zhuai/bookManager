@@ -22,24 +22,26 @@
                     autocomplete="off" class="layui-input">
             </div>
         </div>
+        <input id="util" style="display: none;"/>
         <div class="layui-form-item">
             <label class="layui-form-label">所属专业</label>
             <div class="layui-input-inline">
-                <input type="text" name="majorName" lay-verify="required" placeholder="请输入所属专业名" autocomplete="off"
-                    class="layui-input">
+                <select id="majorName" name="majorName" lay-verify="required" lay-filter="majorName">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">负责人姓名</label>
             <div class="layui-input-inline">
-                <input type="text" name="principalName" lay-verify="required" placeholder="请输入该班级负责人姓名" autocomplete="off"
+                <input type="text" id="principalName" name="principalName" lay-verify="required" placeholder="请输入该班级负责人姓名" autocomplete="off"
                     class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">负责人学号</label>
             <div class="layui-input-inline">
-                <input type="text" name="principalNumber" lay-verify="required" placeholder="请输入该班级负责人学号" autocomplete="off"
+                <input type="text" id="principalNumber" name="principalNumber" lay-verify="required" placeholder="请输入该班级负责人学号" autocomplete="off"
                     class="layui-input">
             </div>
         </div>  
@@ -56,8 +58,41 @@
         }).extend({
             index: 'lib/index' //主入口模块
         }).use(['index', 'form', 'upload'], function () {
+            var layer = layui.layer,
+                form = layui.form,
+                setter = layui.setter,
+                admin = layui.admin,
+                element = layui.element,
+                $ = layui.$;
             
-        })
+            layer.ready(function() {
+                $.ajax({
+                    url: setter.baseURL + 'getMajorListBySchoolName',
+                    type: 'post',
+                    headers: {
+                        'Authorization': sessionStorage.getItem("token"),
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    data: JSON.stringify({'schoolName': sessionStorage.getItem("schoolName")}),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function(res) {
+                        var majorName = $("#util").val();
+                        var data = res.data;
+                        for(i = 0; i < data.length; i++) {
+                            var option = new Option(data[i].name, data[i].name);
+                            $("#majorName").append(option);
+                            if(data[i].name == majorName && majorName != undefined) {
+                                $("#majorName").get(0).selectedIndex = i + 1;
+                            }
+                        }
+                        form.render('select');
+                    }
+                });
+
+            });
+
+        });
     </script>
 </body>
 

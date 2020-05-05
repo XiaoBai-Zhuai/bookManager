@@ -29,6 +29,7 @@
                     autocomplete="off" class="layui-input">
             </div>
         </div>
+        <input id="mutil" style="display: none;" />
         <div class="layui-form-item">
             <label class="layui-form-label">专业名</label>
             <div class="layui-input-inline">
@@ -37,6 +38,7 @@
                 </select>
             </div>
         </div>
+        <input id="cutil" style="display: none;" />
         <div class="layui-form-item">
             <label class="layui-form-label">班级名</label>
             <div class="layui-input-inline">
@@ -62,14 +64,16 @@
                 layer = layui.layer,
                 form = layui.form,
                 admin = layui.admin,
-                element = layui.element;
+                element = layui.element,
+                setter = layui.setter;
 
             layer.ready(function () {
+                var majorName = $("#mutil").val();
                 var data = {
                     "schoolName": sessionStorage.getItem("schoolName")
                 };
                 $.ajax({
-                    url: "http://localhost:8080/getMajorNameBySchoolName",
+                    url: setter.baseURL + "getMajorNameBySchoolName",
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -83,16 +87,47 @@
                         for (i = 0; i < data.length; i++) {
                             document.getElementById("majorName").append(new Option(data[i]
                                 .name, data[i].name));
+                            if (majorName != undefined && majorName == data[i].name) {
+                                $("#majorName").get(0).selectedIndex = i + 1;
+                            }
                         }
                         form.render();
                     }
                 });
+                var className = $("#cutil").val();
+                if (majorName != undefined && className != undefined) {
+                    $.ajax({
+                        url: setter.baseURL + "getAllClassListByMajorName",
+                        type: 'post',
+                        headers: {
+                            'Authorization': sessionStorage.getItem("token"),
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        data: JSON.stringify({'majorName' : majorName}),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            $("#className").find("option").remove();
+                            $("#className").append(new Option("", ""));
+                            var data = res.data;
+                            for (i = 0; i < data.length; i++) {
+                                document.getElementById("className").append(new Option(data[i].name, data[i].name));
+                                if(data[i].name == className) {
+                                    $("#className").get(0).selectedIndex = i + 1;
+                                }
+                            }
+                            form.render();
+                        }
+                    })
+                }
             });
 
             form.on('select(majorName)', function (data) {
-                var majorName = {"majorName": data.value};
+                var majorName = {
+                    "majorName": data.value
+                };
                 $.ajax({
-                    url: "http://localhost:8080/getClassNameByMajorName",
+                    url: setter.baseURL + "getClassNameByMajorName",
                     type: 'post',
                     headers: {
                         'Authorization': sessionStorage.getItem("token"),
@@ -101,7 +136,9 @@
                     data: JSON.stringify(majorName),
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    success: function(res) {
+                    success: function (res) {
+                        $("#className").find("option").remove();
+                        $("#className").append(new Option("", ""));
                         var data = res.data;
                         for (i = 0; i < data.length; i++) {
                             document.getElementById("className").append(new Option(data[i]
@@ -111,6 +148,14 @@
                     }
                 });
             });
+
+            /* $('#className').click(function() {
+                var majorName = $("#majorName option:selected").text();
+                console.log(majorName);
+                if(majorName == '') {
+                    alert("请先选择专业");
+                }
+            }); */
         })
     </script>
 </body>
