@@ -26,6 +26,8 @@ public class Book implements Serializable {
     @Column
     private Integer stockSum;
     @Column
+    private String imageUrl;
+    @Column
     private Integer status;
 
     public Integer getId() {
@@ -90,5 +92,13 @@ public class Book implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

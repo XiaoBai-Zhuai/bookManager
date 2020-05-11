@@ -13,7 +13,29 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
         table = layui.table,
         form = layui.form,
         laydate = layui.laydate
-        setter = layui.setter;
+    setter = layui.setter;
+
+    clickImg = function (t) {
+        var t = $(t).find("img");
+        if (t == null || t == '') {
+            return;
+        }
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['75%', '85'],
+            closeBtn: 1,
+            title: false,
+            shadeClose: true,
+            end: function (index, layero) {
+                return false;
+            },
+            success: function (layero, index) {
+                layer.iframeAuto(index);
+            },
+            content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '"/></div>'
+        })
+    };
 
     //用户管理
     table.render({
@@ -33,14 +55,19 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                 type: 'checkbox',
                 fixed: 'left'
             }, {
-                field: 'id',
-                width: 100,
-                title: 'ID',
-                sort: true
-            }, {
                 field: 'name',
                 title: '教材名',
                 minWidth: 100
+            }, {
+                field: 'image',
+                title: '封面',
+                width: 80,
+                templet: function (d) {
+                    if (d.image != undefined)
+                        return '<div onclick="clickImg(this)"><img src=' + setter.baseURL + "images/" + d.image + ' style="width: 50px; height: 50px"/></div>'
+                    else
+                        return '';
+                }
             }, {
                 field: 'author',
                 title: '作者'
@@ -119,6 +146,7 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                     body.find("#name").val(data.name);
                     body.find("#author").val(data.author);
                     body.find("#price").val(data.price);
+                    body.find("#imageUrl").val(data.imageUrl);
                 },
                 yes: function (index, layero) {
                     var iframeWindow = window['layui-layer-iframe' + index],
@@ -148,11 +176,11 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                                     offset: '15px',
                                     icon: 1,
                                     time: 1000
-                                })
+                                });
+                                table.reload('book-manage'); //数据刷新
+                                layer.close(index); //关闭弹层
                             }
                         });
-                        table.reload('book-manage'); //数据刷新
-                        layer.close(index); //关闭弹层
                     });
 
                     submit.trigger('click');

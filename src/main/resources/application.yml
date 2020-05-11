@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/book_manager?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
-    password: ZYMzym1050367616@
+    password: 
     # 连接池配置
     druid:
       # 初始化，最小，最大 连接数
@@ -18,8 +18,6 @@ spring:
       # 多久检测一次需要关闭的空闲连接
       time-between-eviction-runs-millis: 60000
       validation-query: SELECT 'x'
-  mvc:
-    dispatch-options-request: true
   redis:
     host: localhost
     port: 6379
@@ -32,13 +30,17 @@ spring:
     timeout: 0
   mail:
     host: smtp.qq.com
-    password: ewbhpuehnhgkbeec
-    username: qwaszxqwaszx123@foxmail.com
+    password: 
+    username: 
     properties:
       mail:
         auth: true
         smtp:
           enable: true
+  mvc:
+    static-path-pattern: classpath:static/**
+  resources:
+    static-locations: classpath:static/
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:

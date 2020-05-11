@@ -1,4 +1,4 @@
-layui.define(['index', 'table'], function () {
+layui.define(['index', 'table'], function (exports) {
     var admin = layui.admin,
         table = layui.table,
         $ = layui.$,

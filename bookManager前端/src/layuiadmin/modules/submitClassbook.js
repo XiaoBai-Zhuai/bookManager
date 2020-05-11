@@ -1,4 +1,4 @@
-layui.define(['index', 'form', 'laydate'], function () {
+layui.define(['index', 'form', 'laydate'], function (exports) {
     var $ = layui.$,
         admin = layui.admin,
         element = layui.element,

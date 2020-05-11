@@ -1,4 +1,4 @@
-layui.define(['index', 'set'], function () {
+layui.define(['index', 'set'], function (exports) {
     var $ = layui.$,
         form = layui.form,
         layer = layui.layer,

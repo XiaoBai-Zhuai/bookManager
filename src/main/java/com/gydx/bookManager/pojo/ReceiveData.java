@@ -13,6 +13,15 @@ public class ReceiveData {
     private String author;
     private String publishTime;
     private String publisher;
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getPublisher() {
         return publisher;

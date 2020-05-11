@@ -5,6 +5,7 @@ import com.gydx.bookManager.pojo.BookPageInfoPojo;
 import com.gydx.bookManager.entity.Book;
 import com.gydx.bookManager.pojo.ReceiveData;
 import com.gydx.bookManager.service.BookService;
+import com.gydx.bookManager.util.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,4 +152,6 @@ public class BookInfoController {
         jsonObject.put("data", books);
         return jsonObject.toJSONString();
     }
+
+
 }

@@ -9,6 +9,7 @@ import com.gydx.bookManager.pojo.BookPageInfoPojo;
 import com.gydx.bookManager.mapper.BookMapper;
 import com.gydx.bookManager.entity.Book;
 import com.gydx.bookManager.service.BookService;
+import com.gydx.bookManager.util.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,12 @@ public class BookServiceImpl implements BookService {
     private MajorMapper majorMapper;
     @Autowired
     private MajorCourseMapper majorCourseMapper;
+    @Autowired
+    ImageUtil imageUtil;
 
     /**
      * 教材列表分页查询
+     *
      * @param page
      * @param limit
      * @return
@@ -47,6 +51,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 获取全部教材列表
+     *
      * @return
      */
     @Override
@@ -58,6 +63,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据教材id删除某本教材
+     *
      * @param id
      * @return
      */
@@ -70,12 +76,14 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 修改教材信息
+     *
      * @param book
      * @return
      */
     @Override
     public int updateBookInfo(Book book) {
         int i = 0;
+        book = addImageUrl(book);
         try {
             i = bookMapper.updateBook(book);
         } catch (Exception e) {
@@ -86,6 +94,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 批量删除教材
+     *
      * @param books
      * @return
      */
@@ -100,22 +109,46 @@ public class BookServiceImpl implements BookService {
         return i;
     }
 
+    public Book addImageUrl(Book book) {
+        String imageUrl = book.getImageUrl();
+        if (imageUrl.startsWith("http")) {
+            String[] split = imageUrl.split("/");
+            boolean b = true;
+            try {
+                imageUtil.saveImageByUrl(imageUrl, split[split.length - 1]);
+            } catch (Exception e) {
+                logger.error("保存网络图片出错，错误：" + e);
+            } finally {
+                book.setImageUrl(split[split.length - 1]);
+            }
+        }
+        return book;
+    }
+
     /**
      * 添加教材
+     *
      * @param book
      * @return
      */
     @Override
     public int addBook(Book book) {
+        book = addImageUrl(book);
         Book b = new Book();
-        b.setName(book.getName()); b.setAuthor(book.getAuthor());
-        b.setPublisher(book.getPublisher()); b.setPublishTime(book.getPublishTime());
+        b.setName(book.getName());
+        b.setAuthor(book.getAuthor());
+        b.setPublisher(book.getPublisher());
+        b.setPublishTime(book.getPublishTime());
         Book book1 = bookMapper.selectOne(b);
         if (book1 != null) {
             if (book1.getStatus() == 0) {
                 bookMapper.updateBookStatus(book1);
+                if (book.getImageUrl() != null) {
+                    book.setImageUrl(book.getImageUrl());
+                    bookMapper.updateImage(book1);
+                }
                 return 1;
-            } else if(book1.getStatus() == 1) {
+            } else if (book1.getStatus() == 1) {
                 return 0;
             }
         } else {
@@ -126,6 +159,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据条件分页查询出教材
+     *
      * @param bookPageInfoPojo
      * @return
      */
@@ -143,6 +177,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据条件查询出所有的教材
+     *
      * @param bookPageInfoPojo
      * @return
      */
@@ -157,6 +192,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据专业名获取该专业下应该用到的教材，在班级负责人提交教材领取情况时使用
+     *
      * @param majorName
      * @return
      */
@@ -182,6 +218,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 获取全部教材列表
+     *
      * @return
      */
     @Override
@@ -199,6 +236,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 查询出所有教材中不重复的教材名
+     *
      * @return
      */
     @Override
@@ -214,6 +252,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 查询出所有教材里不重复的作者名
+     *
      * @return
      */
     @Override
@@ -229,6 +268,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据教材名查询出所有的作者
+     *
      * @param bookName
      * @return
      */
@@ -245,6 +285,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据教材名和作者查询出所有的出版时间
+     *
      * @param bookName
      * @param author
      * @return
@@ -262,6 +303,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据教材名和作者和出版日期查询出所有的出版社名字
+     *
      * @param bookName
      * @param author
      * @param publishTime
@@ -280,6 +322,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * 根据教材名和作者和出版日期和出版社名查询出所有的教材定价
+     *
      * @param bookName
      * @param author
      * @param publishTime

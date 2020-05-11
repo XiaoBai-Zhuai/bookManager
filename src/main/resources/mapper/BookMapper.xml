@@ -116,6 +116,9 @@
             <if test="stockSum != null">
                 b.stock_sum = #{stockSum}
             </if>
+            <if test="image != null and image != ''">
+                b.image = #{image}
+            </if>
         </trim>
         WHERE
         b.id = #{id};
@@ -134,5 +137,8 @@
     </update>
     <update id="updateBookStatus" parameterType="com.gydx.bookManager.entity.Book">
         update book set status = 1 where id = #{id};
+    </update>
+    <update id="updateImage" parameterType="com.gydx.bookManager.entity.Book">
+        update book set image = #{image} where id = #{id};
     </update>
 </mapper>

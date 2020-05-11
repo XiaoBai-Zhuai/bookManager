@@ -46,4 +46,6 @@ public interface BookMapper extends Mapper<Book> {
             String author, @Param("publishTime") String publishTime, @Param("publisher") String publisher);
 
     void updateStockSum(@Param("bookId") Integer bookId, @Param("bookSum") Integer bookSum);
+
+    void updateImage(Book book1);
 }
