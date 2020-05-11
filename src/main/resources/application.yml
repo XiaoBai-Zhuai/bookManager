@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/book_manager?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
-    password: 
+    password: ZYMzym1050367616@
     # 连接池配置
     druid:
       # 初始化，最小，最大 连接数
@@ -30,8 +30,8 @@ spring:
     timeout: 0
   mail:
     host: smtp.qq.com
-    password: 
-    username: 
+    password: ewbhpuehnhgkbeec
+    username: zha7412@qq.com
     properties:
       mail:
         auth: true

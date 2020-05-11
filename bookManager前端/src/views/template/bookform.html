@@ -113,14 +113,14 @@
             $("#div_prev").empty();
             document.getElementById("div_prev").appendChild(imgobj);
             $("#seeImg").attr("style", "display: block");
-            $("#image").val(file.name);
+            $("#imageUrl").val(file.name);
             form.render();
           });
         }
       });
 
-      $("#image").bind("input propertychange", function (event) {
-        var img = $("#image").val();
+      $("#imageUrl").bind("input propertychange", function (event) {
+        var img = $("#imageUrl").val();
         if (img == '' || img == null || img == undefined) {
           $("#seeImg").attr("style", "display: none");
         } else {
@@ -138,7 +138,7 @@
       });
 
       layer.ready(function() {
-        var img = $("#image").val();
+        var img = $("#imageUrl").val();
         if (img == '' || img == null || img == undefined) {
           $("#seeImg").attr("style", "display: none");
         } else {

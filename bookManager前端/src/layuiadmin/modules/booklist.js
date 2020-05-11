@@ -59,12 +59,12 @@ layui.define(['table', 'form', 'laydate'], function (exports) {
                 title: '教材名',
                 minWidth: 100
             }, {
-                field: 'image',
+                field: 'imageUrl',
                 title: '封面',
                 width: 80,
                 templet: function (d) {
-                    if (d.image != undefined)
-                        return '<div onclick="clickImg(this)"><img src=' + setter.baseURL + "images/" + d.image + ' style="width: 50px; height: 50px"/></div>'
+                    if (d.imageUrl != undefined)
+                        return '<div onclick="clickImg(this)"><img src=' + setter.baseURL + "images/" + d.imageUrl + ' style="width: 50px; height: 50px"/></div>'
                     else
                         return '';
                 }

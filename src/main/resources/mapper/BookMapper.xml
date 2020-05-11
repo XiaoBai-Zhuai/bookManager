@@ -97,7 +97,6 @@
         UPDATE
         book b
         SET
-        <trim suffixOverrides=",">
             <if test="name != null and name != ''">
                 b.name = #{name},
             </if>
@@ -114,12 +113,9 @@
                 b.price = #{price},
             </if>
             <if test="stockSum != null">
-                b.stock_sum = #{stockSum}
+                b.stock_sum = #{stockSum},
             </if>
-            <if test="image != null and image != ''">
-                b.image = #{image}
-            </if>
-        </trim>
+            b.image_url = #{imageUrl}
         WHERE
         b.id = #{id};
     </update>

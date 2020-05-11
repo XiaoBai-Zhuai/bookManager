@@ -59,6 +59,9 @@
                         <div style="padding-bottom: 10px;">
                             <button class="layui-btn layuiadmin-btn-studentlist" data-type="batchdel">删除</button>
                             <button class="layui-btn layuiadmin-btn-studentlist" data-type="add">添加</button>
+                            <button type="button" class="layui-btn" id="uploadStudents">
+                                <i class="layui-icon">&#xe67c;</i>导入数据
+                            </button>
                         </div>
                     </div>
                 </script>
@@ -79,12 +82,24 @@
             base: '../../../layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'table', 'studentlist'], function () {
+        }).use(['index', 'table', 'studentlist', 'upload'], function () {
             var admin = layui.admin,
                 table = layui.table,
                 $ = layui.$,
                 form = layui.form,
-                setter = layui.setter;
+                setter = layui.setter,
+                upload = layui.upload;
+
+            upload.render({
+                elem: '#uploadStudents',
+                url: setter.baseURL + 'uploadExcel/student',
+                accept: 'file',
+                exts: 'xlsx|xlx',
+                drag: false,
+                done: function(res, index, upload) {
+                    
+                }
+            })
         });
     </script>
 </body>
