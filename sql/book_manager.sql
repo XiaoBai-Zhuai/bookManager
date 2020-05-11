@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2020-05-05 13:17:21
+Date: 2020-05-11 13:59:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,20 +27,22 @@ CREATE TABLE `book` (
   `publisher` varchar(255) NOT NULL COMMENT '出版社名称',
   `publish_time` date NOT NULL COMMENT '教材出版日期',
   `stock_sum` int(11) NOT NULL DEFAULT '0' COMMENT '库存数量',
+  `image_url` varchar(255) DEFAULT NULL COMMENT '教材封面',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1表示未删除，0表示已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES ('1', '《计算机组成原理》', '唐朔飞', '43', '高等教育出版社', '2008-01-03', '81658', '1');
-INSERT INTO `book` VALUES ('2', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2013-01-01', '3427', '1');
-INSERT INTO `book` VALUES ('3', '《毛泽东思想和中国特色社会主义理论体系概论》', ' 本书编写组', '25', '高等教育出版社', '2014-01-01', '491', '1');
-INSERT INTO `book` VALUES ('4', '《计算机应用基础》', '姜帆', '42', '武汉理工大学出版社', '2017-01-01', '20000', '1');
-INSERT INTO `book` VALUES ('5', '《概率论与数理统计》', '郭满才、徐钊', '40', '高等教育出版社', '2012-01-01', '0', '1');
-INSERT INTO `book` VALUES ('7', '《计算机组成原理》', '唐朔飞', '50', '高等教育出版社', '2008-01-03', '1570', '1');
-INSERT INTO `book` VALUES ('8', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2015-01-01', '540', '1');
+INSERT INTO `book` VALUES ('1', '《计算机组成原理》', '唐朔飞', '43', '高等教育出版社', '2008-01-03', '81658', null, '1');
+INSERT INTO `book` VALUES ('2', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2013-01-01', '3427', null, '1');
+INSERT INTO `book` VALUES ('3', '《毛泽东思想和中国特色社会主义理论体系概论》', ' 本书编写组', '25', '高等教育出版社', '2014-01-01', '491', null, '1');
+INSERT INTO `book` VALUES ('4', '《计算机应用基础》', '姜帆', '42', '武汉理工大学出版社', '2017-01-01', '20000', null, '1');
+INSERT INTO `book` VALUES ('5', '《概率论与数理统计》', '郭满才、徐钊', '40', '高等教育出版社', '2012-01-01', '0', null, '1');
+INSERT INTO `book` VALUES ('7', '《计算机组成原理》', '唐朔飞', '50', '高等教育出版社', '2008-01-03', '1570', null, '1');
+INSERT INTO `book` VALUES ('8', '《数据库系统概论》', ' 王珊/萨师煊', '39.6', '高等教育出版社', '2015-01-01', '540', 'u=2042857244,3513928367&fm=26&gp=0.jpg', '1');
+INSERT INTO `book` VALUES ('11', '《离散数学》', '屈婉玲、耿素云、张立昂 ', '41.1', '高等教育出版社', '2008-03-01', '0', '57353d62Nd629d32a.jpg', '1');
 
 -- ----------------------------
 -- Table structure for class
