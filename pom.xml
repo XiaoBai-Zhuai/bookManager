@@ -15,7 +15,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <shiro.version>1.3.1</shiro.version>
+        <shiro.version>1.7.1</shiro.version>
         <java.version>8</java.version>
     </properties>
 
