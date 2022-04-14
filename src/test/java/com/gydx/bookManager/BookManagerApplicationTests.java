@@ -42,7 +42,7 @@ class BookManagerApplicationTests {
         //发送人
         mailMessage.setFrom(sendUsername);
         //收件人
-        mailMessage.setTo("78045829@qq.com");
+        mailMessage.setTo("xxxxxx@qq.com");
         javaMailSender.send(mailMessage);
     }
 
@@ -51,9 +51,9 @@ class BookManagerApplicationTests {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setSubject("注意");
-        helper.setText("<b style='color:blue'>yqy会把yys再下回来的</b>", true);
+        helper.setText("<b style='color:blue'>xxxxxxxxx</b>", true);
         helper.setFrom(new InternetAddress(sendUsername, "无情的邮件发送机器", "UTF-8"));
-        helper.setTo("78045829@qq.com");
+        helper.setTo("xxxxxx@qq.com");
         javaMailSender.send(mimeMessage);
     }
 
@@ -62,12 +62,12 @@ class BookManagerApplicationTests {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setSubject("重置密码");
-        helper.setText("尊敬的<b>" + "刘莹" + "</b>，您好：<br/><br/>" + "&nbsp;&nbsp;&nbsp;&nbsp;" +
+        helper.setText("尊敬的<b>" + "xx" + "</b>，您好：<br/><br/>" + "&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "您的验证码为<b>" + createCode() + "</b>。<br/>&nbsp;&nbsp;&nbsp;&nbsp;请在<b>10分钟</b>" +
                 "之内完成密码重置，否则过期则验证码无效！", true);
         helper.setFrom(new InternetAddress(sendUsername, "管理员", "UTF-8"));
-        helper.setTo("zhuaizhazha@163.com");
-//        helper.setTo("1340096552@qq.com");
+        helper.setTo("xxxxx@163.com");
+//        helper.setTo("xxxxxxx@qq.com");
 
         javaMailSender.send(mimeMessage);
     }
