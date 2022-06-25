@@ -5,8 +5,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/book_manager?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    username: root
-    password: ZYMzym1050367616@
+    username: xxxx
+    password: xxxx
     # 连接池配置
     druid:
       # 初始化，最小，最大 连接数
@@ -30,8 +30,10 @@ spring:
     timeout: 0
   mail:
     host: smtp.qq.com
-    password: ewbhpuehnhgkbeec
-    username: zha7412@qq.com
+    # 申请的时候会有密码
+    password: xxx
+    # 邮箱地址 加@xx.com
+    username: xxx
     properties:
       mail:
         auth: true
